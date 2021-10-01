@@ -26,9 +26,9 @@ final class Group
      * @param array $middleware
      */
     public function __construct(
-        public string $prefix = '',
-        public string $suffix = '',
-        public array $middleware = [],
+        public readonly string $prefix = '',
+        public readonly string $suffix = '',
+        public readonly array $middleware = [],
     ) {
     }
 }

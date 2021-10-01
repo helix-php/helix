@@ -16,7 +16,7 @@ abstract class ExternalServerCreateInfo extends ServerCreateInfo
     /**
      * @var array
      */
-    public array $server;
+    public readonly array $server;
 
     /**
      * @param array|null $vars

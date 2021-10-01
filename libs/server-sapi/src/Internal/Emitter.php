@@ -150,6 +150,9 @@ final class Emitter
         }
 
         while (! $body->eof()) {
+            if (\Fiber::getCurrent() !== null) {
+                \Fiber::suspend();
+            }
             echo $body->read($this->info->bufferLength);
         }
     }

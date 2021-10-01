@@ -17,15 +17,15 @@ use Helix\Server\Sapi\Emitter\HeadersBehaviour;
 final class EmitterCreateInfo
 {
     /**
-     * @param positive-int|null $bufferLength
+     * @param positive-int $bufferLength
      * @param HeadersBehaviour $headers
      * @param BodyBehaviour $body
      */
     public function __construct(
-        public readonly ?int $bufferLength = null,
+        public readonly int $bufferLength = 1024,
         public readonly HeadersBehaviour $headers = HeadersBehaviour::SKIP,
         public readonly BodyBehaviour $body = BodyBehaviour::APPEND,
     ) {
-        assert($bufferLength === null || $bufferLength > 0, 'Precondition [bufferLength > 0] failed');
+        assert($bufferLength > 0, 'Precondition [bufferLength > 0] failed');
     }
 }

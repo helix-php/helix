@@ -23,7 +23,7 @@ abstract class Server implements ServerInterface
      * @param T $info
      */
     public function __construct(
-        protected Psr17FactoryInterface $factory,
-        protected ServerCreateInfo $info,
+        protected readonly Psr17FactoryInterface $factory,
+        protected readonly ServerCreateInfo $info,
     ) {}
 }

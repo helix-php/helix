@@ -32,7 +32,7 @@ final class ServerExtension
         return new Server($factory, new ServerCreateInfo(
             vars: $_SERVER,
             emitter: new EmitterCreateInfo(
-                bufferLength: null,
+                bufferLength: 1024,
                 headers: HeadersBehaviour::SKIP,
                 body: BodyBehaviour::APPEND,
             )

@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Helix\Config\Meta;
+namespace Helix\Config\Attribute;
 
 use Helix\Boot\Attribute\ClassMetadata;
 

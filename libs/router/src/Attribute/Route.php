@@ -31,11 +31,11 @@ final class Route
      * @param array $middleware
      */
     public function __construct(
-        public string $path,
-        public Method $method = Method::GET,
-        public ?string $as = null,
-        public array $where = [],
-        public array $middleware = [],
+        public readonly string $path,
+        public readonly Method $method = Method::GET,
+        public readonly ?string $as = null,
+        public readonly array $where = [],
+        public readonly array $middleware = [],
     ) {
     }
 }

@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Helix\Foundation\Console\Command;
 
 use Helix\Boot\ExtensionInterface;
-use Helix\Config\Meta\ProvidesConfig;
+use Helix\Config\Attribute\ProvidesConfig;
 use Helix\Boot\RepositoryInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

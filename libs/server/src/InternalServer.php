@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Helix\Server;
 
-use Helix\Foundation\Http\FactoryInterface;
+use Helix\Http\Psr17FactoryInterface;
 
 /**
  * @template T of InternalServerCreateInfo
@@ -20,10 +20,10 @@ use Helix\Foundation\Http\FactoryInterface;
 abstract class InternalServer extends Server
 {
     /**
-     * @param FactoryInterface $factory
+     * @param Psr17FactoryInterface $factory
      * @param T $info
      */
-    public function __construct(FactoryInterface $factory, InternalServerCreateInfo $info)
+    public function __construct(Psr17FactoryInterface $factory, InternalServerCreateInfo $info)
     {
         parent::__construct($factory, $info);
     }
