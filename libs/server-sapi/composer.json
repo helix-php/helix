@@ -1,0 +1,27 @@
+{
+    "name": "helix/server-sapi",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.1",
+        "helix/server": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Helix\\Server\\Sapi\\": "src"
+        }
+    },
+    "provide": {
+        "helix/server-implementation": "^1.0"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
