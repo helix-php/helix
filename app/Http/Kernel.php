@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace App\Http;
 
-use App\Http\Middleware\ServerTiming;
 use Helix\Foundation\Http\Kernel as BaseHttpKernel;
 
 class Kernel extends BaseHttpKernel
@@ -20,6 +19,5 @@ class Kernel extends BaseHttpKernel
      * {@inheritDoc}
      */
     public array $middleware = [
-        ServerTiming::class,
     ];
 }

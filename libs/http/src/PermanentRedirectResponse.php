@@ -15,7 +15,7 @@ use Helix\Contracts\Http\StatusCode\StatusCodeInterface;
 use Helix\Http\StatusCode\StatusCode;
 use Psr\Http\Message\UriInterface;
 
-class PermanentRedirectResponse extends RedirectResponse
+final class PermanentRedirectResponse extends RedirectResponse
 {
     /**
      * {@inheritDoc}

@@ -14,7 +14,7 @@ namespace Helix\Http;
 use Helix\Contracts\Http\StatusCode\StatusCodeInterface;
 use Helix\Http\StatusCode\StatusCode;
 
-class JsonResponse extends Response
+final class JsonResponse extends Response
 {
     /**
      * @var int

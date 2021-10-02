@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Helix\Server\Sapi\Internal;
 
+use Helix\Async\Task;
 use Helix\Server\Sapi\Emitter\BodyBehaviour;
 use Helix\Server\Sapi\Emitter\HeadersBehaviour;
 use Helix\Server\Sapi\EmitterCreateInfo;
@@ -37,16 +38,17 @@ final class Emitter
      * e.g., if headers already sent or output has been emitted previously.
      *
      * @param ResponseInterface $response
-     * @throws HeadersAlreadySentException
-     * @throws BodyAlreadySentException
+     * @return \Fiber
      */
-    public function emit(ResponseInterface $response): void
+    public function emit(ResponseInterface $response): \Fiber
     {
-        $this->emitHeaders($response);
+        return Task::async(function () use ($response) {
+            $this->emitHeaders($response);
 
-        if ($response->getBody()->isReadable()) {
-            $this->emitBody($response);
-        }
+            if ($response->getBody()->isReadable()) {
+                $this->emitBody($response);
+            }
+        });
     }
 
     /**
@@ -87,7 +89,7 @@ final class Emitter
             $notCookie = $name !== 'Set-Cookie';
 
             foreach ($values as $value) {
-                header("{$name}: {$value}", $notCookie);
+                header("$name: $value", $notCookie);
                 $notCookie = false;
             }
         }
@@ -103,20 +105,21 @@ final class Emitter
      */
     private function emitStatusLine(ResponseInterface $response): void
     {
-        $statusCode = (int)$response->getStatusCode();
-        $reasonPhrase = \trim((string)$response->getReasonPhrase());
-        $protocolVersion = \trim((string)$response->getProtocolVersion());
+        $statusCode = $response->getStatusCode();
+        $reasonPhrase = \trim($response->getReasonPhrase());
+        $protocolVersion = \trim($response->getProtocolVersion());
 
-        $status = $statusCode . ($reasonPhrase ? " {$reasonPhrase}" : '');
-        \header("HTTP/{$protocolVersion} {$status}", true, $statusCode);
+        $status = $statusCode . ($reasonPhrase ? " $reasonPhrase" : '');
+        \header("HTTP/$protocolVersion $status", true, $statusCode);
     }
 
     /**
      * Emits the message body.
      *
      * @param ResponseInterface $response
-     * @psalm-suppress MixedArgument
      * @throws BodyAlreadySentException
+     * @throws \Throwable
+     * @psalm-suppress MixedArgument
      */
     private function emitBody(ResponseInterface $response): void
     {
@@ -128,11 +131,6 @@ final class Emitter
             if ($this->info->body === BodyBehaviour::SKIP) {
                 return;
             }
-        }
-
-        if ($this->info->bufferLength === null) {
-            echo $response->getBody();
-            return;
         }
 
         \flush();
@@ -150,10 +148,9 @@ final class Emitter
         }
 
         while (! $body->eof()) {
-            if (\Fiber::getCurrent() !== null) {
-                \Fiber::suspend();
-            }
-            echo $body->read($this->info->bufferLength);
+            $chunk = $body->read($this->info->bufferLength);
+            echo Task::tick($chunk);
+            \flush();
         }
     }
 

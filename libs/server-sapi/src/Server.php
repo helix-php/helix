@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Helix\Server\Sapi;
 
+use Helix\Async\Task;
 use Helix\Contracts\ErrorHandler\Http\HttpErrorHandlerInterface;
 use Helix\Http\Psr17FactoryInterface;
 use Helix\Server\ExternalServer;
@@ -68,7 +69,7 @@ class Server extends ExternalServer
                 $this->info->server
             );
 
-            $this->emitter->emit($handler->handle($request));
+            Task::await($this->emitter->emit($handler->handle($request)));
         } catch (\Throwable $e) {
             if ($error !== null) {
                 $this->emitter->emit($error->throw($e, $request ?? null));

@@ -25,7 +25,7 @@ class Response extends BaseResponse
      */
     public function __construct(mixed $body, StatusCodeInterface $status = StatusCode::OK, array $headers = [])
     {
-        if ($body instanceof \Stringable) {
+        if ($body instanceof \Stringable && !$body instanceof StreamInterface) {
             $body = (string)$body;
         }
 

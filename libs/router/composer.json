@@ -18,6 +18,7 @@
         }
     },
     "require-dev": {
+        "jetbrains/phpstorm-attributes": "^1.0",
         "phpunit/phpunit": "^9.3",
         "httpsoft/http-message": "^1.0"
     },

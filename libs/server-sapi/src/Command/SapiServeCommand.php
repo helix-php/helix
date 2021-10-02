@@ -62,7 +62,10 @@ final class SapiServeCommand extends Command
          */
         [$host, $port] = [$input->getOption('host'), $input->getOption('port')];
 
-        $process = new Process(['php', '-S', $host . ':' . $port, 'index.php'], $this->public);
+        $process = new Process(['php', '-S', $host . ':' . $port, 'index.php'], $this->public, [
+            'PHP_CLI_SERVER_WORKERS' => '2'
+        ]);
+
         $process->setTimeout(null);
 
         return $process->run($this->processHandler(

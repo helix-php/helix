@@ -15,6 +15,7 @@ use Helix\Contracts\Http\Method\MethodInterface;
 use Helix\Contracts\Router\RouteInterface;
 use Helix\Http\Method\Method;
 use Helix\Router\Internal\Normalizer;
+use JetBrains\PhpStorm\Language;
 
 /**
  * @package router
@@ -111,7 +112,8 @@ class Route implements RouteInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @param non-empty-string $path
+     * @return $this
      */
     public function located(string $path): self
     {
@@ -121,7 +123,8 @@ class Route implements RouteInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @param MethodInterface|non-empty-string $method
+     * @return $this
      */
     public function matched(MethodInterface|string $method): self
     {
@@ -135,7 +138,8 @@ class Route implements RouteInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @param mixed $action
+     * @return $this
      */
     public function then(mixed $action): self
     {
@@ -145,9 +149,11 @@ class Route implements RouteInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @param non-empty-string $name
+     * @param non-empty-string $pattern
+     * @return $this
      */
-    public function where(string $name, string $pattern): self
+    public function where(string $name, #[Language('RegExp')] string $pattern): self
     {
         assert($name !== '');
         assert($pattern !== '');
@@ -158,7 +164,8 @@ class Route implements RouteInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @param non-empty-string|null $name
+     * @return $this
      */
     public function as(?string $name): self
     {
@@ -168,7 +175,8 @@ class Route implements RouteInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @param mixed ...$middleware
+     * @return $this
      */
     public function through(mixed ...$middleware): self
     {

@@ -15,7 +15,7 @@ use Helix\Contracts\Http\StatusCode\StatusCodeInterface;
 use Helix\Http\StatusCode\StatusCode;
 use Psr\Http\Message\StreamInterface;
 
-class HtmlResponse extends Response
+final class HtmlResponse extends Response
 {
     /**
      * @param string|resource|StreamInterface|null $body

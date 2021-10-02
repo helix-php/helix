@@ -11,13 +11,14 @@ declare(strict_types=1);
 
 namespace App\Http\Controller;
 
+use Helix\Contracts\View\FactoryInterface;
 use Helix\Http\HtmlResponse;
 use Helix\Http\PermanentRedirectResponse;
 use Helix\Router\Attribute\Route;
 use Helix\Router\Generator\GeneratorInterface;
 use Psr\Http\Message\ResponseInterface;
 
-class HomeController extends Controller
+class HomeController
 {
     #[Route('/')]
     public function index(GeneratorInterface $route): ResponseInterface
@@ -28,10 +29,10 @@ class HomeController extends Controller
     }
 
     #[Route(path: '/home', as: 'home')]
-    public function home(): ResponseInterface
+    public function home(FactoryInterface $views): ResponseInterface
     {
         return new HtmlResponse(
-            $this->views->create('welcome.html.php')
+            $views->create('welcome.html.php')
         );
     }
 }

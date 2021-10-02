@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Helix\Foundation\Http;
 
+use Helix\Async\Task;
 use Helix\Container\Exception\RegistrationException;
 use Helix\Contracts\Container\Exception\NotInstantiatableExceptionInterface;
 use Helix\Contracts\ErrorHandler\ErrorHandlerInterface;
@@ -49,7 +50,7 @@ final class Application extends BaseApplication
 
         $server = $this->container->get(ServerInterface::class);
 
-        $fiber = new \Fiber(function () use ($server) {
+        return (int)Task::await(function () use ($server): int {
             $requests = $this->container->get(RequestHandlerInterface::class);
             $errors = $this->container->get(HttpErrorHandlerInterface::class);
 
@@ -57,13 +58,5 @@ final class Application extends BaseApplication
 
             return 0;
         });
-
-        $fiber->start();
-
-        while (! $fiber->isTerminated()) {
-            $fiber->resume();
-        }
-
-        return (int)$fiber->getReturn();
     }
 }
