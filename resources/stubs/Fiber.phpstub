@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * This file is part of Helix package.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+/**
+ * @template TReturn of mixed
+ */
+final class Fiber
+{
+    /**
+     * @param callable(mixed): mixed $callback
+     */
+    public function __construct(callable $callback) {}
+    public function start(mixed ...$args): mixed {}
+    public function resume(mixed $value = null): mixed {}
+    public function throw(Throwable $exception): mixed {}
+    public function isStarted(): bool {}
+    public function isSuspended(): bool {}
+    public function isRunning(): bool {}
+    public function isTerminated(): bool {}
+
+    /**
+     * @return TReturn
+     */
+    public function getReturn(): mixed {}
+    public static function getCurrent(): ?Fiber {}
+    public static function suspend(mixed $value = null): mixed {}
+}
+
+final class FiberError extends Error
+{
+    public function __construct() {}
+}

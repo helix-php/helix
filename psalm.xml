@@ -6,6 +6,9 @@
     xmlns="https://getpsalm.org/schema/config"
     xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
 >
+    <stubs>
+        <file name="resources/stubs/Fiber.phpstub" />
+    </stubs>
     <issueHandlers>
         <LessSpecificReturnStatement errorLevel="suppress" />
         <MoreSpecificReturnType errorLevel="suppress" />

@@ -11,6 +11,17 @@ declare(strict_types=1);
 
 use Helix\Async\Task;
 
+if (!function_exists('coroutine_to_fiber')) {
+    /**
+     * @param Generator $generator
+     * @return Fiber
+     */
+    function coroutine_to_fiber(\Generator $generator): \Fiber
+    {
+        return Task::toFiber($generator);
+    }
+}
+
 if (!function_exists('await')) {
     /**
      * @param mixed $task
@@ -40,7 +51,7 @@ if (!function_exists('cooperative')) {
      * @return array
      * @throws Throwable
      */
-    public function cooperative(array $tasks): array
+    function cooperative(array $tasks): array
     {
         return Task::cooperative($tasks);
     }

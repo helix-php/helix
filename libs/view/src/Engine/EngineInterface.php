@@ -20,5 +20,5 @@ interface EngineInterface
      * @param array<non-empty-string, mixed> $vars
      * @return ViewInterface
      */
-    public function create(string $name, array $vars): ViewInterface;
+    public function create(string $name, array $vars = []): ViewInterface;
 }

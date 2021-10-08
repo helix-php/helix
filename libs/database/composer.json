@@ -1,0 +1,29 @@
+{
+    "name": "helix/database",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.1",
+        "helix/config-purify": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Helix\\Database\\": "src"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.3"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Helix\\Database\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

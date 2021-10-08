@@ -31,7 +31,7 @@ class EventSourceController
                     'date'   => (new \DateTime())->format(\DateTimeInterface::RFC3339_EXTENDED)
                 ]);
 
-                \usleep(1000000);
+                \usleep(10000);
             }
         });
     }

@@ -17,6 +17,11 @@ namespace Helix\Async;
 final class Task
 {
     /**
+     * Constructor not available
+     */
+    private function __construct() {}
+
+    /**
      * @param \Generator $coroutine
      * @return \Fiber
      */

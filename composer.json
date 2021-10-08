@@ -14,7 +14,12 @@
         {"type": "path", "url": "libs/async"},
         {"type": "path", "url": "libs/boot"},
         {"type": "path", "url": "libs/config"},
+        {"type": "path", "url": "libs/config-purify"},
         {"type": "path", "url": "libs/container"},
+        {"type": "path", "url": "libs/database"},
+        {"type": "path", "url": "libs/database-pdo"},
+        {"type": "path", "url": "libs/database-pdo-mysql"},
+        {"type": "path", "url": "libs/database-pdo-sqlite"},
         {"type": "path", "url": "libs/foundation"},
         {"type": "path", "url": "libs/foundation-http"},
         {"type": "path", "url": "libs/foundation-console"},
@@ -31,8 +36,13 @@
     "name": "helix/app",
     "require": {
         "php": ">=8.1",
+        "ext-pdo": "*",
         "ext-mbstring": "*",
         "helix/async": "^1.0",
+        "helix/database": "^1.0",
+        "helix/database-pdo": "^1.0",
+        "helix/database-pdo-mysql": "^1.0",
+        "helix/database-pdo-sqlite": "^1.0",
         "helix/foundation-http": "^1.0",
         "helix/foundation-console": "^1.0",
         "helix/server-sapi": "^1.0",
@@ -46,6 +56,7 @@
         }
     },
     "require-dev": {
+        "doctrine/dbal": "^4.0",
         "phpunit/phpunit": "^9.5",
         "symfony/var-dumper": "^5.4",
         "vimeo/psalm": "^4.10"

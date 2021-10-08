@@ -19,7 +19,7 @@ final class PhpEngine extends FilesystemAwareEngine
     /**
      * {@inheritDoc}
      */
-    public function create(string $name, array $vars): PhpView
+    public function create(string $name, iterable $vars = []): PhpView
     {
         $pathname = $this->lookup($name);
 

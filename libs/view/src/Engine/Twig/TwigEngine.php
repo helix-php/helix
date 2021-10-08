@@ -13,7 +13,6 @@ namespace Helix\View\Engine\Twig;
 
 use Helix\View\Engine\Engine;
 use Twig\Environment;
-use Twig\Loader\FilesystemLoader;
 use Twig\Loader\LoaderInterface;
 
 final class TwigEngine extends Engine
@@ -34,7 +33,7 @@ final class TwigEngine extends Engine
     /**
      * {@inheritDoc}
      */
-    public function create(string $name, array $vars): TwigView
+    public function create(string $name, iterable $vars = []): TwigView
     {
         return new TwigView($this->env, $name, $vars);
     }

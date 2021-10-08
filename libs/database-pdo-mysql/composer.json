@@ -1,0 +1,30 @@
+{
+    "name": "helix/database-pdo-mysql",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.1",
+        "ext-pdo_mysql": "*",
+        "helix/database-pdo": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Helix\\Database\\PDO\\MySQL\\": "src"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.3"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Helix\\Database\\PDO\\MySQL\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

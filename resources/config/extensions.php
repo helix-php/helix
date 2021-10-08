@@ -32,4 +32,5 @@ return [
     \App\Extension\ServerExtension::class,
     \App\Extension\LoggerExtension::class,
     \App\Extension\ViewExtension::class,
+    \App\Extension\DatabaseExtension::class,
 ];
