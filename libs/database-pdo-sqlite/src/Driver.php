@@ -11,28 +11,29 @@ declare(strict_types=1);
 
 namespace Helix\Database\PDO\SQLite;
 
-use Helix\Database\ConnectionInterface;
-use Helix\Database\DriverInterface;
+use Helix\Contracts\Database\QueryInterface;
 use Helix\Database\Exception\ConnectionException;
-use Helix\Database\Exception\SyntaxException;
-use Helix\Database\PDO\Exception\DatabaseException as PDODatabaseException;
+use Helix\Database\Exception\SyntaxErrorException;
+use Helix\Database\PDO\Driver as BaseDriver;
 use Helix\Database\Exception\DatabaseException;
 
-final class Driver implements DriverInterface
+/**
+ * @property-read ConnectionInfo $info
+ */
+final class Driver extends BaseDriver
 {
     /**
      * @param ConnectionInfo $info
      */
-    public function __construct(
-        private ConnectionInfo $info = new MemoryConnectionInfo()
-    ) {
+    public function __construct(ConnectionInfo $info = new MemoryConnectionInfo())
+    {
+        parent::__construct($info);
     }
 
     /**
-     * @return ConnectionInterface
-     * @throws DatabaseException
+     * {@inheritDoc}
      */
-    public function connect(): ConnectionInterface
+    public function connect(): Connection
     {
         return new Connection($this, $this->pdo());
     }
@@ -46,9 +47,9 @@ final class Driver implements DriverInterface
         try {
             return new \PDO(
                 dsn: $this->info->getDsn(),
-                username: $this->info->user,
-                password: $this->info->password,
-                options: $this->info->options,
+                username: null,
+                password: null,
+                options: $this->getOptions(),
             );
         } catch (\PDOException $e) {
             throw $this->exception($e);
@@ -61,22 +62,20 @@ final class Driver implements DriverInterface
      *
      * {@inheritDoc}
      */
-    public function exception(\Throwable $e, string $sql = null): DatabaseException
+    public function exception(\Throwable $e, QueryInterface $query = null): DatabaseException
     {
-        if ($e instanceof \PDOException) {
-            $e = PDODatabaseException::create($e);
-        }
+        $e = parent::exception($e, $query);
 
         $message = $e->getMessage();
 
         return match (true) {
             \str_contains($message, 'syntax error') =>
-                new SyntaxException($message, (int)$e->getCode()),
+                SyntaxErrorException::create($message, (int)$e->getCode(), $query),
 
             \str_contains($message, 'unable to open database file') =>
                 new ConnectionException($message, (int)$e->getCode()),
 
-            default => new DatabaseException($e->getMessage()),
+            default => $e,
         };
     }
 }

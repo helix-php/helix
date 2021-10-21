@@ -243,36 +243,19 @@
         </code>
     </section>
     <section class="status">
-        <code style="padding: 10px 20px; display: flex; flex-direction: column; align-items: start">
-            <span id="sse-time">
-                Connecting to server...
-            </span>
-            <span id="sse-memory">
-                Connecting to server...
-            </span>
-            <span id="sse-date">
-                Connecting to server...
-            </span>
+        <code style="padding: 10px 50px 10px 30px; display: flex; flex-direction: column; align-items: start">
+            <pre id="users">Fetching data...</pre>
         </code>
         <script>
-            setTimeout(function () {
-                let stream = new EventSource('/stream');
-                let sseTime = document.getElementById('sse-time');
-                let sseMemory = document.getElementById('sse-memory');
-                let sseDate = document.getElementById('sse-date');
+            let users = document.getElementById('users');
 
-                stream.addEventListener("ping", (event) => {
-                    let data = JSON.parse(event.data);
-
-                    sseDate.textContent = `Server Time: ${data.date}`;
-                    sseTime.textContent = `Connection Alive: ${data.alive}sec`;
-                    sseMemory.textContent = `Memory Usage: ${data.memory}kb`;
+            fetch('/users.json')
+                .then(function (response) {
+                    response.json()
+                        .then(function (data) {
+                            users.innerText = JSON.stringify(data, null, '    ');
+                        });
                 });
-
-                window.onbeforeunload = () => {
-                    stream.close();
-                }
-            }, 10);
         </script>
     </section>
 </main>

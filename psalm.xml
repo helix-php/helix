@@ -15,8 +15,8 @@
     </issueHandlers>
     <projectFiles>
         <directory name="app" />
-        <directory name="libs/**/src/*" />
         <directory name="libs/contracts/**/src/*" />
+        <directory name="libs/**/src/*" />
         <ignoreFiles>
             <directory name="vendor" />
         </ignoreFiles>

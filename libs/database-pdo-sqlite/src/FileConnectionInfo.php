@@ -14,20 +14,13 @@ namespace Helix\Database\PDO\SQLite;
 final class FileConnectionInfo extends ConnectionInfo
 {
     /**
-     * @param non-empty-string $path
-     * {@inheritDoc}
+     * @param string $path The pathname to the SQLite database file.
+     *        - In case of keyword ":memory:" {@see MemoryConnectionInfo}.
+     *        - In case of empty string value {@see TempFileConnectionInfo}.
      */
     public function __construct(
-        public string $path,
-        ?string $user = null,
-        ?string $password = null,
-        array $options = []
+        public readonly string $path
     ) {
-        parent::__construct(
-            user: $user,
-            password: $password,
-            options: $options,
-        );
     }
 
     /**
@@ -35,8 +28,6 @@ final class FileConnectionInfo extends ConnectionInfo
      */
     public function getDsn(): string
     {
-        $config = ['path' => $this->path];
-
-        return \sprintf('%s:%s', $this->getDriverName(), $this->dsn($config));
+        return \sprintf('%s:%s', $this->getDriverName(), $this->dsn(['path' => $this->path]));
     }
 }

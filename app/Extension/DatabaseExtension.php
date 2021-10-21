@@ -12,27 +12,44 @@ declare(strict_types=1);
 namespace App\Extension;
 
 use Helix\Boot\Attribute\Singleton;
-use Helix\Database\ConnectionInterface;
-use Helix\Database\DriverInterface;
-use Helix\Database\PDO\SQLite\Driver;
-use Helix\Database\PDO\SQLite\FileConnectionInfo;
-use Helix\Foundation\Path;
+use Helix\Contracts\Database\ConnectionInterface;
+use Helix\Contracts\Database\DriverInterface;
+use Helix\Database;
+use Helix\Database\Manager\Manager;
+use Helix\Database\Manager\ManagerInterface;
 
 class DatabaseExtension
 {
+    /**
+     * @return ManagerInterface
+     */
+    #[Singleton]
+    public function getManager(): ManagerInterface
+    {
+        return new Manager(drivers: [
+            'default' => new Database\PDO\SQLite\Driver(
+                info: new Database\PDO\SQLite\MemoryConnectionInfo()
+            )
+        ]);
+    }
+
+    /**
+     * @param ManagerInterface $manager
+     * @return DriverInterface
+     */
+    #[Singleton]
+    public function getDriver(ManagerInterface $manager): DriverInterface
+    {
+        return $manager->get();
+    }
+
+    /**
+     * @param DriverInterface $driver
+     * @return ConnectionInterface
+     */
     #[Singleton]
     public function getConnection(DriverInterface $driver): ConnectionInterface
     {
         return $driver->connect();
-    }
-
-    #[Singleton]
-    public function getDriver(Path $path): DriverInterface
-    {
-        return new Driver(
-            new FileConnectionInfo(
-                path: $path->storage('database.sqlite')
-            )
-        );
     }
 }

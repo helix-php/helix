@@ -24,15 +24,39 @@ class DatabaseException extends BaseDatabaseException
      * @param \PDOException $e
      * @return self
      */
-    public static function create(\PDOException $e): self
+    public static function fromPDO(\PDOException $e): self
     {
-        [$state, $code] = $e->errorInfo === null
-            ? [null, $e->getCode()]
-            : $e->errorInfo;
+        if (\is_array($e->errorInfo)) {
+            return self::fromErrorInfo($e->errorInfo);
+        }
 
-        $instance = new self($e->getMessage(), $code, $e);
-        $instance->state = $state;
+        return new self($e->getMessage(), 0, $e);
+    }
 
-        return $instance;
+    /**
+     * @param array $info
+     * @return static
+     */
+    public static function fromErrorInfo(array $info): self
+    {
+        [$state, $code, $message] = self::normalizeInfo($info);
+
+        $exception = new self($message, $code);
+        $exception->state = $state;
+
+        return $exception;
+    }
+
+    /**
+     * @param array $info
+     * @return array{0: string|null, 1: int, 2: string}
+     */
+    private static function normalizeInfo(array $info): array
+    {
+        return [
+            (string)($info[0] ?? null),
+            (int)($info[1] ?? 0),
+            (string)($info[2] ?? 'Unrecognized database error'),
+        ];
     }
 }

@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Helix\Foundation\Http;
 
-use Helix\Async\Task;
 use Helix\Container\Exception\RegistrationException;
 use Helix\Contracts\Container\Exception\NotInstantiatableExceptionInterface;
 use Helix\Contracts\ErrorHandler\ErrorHandlerInterface;
@@ -49,14 +48,11 @@ final class Application extends BaseApplication
         parent::run();
 
         $server = $this->container->get(ServerInterface::class);
+        $requests = $this->container->get(RequestHandlerInterface::class);
+        $errors = $this->container->get(HttpErrorHandlerInterface::class);
 
-        return (int)Task::await(function () use ($server): int {
-            $requests = $this->container->get(RequestHandlerInterface::class);
-            $errors = $this->container->get(HttpErrorHandlerInterface::class);
+        $server->run($requests, $errors);
 
-            $server->run($requests, $errors);
-
-            return 0;
-        });
+        return 0;
     }
 }

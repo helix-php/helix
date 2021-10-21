@@ -33,8 +33,8 @@ abstract class FilesystemAwareEngine extends Engine
     protected function lookup(string $name): ?string
     {
         foreach ($this->dirs as $directory) {
-            if (\is_file($directory . '/' . $name)) {
-                return $directory . '/' . $name;
+            if (\is_file($directory . \DIRECTORY_SEPARATOR . $name)) {
+                return $directory . \DIRECTORY_SEPARATOR . $name;
             }
         }
 

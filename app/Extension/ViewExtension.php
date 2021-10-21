@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace App\Extension;
 
 use Helix\Boot\Attribute\Singleton;
-use Helix\View\Engine;
 use Helix\Contracts\View\FactoryInterface;
 use Helix\Foundation\Path;
 use Helix\View\Factory;
@@ -24,8 +23,8 @@ final class ViewExtension
     public function getViewFactory(Path $path): FactoryInterface
     {
         return new Factory([
-            'php'  => new Engine\Php\PhpEngine($path->views),
-            'twig' => new Engine\Twig\TwigEngine(
+            'php'  => new \Helix\View\Engine\Php\PhpEngine($path->views),
+            'twig' => new \Helix\View\Engine\Twig\TwigEngine(
                 new FilesystemLoader($path->views),
             ),
         ]);

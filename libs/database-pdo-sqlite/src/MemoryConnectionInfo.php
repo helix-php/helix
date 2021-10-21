@@ -18,8 +18,6 @@ final class MemoryConnectionInfo extends ConnectionInfo
      */
     public function getDsn(): string
     {
-        $config = ['path' => ':memory:'];
-
-        return \sprintf('%s:%s', $this->getDriverName(), $this->dsn($config));
+        return \sprintf('%s::memory:', $this->getDriverName());
     }
 }

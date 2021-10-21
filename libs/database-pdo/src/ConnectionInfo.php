@@ -21,19 +21,6 @@ abstract class ConnectionInfo extends BaseConnectionInfo implements ProvidesData
     abstract public function getDriverName(): string;
 
     /**
-     * @return iterable
-     */
-    public function getDefaultOptions(): iterable
-    {
-        //
-        yield \PDO::ATTR_CASE => \PDO::CASE_NATURAL;
-
-        yield \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION;
-        yield \PDO::ATTR_EMULATE_PREPARES => false;
-        yield \PDO::ATTR_STRINGIFY_FETCHES => false;
-    }
-
-    /**
      * @param iterable<non-empty-string|int, mixed> $fields
      * @return string
      */

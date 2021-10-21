@@ -15,6 +15,10 @@ use Helix\Database\PDO\Connection as PDOConnection;
 
 class Connection extends PDOConnection
 {
+    public function inTransaction(): bool
+    {
+        return $this->pdo->inTransaction();
+    }
     /**
      * @return bool
      */

@@ -18,32 +18,6 @@ use Helix\Config\Purify\Purifier;
 abstract class ConnectionInfo
 {
     /**
-     * @var array
-     */
-    public readonly array $options;
-
-    /**
-     * @param non-empty-string|null $user
-     * @param string|null $password
-     * @param array $options
-     */
-    public function __construct(
-        public readonly ?string $user = null,
-        public readonly ?string $password = null,
-        array $options = [],
-    ) {
-        $this->options = \array_merge([...$this->getDefaultOptions()], $options);
-    }
-
-    /**
-     * @return iterable
-     */
-    protected function getDefaultOptions(): iterable
-    {
-        return [];
-    }
-
-    /**
      * @return array
      */
     public function __debugInfo(): array

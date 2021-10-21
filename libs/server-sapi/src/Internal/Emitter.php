@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Helix\Server\Sapi\Internal;
 
-use Helix\Async\Task;
 use Helix\Server\Sapi\Emitter\BodyBehaviour;
 use Helix\Server\Sapi\Emitter\HeadersBehaviour;
 use Helix\Server\Sapi\EmitterCreateInfo;
@@ -38,17 +37,18 @@ final class Emitter
      * e.g., if headers already sent or output has been emitted previously.
      *
      * @param ResponseInterface $response
-     * @return \Fiber
+     * @return void
+     * @throws BodyAlreadySentException
+     * @throws HeadersAlreadySentException
+     * @throws \Throwable
      */
-    public function emit(ResponseInterface $response): \Fiber
+    public function emit(ResponseInterface $response): void
     {
-        return Task::async(function () use ($response) {
-            $this->emitHeaders($response);
+        $this->emitHeaders($response);
 
-            if ($response->getBody()->isReadable()) {
-                $this->emitBody($response);
-            }
-        });
+        if ($response->getBody()->isReadable()) {
+            $this->emitBody($response);
+        }
     }
 
     /**
@@ -148,8 +148,7 @@ final class Emitter
         }
 
         while (! $body->eof()) {
-            $chunk = $body->read($this->info->bufferLength);
-            echo Task::tick($chunk);
+            echo $body->read($this->info->bufferLength);
             \flush();
         }
     }

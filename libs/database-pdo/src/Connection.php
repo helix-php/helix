@@ -11,48 +11,27 @@ declare(strict_types=1);
 
 namespace Helix\Database\PDO;
 
+use Helix\Contracts\Database\Query\ExecutableQueryInterface;
+use Helix\Contracts\Database\Transaction\IsolationLevelInterface;
+use Helix\Contracts\Database\TransactionInterface;
 use Helix\Database\Connection as BaseConnection;
-use Helix\Database\DriverInterface;
-use Helix\Database\QueryInterface;
+use Helix\Database\ExceptionConverterInterface;
 
 abstract class Connection extends BaseConnection
 {
     /**
-     * @param DriverInterface $driver
+     * @param ExceptionConverterInterface $converter
      * @param \PDO $pdo
      */
     public function __construct(
-        protected DriverInterface $driver,
-        public \PDO $pdo,
+        protected readonly ExceptionConverterInterface $converter,
+        protected readonly \PDO $pdo,
     ) {
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function transaction(\Closure $expr): self
+    public function transaction(IsolationLevelInterface $level = null): TransactionInterface
     {
-        try {
-            $this->pdo->beginTransaction();
-            $expr($this);
-            $this->pdo->commit();
-        } catch (\PDOException $e) {
-            $this->pdo->rollBack();
-            throw $this->driver->exception($e);
-        } catch (\Throwable $e) {
-            $this->pdo->rollBack();
-            throw $e;
-        }
-
-        return $this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function inTransaction(): bool
-    {
-        return $this->pdo->inTransaction();
+        throw new \LogicException(__METHOD__ . ' not implemented yet');
     }
 
     /**
@@ -69,7 +48,7 @@ abstract class Connection extends BaseConnection
 
             return $result;
         } catch (\Throwable $e) {
-            throw $this->driver->exception($e);
+            throw $this->converter->exception($e);
         }
     }
 
@@ -84,10 +63,8 @@ abstract class Connection extends BaseConnection
     /**
      * {@inheritDoc}
      */
-    public function query(string $sql, array $params = []): QueryInterface
+    public function query(string $query, iterable $params = []): ExecutableQueryInterface
     {
-        $stmt = $this->pdo->prepare($sql);
-
-        return new Query($this->driver, $stmt, $params);
+        return new ExecutableQuery($this->pdo, $this->converter, $query, $params);
     }
 }

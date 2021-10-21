@@ -11,115 +11,19 @@ declare(strict_types=1);
 
 namespace Helix\Async;
 
-/**
- * @psalm-type TaskType = \Generator | \Fiber | \Closure | mixed
- */
-final class Task
+abstract class Task
 {
     /**
-     * Constructor not available
-     */
-    private function __construct() {}
-
-    /**
-     * @param \Generator $coroutine
-     * @return \Fiber
-     */
-    public static function toFiber(\Generator $coroutine): \Fiber
-    {
-        return new \Fiber(static function () use ($coroutine): mixed {
-            while ($coroutine->valid()) {
-                $coroutine->send(
-                    \Fiber::suspend($coroutine->current())
-                );
-            }
-
-            return $coroutine->getReturn();
-        });
-    }
-
-    /**
-     * @param TaskType $task
-     * @return \Fiber
-     */
-    private static function cast(mixed $task): \Fiber
-    {
-        return match (true) {
-            $task instanceof \Generator => self::toFiber($task),
-            $task instanceof \Fiber => $task,
-            $task instanceof \Closure => new \Fiber($task),
-            default => new \Fiber(static fn (): mixed => $task)
-        };
-    }
-
-    /**
-     * @param TaskType $task
+     * @param \Closure $expr
      * @return mixed
      * @throws \Throwable
-     * @psalm-suppress MixedAssignment
      */
-    public static function await(mixed $task): mixed
+    public static function run(\Closure $expr): mixed
     {
-        $fiber = self::cast($task);
-        $value = null;
+        $result = self::tick($expr());
 
-        if (! $fiber->isStarted()) {
-            $value = $fiber->start($value);
-        }
-
-        while (! $fiber->isTerminated()) {
-            $value = $fiber->resume($value);
-        }
-
-        return $fiber->getReturn();
-    }
-
-    /**
-     * @param \Closure $context
-     * @return \Fiber
-     */
-    public static function async(\Closure $context): \Fiber
-    {
-        return new \Fiber($context);
-    }
-
-    /**
-     * @param array<array-key, TaskType> $tasks
-     * @return array
-     * @throws \Throwable
-     * @psalm-suppress MixedAssignment
-     */
-    public static function cooperative(array $tasks): array
-    {
-        if ($tasks === []) {
-            return [];
-        }
-
-        $result = $states = [];
-
-        foreach ($tasks as $id => $task) {
-            $tasks[$id] = self::cast($task);
-        }
-
-        while ($tasks !== []) {
-            /**
-             * @var int|string $id
-             * @var \Fiber $task
-             */
-            foreach ($tasks as $id => $task) {
-                switch (true) {
-                    case $task->isStarted():
-                        $states[$id] = $task->start();
-                        break;
-
-                    case ! $task->isTerminated():
-                        $states[$id] = $task->start($states[$id]);
-                        break;
-
-                    default:
-                        $result[$id] = $task->getReturn();
-                }
-            }
+        if ($result instanceof \Generator) {
+            return self::await($result);
         }
 
         return $result;
@@ -127,16 +31,169 @@ final class Task
 
     /**
      * @template T of mixed
-     * @param T $data
+     *
+     * @param (\Closure(): T|\Generator<mixed, mixed, mixed, T>) $expr
+     * @return \Fiber<mixed, mixed, mixed, T>
+     */
+    public static function async(\Closure|\Generator $task): \Fiber
+    {
+        if ($task instanceof \Generator) {
+            return self::toFiber($task);
+        }
+
+        return new \Fiber($task);
+    }
+
+    /**
+     * @param \Generator $coroutine
+     * @return \Fiber
+     */
+    private static function toFiber(\Generator $coroutine): \Fiber
+    {
+        return new \Fiber(static function () use ($coroutine) {
+            while ($coroutine->valid()) {
+                $coroutine->send(\Fiber::suspend($coroutine->current()));
+            }
+
+            return $coroutine->getReturn();
+        });
+    }
+
+    /**
+     * @template T of mixed
+     *
+     * @param \Fiber<mixed, mixed, mixed, T> $fiber
      * @return T
      * @throws \Throwable
      */
-    public static function tick(mixed $data = null): mixed
+    private static function awaitFiber(\Fiber $fiber): mixed
     {
-        if (\Fiber::getCurrent() !== null) {
-            return \Fiber::suspend($data);
+        if (\Fiber::getCurrent()) {
+            if (!$fiber->isStarted()) {
+                $context = $fiber->start();
+
+                if ($context instanceof \Generator) {
+                    return self::await($context);
+                }
+            }
+
+            while (!$fiber->isTerminated()) {
+                \Fiber::suspend($fiber->resume());
+            }
+
+            return $fiber->getReturn();
         }
 
-        return $data;
+        if (! $fiber->isStarted()) {
+            $context = $fiber->start();
+
+            if ($context instanceof \Generator) {
+                return self::await($context);
+            }
+        }
+
+        while (! $fiber->isTerminated()) {
+            dump('RES: ', $fiber->resume());
+        }
+
+        return $fiber->getReturn();
+    }
+
+    /**
+     * @template T of mixed
+     *
+     * @param \Generator<mixed, mixed, mixed, T> $coroutine
+     * @return T
+     * @throws \Throwable
+     */
+    private static function awaitCoroutine(\Generator $coroutine): mixed
+    {
+        if (\Fiber::getCurrent()) {
+            while ($coroutine->valid()) {
+                $coroutine->send(\Fiber::suspend($coroutine->current()));
+            }
+
+            return $coroutine->getReturn();
+        }
+
+        while ($coroutine->valid()) {
+            $coroutine->send($coroutine->current());
+        }
+
+        return $coroutine->getReturn();
+    }
+
+    /**
+     * @template T of mixed
+     *
+     * @param \Fiber<mixed, mixed, mixed, T>|\Generator<mixed, mixed, mixed, T> $task
+     * @return T
+     * @throws \Throwable
+     */
+    public static function await(\Fiber|\Generator $task): mixed
+    {
+        if ($task instanceof \Generator) {
+            return self::awaitCoroutine($task);
+        }
+
+        return self::awaitFiber($task);
+    }
+
+    /**
+     * @param mixed $value
+     * @return mixed
+     * @throws \Throwable
+     */
+    public static function tick(mixed $value): mixed
+    {
+        if (\Fiber::getCurrent()) {
+            return \Fiber::suspend($value);
+        }
+
+        return $value;
+    }
+
+    /**
+     * @template T of mixed
+     *
+     * @param non-empty-list<\Fiber<mixed, mixed, mixed, T>> $tasks
+     * @return non-empty-array<T>
+     * @throws \Throwable
+     */
+    public static function all(iterable $tasks): array
+    {
+        $result = $from = [];
+
+        foreach ($tasks as $id => $task) {
+            $task = match (true) {
+                $task instanceof \Fiber => $task,
+                $task instanceof \Closure => new \Fiber($task),
+                default => new \Fiber(static fn () => $task),
+            };
+
+            $result[$id] = null;
+            $from[$id] = $task;
+        }
+
+        while ($from !== []) {
+            /** @var \Fiber $task */
+            foreach ($from as $id => $task) {
+                switch (false) {
+                    case $task->isStarted():
+                        self::tick($task->start());
+                        break;
+
+                    case $task->isTerminated():
+                        self::tick($task->resume());
+                        break;
+
+                    default:
+                        $result[$id] = $task->getReturn();
+                        unset($from[$id]);
+                }
+            }
+        }
+
+        return $result;
     }
 }

@@ -7,8 +7,7 @@
         "helix/error-handler-contracts": "^1.0",
         "psr/log": "^1.0|^2.0|^3.0",
         "helix/container": "^1.0",
-        "helix/boot": "^1.0",
-        "helix/config": "^1.0"
+        "helix/boot": "^1.0"
     },
     "autoload": {
         "psr-4": {

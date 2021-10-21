@@ -421,7 +421,7 @@ class Router implements RegistrarInterface, RepositoryInterface, RouterInterface
     }
 
     /**
-     * @param (callable(Router): void)|null $group
+     * @param (callable(Router): taskInterface)|null $group
      * @return Group
      */
     public function group(callable $group = null): Group

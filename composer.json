@@ -1,12 +1,17 @@
 {
     "repositories": [
+        {"type": "path", "url": "libs/contracts/arrayable"},
+        {"type": "path", "url": "libs/contracts/config"},
         {"type": "path", "url": "libs/contracts/container"},
         {"type": "path", "url": "libs/contracts/container-registrar"},
+        {"type": "path", "url": "libs/contracts/database"},
         {"type": "path", "url": "libs/contracts/dispatcher"},
+        {"type": "path", "url": "libs/contracts/memoizable"},
         {"type": "path", "url": "libs/contracts/error-handler"},
         {"type": "path", "url": "libs/contracts/error-handler-http"},
         {"type": "path", "url": "libs/contracts/http-method"},
         {"type": "path", "url": "libs/contracts/http-status-code"},
+        {"type": "path", "url": "libs/contracts/manager"},
         {"type": "path", "url": "libs/contracts/middleware"},
         {"type": "path", "url": "libs/contracts/router"},
         {"type": "path", "url": "libs/contracts/view"},
@@ -17,8 +22,8 @@
         {"type": "path", "url": "libs/config-purify"},
         {"type": "path", "url": "libs/container"},
         {"type": "path", "url": "libs/database"},
+        {"type": "path", "url": "libs/database-manager"},
         {"type": "path", "url": "libs/database-pdo"},
-        {"type": "path", "url": "libs/database-pdo-mysql"},
         {"type": "path", "url": "libs/database-pdo-sqlite"},
         {"type": "path", "url": "libs/foundation"},
         {"type": "path", "url": "libs/foundation-http"},
@@ -26,12 +31,15 @@
         {"type": "path", "url": "libs/http"},
         {"type": "path", "url": "libs/http-method"},
         {"type": "path", "url": "libs/http-status-code"},
+        {"type": "path", "url": "libs/manager"},
         {"type": "path", "url": "libs/middleware"},
         {"type": "path", "url": "libs/router"},
         {"type": "path", "url": "libs/router-generator"},
         {"type": "path", "url": "libs/server-sapi"},
         {"type": "path", "url": "libs/server"},
-        {"type": "path", "url": "libs/view"}
+        {"type": "path", "url": "libs/view"},
+        {"type": "path", "url": "libs/view-engine-php"},
+        {"type": "path", "url": "libs/view-engine-twig"}
     ],
     "name": "helix/app",
     "require": {
@@ -39,16 +47,9 @@
         "ext-pdo": "*",
         "ext-mbstring": "*",
         "helix/async": "^1.0",
-        "helix/database": "^1.0",
-        "helix/database-pdo": "^1.0",
-        "helix/database-pdo-mysql": "^1.0",
-        "helix/database-pdo-sqlite": "^1.0",
         "helix/foundation-http": "^1.0",
         "helix/foundation-console": "^1.0",
-        "helix/server-sapi": "^1.0",
-        "symfony/process": "^5.4",
-        "monolog/monolog": "^2.3",
-        "twig/twig": "^3.3"
+        "monolog/monolog": "^2.3"
     },
     "autoload": {
         "psr-4": {
@@ -56,10 +57,21 @@
         }
     },
     "require-dev": {
-        "doctrine/dbal": "^4.0",
+        "helix/view-engine-php": "^1.0",
+        "helix/view-engine-twig": "^1.0",
+
+        "helix/config": "^1.0",
+
+        "helix/database-manager": "^1.0",
+        "helix/database-pdo-sqlite": "^1.0",
+
+        "helix/server-sapi": "^1.0",
+
         "phpunit/phpunit": "^9.5",
         "symfony/var-dumper": "^5.4",
-        "vimeo/psalm": "^4.10"
+        "vimeo/psalm": "^4.10",
+
+        "jetbrains/phpstorm-attributes": "^1.0"
     },
     "extra": {
         "branch-alias": {
