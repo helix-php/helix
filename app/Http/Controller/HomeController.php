@@ -57,9 +57,9 @@ class HomeController
         $db->execute('INSERT INTO `users` (`name`) VALUES ("Vasya")');
 
         // Async insertion
-        $insert = Task::async(static fn (): ResultInterface => $db->execute(
-            'INSERT INTO `users` (`name`) VALUES ("Petya")'
-        ));
+        $insert = Task::async(static fn (): ResultInterface =>
+            $db->execute('INSERT INTO `users` (`name`) VALUES ("Petya")')
+        );
 
         // Selection
         $selection = $db->query('SELECT * FROM `users`');
