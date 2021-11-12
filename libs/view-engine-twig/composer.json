@@ -1,0 +1,25 @@
+{
+    "name": "helix/view-engine-twig",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.1",
+        "twig/twig": "^3.3",
+        "helix/view": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Helix\\View\\Engine\\Twig\\": "src"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

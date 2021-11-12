@@ -1,0 +1,22 @@
+{
+    "name": "helix/boot",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.1",
+        "phpdocumentor/reflection-docblock": "^5.0",
+        "helix/container": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Helix\\Boot\\": "src"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

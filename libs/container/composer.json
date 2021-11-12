@@ -1,0 +1,24 @@
+{
+    "name": "helix/container",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.1",
+        "doctrine/instantiator": "^1.4",
+        "helix/container-contracts": "^1.0",
+        "helix/container-registrar-contracts": "^1.0",
+        "helix/dispatcher-contracts": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Helix\\Container\\": "src"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
