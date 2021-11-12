@@ -6,17 +6,12 @@
     xmlns="https://getpsalm.org/schema/config"
     xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
 >
-    <stubs>
-        <file name="resources/stubs/Fiber.phpstub" />
-    </stubs>
     <issueHandlers>
         <LessSpecificReturnStatement errorLevel="suppress" />
         <MoreSpecificReturnType errorLevel="suppress" />
     </issueHandlers>
     <projectFiles>
         <directory name="app" />
-        <directory name="libs/contracts/**/src/*" />
-        <directory name="libs/**/src/*" />
         <ignoreFiles>
             <directory name="vendor" />
         </ignoreFiles>
