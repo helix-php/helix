@@ -16,6 +16,7 @@ use Helix\Contracts\Manager\ManagerInterface;
 use Helix\Manager\Exception\EmptyManagerException;
 use Helix\Manager\Exception\EntryNotFoundException;
 use Helix\Manager\Exception\InitializationException;
+use Helix\Manager\Exception\ManagerException;
 
 /**
  * @template T of mixed
@@ -62,6 +63,7 @@ class Manager implements ManagerInterface, MemoizableInterface
         $this->default = $default;
 
         foreach ($entries as $entry => $registrar) {
+            $entry = \is_int($entry) ? \uniqid('driver_', true) : $entry;
             $this->add($entry, $registrar);
         }
     }
@@ -86,6 +88,7 @@ class Manager implements ManagerInterface, MemoizableInterface
 
     /**
      * {@inheritDoc}
+     * @throws ManagerException
      */
     public function get(string $name = null): mixed
     {

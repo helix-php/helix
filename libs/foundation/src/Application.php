@@ -45,6 +45,7 @@ abstract class Application implements LoaderInterface
         $this->extensions = new Loader($this->container);
 
         // Register default services
+        $this->container->instance($this);
         $this->container->instance($info->path);
         $this->container->instance($this->extensions)
             ->as(RepositoryInterface::class)

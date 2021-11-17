@@ -12,6 +12,9 @@
             "Helix\\Middleware\\": "src"
         }
     },
+    "provide": {
+        "helix/middleware-contracts-implementation": "^1.0"
+    },
     "extra": {
         "branch-alias": {
             "dev-master": "1.x-dev"

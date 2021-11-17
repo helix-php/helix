@@ -22,7 +22,7 @@ use Helix\Server\Sapi\EmitterCreateInfo;
 use Helix\Server\Sapi\Server;
 use Helix\Server\Sapi\ServerCreateInfo;
 use Helix\Server\ServerInterface;
-use Symfony\Component\Console\Application;
+use Helix\Foundation\Console\Application as CliApplication;
 
 final class ServerExtension
 {
@@ -39,8 +39,8 @@ final class ServerExtension
         ));
     }
 
-    #[Registration(ifServiceExists: Application::class)]
-    public function addServeCommand(Application $cli, Path $path): void
+    #[Registration(ifServiceExists: CliApplication::class)]
+    public function addServeCommand(CliApplication $cli, Path $path): void
     {
         $cli->add(new SapiServeCommand($path->public));
     }

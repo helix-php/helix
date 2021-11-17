@@ -1,27 +1,25 @@
 {
-    "name": "helix/manager",
+    "name": "helix/db-pdo",
     "type": "library",
     "license": "MIT",
     "require": {
         "php": ">=8.1",
-        "helix/memoizable-contracts": "^1.0",
-        "helix/manager-contracts": "^1.0"
+        "ext-pdo": "*",
+        "helix/async": "^1.0",
+        "helix/db": "^1.0"
     },
     "autoload": {
         "psr-4": {
-            "Helix\\Manager\\": "src"
+            "Helix\\Database\\PDO\\": "src"
         }
     },
-    "provide": {
-        "helix/manager-contracts-implementation": "^1.0"
+    "require-dev": {
+        "jetbrains/phpstorm-attributes": "^1.0"
     },
     "extra": {
         "branch-alias": {
             "dev-master": "1.x-dev"
         }
-    },
-    "config": {
-        "sort-packages": true
     },
     "minimum-stability": "dev",
     "prefer-stable": true

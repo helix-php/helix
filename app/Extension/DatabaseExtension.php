@@ -15,18 +15,18 @@ use Helix\Boot\Attribute\Singleton;
 use Helix\Contracts\Database\ConnectionInterface;
 use Helix\Contracts\Database\DriverInterface;
 use Helix\Database;
-use Helix\Database\Manager\Manager;
-use Helix\Database\Manager\ManagerInterface;
+use Helix\Database\Manager\DriverManager;
+use Helix\Database\Manager\DriverManagerInterface;
 
-class DatabaseExtension
+final class DatabaseExtension
 {
     /**
-     * @return ManagerInterface
+     * @return DriverManagerInterface
      */
     #[Singleton]
-    public function getManager(): ManagerInterface
+    public function getManager(): DriverManagerInterface
     {
-        return new Manager(drivers: [
+        return new DriverManager(drivers: [
             'default' => new Database\PDO\SQLite\Driver(
                 info: new Database\PDO\SQLite\MemoryConnectionInfo()
             )
@@ -34,11 +34,11 @@ class DatabaseExtension
     }
 
     /**
-     * @param ManagerInterface $manager
+     * @param DriverManagerInterface $manager
      * @return DriverInterface
      */
     #[Singleton]
-    public function getDriver(ManagerInterface $manager): DriverInterface
+    public function getDriver(DriverManagerInterface $manager): DriverInterface
     {
         return $manager->get();
     }

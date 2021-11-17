@@ -1,27 +1,20 @@
 {
-    "name": "helix/manager",
+    "name": "helix/db-schema",
     "type": "library",
     "license": "MIT",
     "require": {
         "php": ">=8.1",
-        "helix/memoizable-contracts": "^1.0",
-        "helix/manager-contracts": "^1.0"
+        "ramsey/collection": ""
     },
     "autoload": {
         "psr-4": {
-            "Helix\\Manager\\": "src"
+            "Helix\\Database\\Schema\\": "src"
         }
-    },
-    "provide": {
-        "helix/manager-contracts-implementation": "^1.0"
     },
     "extra": {
         "branch-alias": {
             "dev-master": "1.x-dev"
         }
-    },
-    "config": {
-        "sort-packages": true
     },
     "minimum-stability": "dev",
     "prefer-stable": true

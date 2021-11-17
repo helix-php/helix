@@ -15,6 +15,7 @@ use Helix\Container\Exception\RegistrationException;
 use Helix\Contracts\Container\Exception\NotInstantiatableExceptionInterface;
 use Helix\Foundation\Application as BaseApplication;
 use Symfony\Component\Console\Application as SymfonyApplication;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * @package foundation
@@ -25,6 +26,11 @@ final class Application extends BaseApplication
      * @var SymfonyApplication
      */
     private SymfonyApplication $cli;
+
+    /**
+     * @var bool
+     */
+    private bool $running = false;
 
     /**
      * @param CreateInfo $info
@@ -38,6 +44,19 @@ final class Application extends BaseApplication
         );
 
         parent::__construct($info);
+    }
+
+    /**
+     * @param Command ...$commands
+     * @return void
+     */
+    public function add(Command ...$commands): void
+    {
+        if ($this->running) {
+            throw new \LogicException('Can not add command to running CLI application');
+        }
+
+        $this->cli->addCommands($commands);
     }
 
     /**
@@ -62,6 +81,11 @@ final class Application extends BaseApplication
     {
         parent::run();
 
-        return $this->cli->run();
+        try {
+            $this->running = true;
+            return $this->cli->run();
+        } finally {
+            $this->running = false;
+        }
     }
 }
