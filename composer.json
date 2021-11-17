@@ -19,7 +19,6 @@
         {"type": "path", "url": "libs/contracts/arrayable"},
         {"type": "path", "url": "libs/contracts/container"},
         {"type": "path", "url": "libs/contracts/container-registrar"},
-        {"type": "path", "url": "libs/contracts/db"},
         {"type": "path", "url": "libs/contracts/dispatcher"},
         {"type": "path", "url": "libs/contracts/memoizable"},
         {"type": "path", "url": "libs/contracts/error-handler"},
@@ -35,13 +34,6 @@
         {"type": "path", "url": "libs/boot"},
         {"type": "path", "url": "libs/config-purify"},
         {"type": "path", "url": "libs/container"},
-        {"type": "path", "url": "libs/db"},
-        {"type": "path", "url": "libs/db-manager"},
-        {"type": "path", "url": "libs/db-migrations"},
-        {"type": "path", "url": "libs/db-pdo"},
-        {"type": "path", "url": "libs/db-pdo-sqlite"},
-        {"type": "path", "url": "libs/db-schema"},
-        {"type": "path", "url": "libs/db-schema-sqlite"},
         {"type": "path", "url": "libs/foundation"},
         {"type": "path", "url": "libs/foundation-http"},
         {"type": "path", "url": "libs/foundation-console"},
@@ -77,10 +69,6 @@
     "require-dev": {
         "helix/view-engine-php": "^1.0",
         "helix/view-engine-twig": "^1.0",
-
-        "helix/db-migrations": "^1.0",
-        "helix/db-schema-sqlite": "^1.0",
-        "helix/db-pdo-sqlite": "^1.0",
 
         "helix/server-sapi": "^1.0",
 
