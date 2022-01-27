@@ -59,6 +59,7 @@
 
         "monolog/monolog": "^2.3",
         "doctrine/orm": "^2.11",
+        "happyr/doctrine-specification": "^1.1",
         "symfony/cache": "^6.0"
     },
     "autoload": {

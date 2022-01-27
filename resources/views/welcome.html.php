@@ -242,22 +242,6 @@
             </span>
         </code>
     </section>
-    <section class="status">
-        <code style="padding: 10px 50px 10px 30px; display: flex; flex-direction: column; align-items: start">
-            <pre id="users">Fetching data...</pre>
-        </code>
-        <script>
-            let users = document.getElementById('users');
-
-            fetch('/users.json')
-                .then(function (response) {
-                    response.json()
-                        .then(function (data) {
-                            users.innerText = JSON.stringify(data, null, '    ');
-                        });
-                });
-        </script>
-    </section>
 </main>
 </body>
 </html>

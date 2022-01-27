@@ -9,7 +9,20 @@
 
 declare(strict_types=1);
 
+/** @var \Helix\Foundation\Path $path */
+
 return [
-    'driver' => 'pdo_sqlite',
-    'path'   => __DIR__ . '/../database/db.sqlite'
+    'debug' => false,
+
+    'entities' => [$path->app('Entity')],
+
+    'repositories' => [
+        \App\Entity\Article\ArticleRepositoryInterface::class => \App\Entity\Article::class,
+        \App\Entity\Article\DatabaseArticleRepository::class => \App\Entity\Article::class,
+    ],
+
+    'connection' => [
+        'driver' => 'pdo_sqlite',
+        'path'   => __DIR__ . '/../database/db.sqlite',
+    ]
 ];

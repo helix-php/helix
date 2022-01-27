@@ -11,11 +11,49 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Entity\Article\DatabaseArticleRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity, ORM\Table(name: 'articles')]
+/**
+ * Please note that you should run first:
+ *
+ *  $ php do orm:schema-tool:create
+ *
+ */
+#[ORM\Table(name: 'articles')]
+#[ORM\Entity(repositoryClass: DatabaseArticleRepository::class)]
 class Article
 {
-    #[ORM\Id, ORM\GeneratedValue, ORM\Column(name: 'id')]
+    /**
+     * @var positive-int|0
+     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(name: 'id', type: Types::BIGINT)]
     public int $id;
+
+    /**
+     * @var non-empty-string
+     */
+    #[ORM\Column(name: 'title', type: Types::STRING)]
+    public string $title;
+
+    /**
+     * @var string
+     */
+    #[ORM\Column(name: 'content', type: Types::TEXT)]
+    public string $content;
+
+    /**
+     * @var \DateTimeInterface
+     */
+    #[ORM\Column(name: 'created_at', type: Types::DATETIMETZ_IMMUTABLE)]
+    public \DateTimeInterface $createdAt;
+
+    /**
+     * @var \DateTimeInterface
+     */
+    #[ORM\Column(name: 'updated_at', type: Types::DATETIMETZ_IMMUTABLE)]
+    public \DateTimeInterface $updatedAt;
 }

@@ -11,8 +11,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controller;
 
-use App\Entity\Article;
-use Doctrine\ORM\EntityManagerInterface;
 use Helix\Contracts\View\FactoryInterface;
 use Helix\Http\HtmlResponse;
 use Helix\Http\PermanentRedirectResponse;
@@ -31,11 +29,8 @@ class HomeController
     }
 
     #[Route(path: '/home', as: 'home')]
-    public function home(FactoryInterface $views, EntityManagerInterface $em): ResponseInterface
+    public function home(FactoryInterface $views): ResponseInterface
     {
-        $repository = $em->getRepository(Article::class);
-
-
         return new HtmlResponse(
             $views->create('welcome.html.php')
         );
