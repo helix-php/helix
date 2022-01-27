@@ -15,7 +15,7 @@ use Helix\Boot\Attribute\Singleton;
 use Helix\Contracts\Router\RegistrarInterface;
 use Helix\Contracts\Router\RepositoryInterface;
 use Helix\Contracts\Router\RouterInterface;
-use Helix\Foundation\Path;
+use Helix\Router\Exception\BadRouteDefinitionException;
 use Helix\Router\Generator\Generator;
 use Helix\Router\Generator\GeneratorInterface;
 use Helix\Router\Router;
@@ -24,21 +24,34 @@ use Psr\Http\Message\UriFactoryInterface;
 
 final class RouterExtension
 {
-    #[Singleton(as: [Router::class, RegistrarInterface::class, RepositoryInterface::class])]
-    public function getRouter(Path $path, ResponseFactoryInterface $resp, UriFactoryInterface $uris): RouterInterface
+    /**
+     * @param Router $router
+     * @return void
+     * @throws BadRouteDefinitionException
+     */
+    private function routes(Router $router): void
     {
-        $router = new Router($resp, $uris);
+        $router->import(\App\Http\Controller\HomeController::class);
+    }
 
-        /**
-         * @psalm-suppress UnresolvableInclude
-         * @var callable(Router): void $registrar
-         */
-        $registrar = require $path->config('routes.php');
-        $registrar($router);
+    /**
+     * @param ResponseFactoryInterface $resp
+     * @param UriFactoryInterface $uris
+     * @return RouterInterface
+     */
+    #[Singleton(as: [Router::class, RegistrarInterface::class, RepositoryInterface::class])]
+    public function getRouter(ResponseFactoryInterface $resp, UriFactoryInterface $uris): RouterInterface
+    {
+        $this->routes($router = new Router($resp, $uris));
 
         return $router;
     }
 
+    /**
+     * @param UriFactoryInterface $uris
+     * @param RepositoryInterface $router
+     * @return GeneratorInterface
+     */
     #[Singleton(as: [Generator::class])]
     public function getRouteGenerator(UriFactoryInterface $uris, RepositoryInterface $router): GeneratorInterface
     {
