@@ -24,8 +24,9 @@ final class Emitter
     /**
      * @param EmitterCreateInfo $info
      */
-    public function __construct(private EmitterCreateInfo $info = new EmitterCreateInfo())
-    {
+    public function __construct(
+        private EmitterCreateInfo $info = new EmitterCreateInfo(),
+    ) {
     }
 
     /**
@@ -150,6 +151,10 @@ final class Emitter
         while (! $body->eof()) {
             echo $body->read($this->info->bufferLength);
             \flush();
+        }
+
+        if (\function_exists('\\fastcgi_finish_request')) {
+            \fastcgi_finish_request();
         }
     }
 
