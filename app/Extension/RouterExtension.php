@@ -38,6 +38,7 @@ final class RouterExtension
      * @param ResponseFactoryInterface $resp
      * @param UriFactoryInterface $uris
      * @return RouterInterface
+     * @throws BadRouteDefinitionException
      */
     #[Singleton(as: [Router::class, RegistrarInterface::class, RepositoryInterface::class])]
     public function getRouter(ResponseFactoryInterface $resp, UriFactoryInterface $uris): RouterInterface
