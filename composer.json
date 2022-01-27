@@ -30,7 +30,6 @@
         {"type": "path", "url": "libs/contracts/router"},
         {"type": "path", "url": "libs/contracts/view"},
 
-        {"type": "path", "url": "libs/async"},
         {"type": "path", "url": "libs/boot"},
         {"type": "path", "url": "libs/config-purify"},
         {"type": "path", "url": "libs/container"},
@@ -55,7 +54,6 @@
         "ext-pdo": "*",
         "ext-mbstring": "*",
 
-        "helix/async": "^1.0",
         "helix/foundation-http": "^1.0",
         "helix/foundation-console": "^1.0",
 
