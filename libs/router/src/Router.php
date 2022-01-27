@@ -24,8 +24,8 @@ use Helix\Http\StatusCode\StatusCode;
 use Helix\Router\Exception\BadRouteDefinitionException;
 use Helix\Router\Exception\RouteMatchingException;
 use Helix\Router\Exception\RouteNotAllowedException;
+use Helix\Router\Exception\RouteNotFoundException;
 use Helix\Router\Exception\RouterException;
-use Helix\Router\Generator\Exception\InvalidRouteNameException;
 use Helix\Router\Generator\Exception\RouteGeneratorExceptionInterface;
 use Helix\Router\Generator\Generator;
 use Helix\Router\Generator\GeneratorInterface;
@@ -132,7 +132,7 @@ class Router implements RegistrarInterface, RepositoryInterface, RouterInterface
                 $result[self::INFO_VARS]
             ),
 
-            Dispatcher::NOT_FOUND => throw new InvalidRouteNameException($request, 'Page Not Found'),
+            Dispatcher::NOT_FOUND => throw new RouteNotFoundException($request, 'Route Not Found'),
             Dispatcher::METHOD_NOT_ALLOWED => throw new RouteNotAllowedException($request, 'Method Not Allowed'),
             default => throw new RouteMatchingException($request, 'Internal Router Error'),
         };
