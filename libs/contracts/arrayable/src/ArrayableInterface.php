@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Helix\Contracts\Disposable;
+namespace Helix\Contracts\Arrayable;
 
 /**
  * @template TKey of array-key

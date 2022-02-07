@@ -35,18 +35,36 @@ abstract class Application implements LoaderInterface
     protected Container $container;
 
     /**
+     * @var bool
+     */
+    protected bool $debug;
+
+    /**
      * @param CreateInfo $info
      * @throws RegistrationException
      * @throws NotInstantiatableExceptionInterface
      */
     public function __construct(CreateInfo $info)
     {
+        $this->debug = $info->debug;
+
         $this->container = $info->container;
+        $this->container->instance($this);
+
+        $this->bootPath($info);
+        $this->bootExtensions($info);
+    }
+
+    /**
+     * @param CreateInfo $info
+     * @return void
+     * @throws NotInstantiatableExceptionInterface
+     * @throws RegistrationException
+     */
+    private function bootExtensions(CreateInfo $info): void
+    {
         $this->extensions = new Loader($this->container);
 
-        // Register default services
-        $this->container->instance($this);
-        $this->container->instance($info->path);
         $this->container->instance($this->extensions)
             ->as(RepositoryInterface::class)
         ;
@@ -58,6 +76,23 @@ abstract class Application implements LoaderInterface
 
             $this->load($extension);
         }
+    }
+
+    /**
+     * @param CreateInfo $info
+     * @return void
+     */
+    private function bootPath(CreateInfo $info): void
+    {
+        $this->container->instance($info->path);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDebug(): bool
+    {
+        return $this->debug;
     }
 
     /**

@@ -1,27 +1,25 @@
 {
-    "name": "helix/server-sapi",
+    "name": "helix/config",
     "type": "library",
     "license": "MIT",
     "require": {
         "php": ">=8.1",
-        "symfony/process": "^5.4|^6.0",
-        "helix/server": "^1.0"
+        "ext-json": "*",
+        "helix/arrayable-contracts": "^1.0",
+        "justinrainbow/json-schema": "^5.2"
     },
     "autoload": {
         "psr-4": {
-            "Helix\\Server\\Sapi\\": "src"
+            "Helix\\Config\\": "src"
         }
     },
-    "provide": {
-        "helix/server-implementation": "^1.0"
+    "require-dev": {
+        "jetbrains/phpstorm-attributes": "^1.0"
     },
     "extra": {
         "branch-alias": {
             "dev-master": "1.x-dev"
         }
-    },
-    "config": {
-        "sort-packages": true
     },
     "minimum-stability": "dev",
     "prefer-stable": true

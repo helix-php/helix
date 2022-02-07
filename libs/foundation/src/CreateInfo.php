@@ -21,6 +21,11 @@ use Psr\Container\ContainerInterface;
 abstract class CreateInfo
 {
     /**
+     * @var bool
+     */
+    public bool $debug;
+
+    /**
      * @var Path
      */
     public Path $path;
@@ -31,21 +36,58 @@ abstract class CreateInfo
     public Container $container;
 
     /**
-     * @param ContainerInterface|null $container
+     * @param bool|null $debug
      * @param Path|string $path
      * @param array<ExtensionInterface|class-string<ExtensionInterface>> $extensions
+     * @param ContainerInterface|null $container
      */
     public function __construct(
-        ContainerInterface $container = null,
+        ?bool $debug = null,
         Path|string $path = new Path(),
         public array $extensions = [],
+        ContainerInterface $container = null,
     ) {
-        $this->container = new Container($container);
+        $this->debug = $this->bootDebugValue($debug);
+        $this->container = $this->bootContainerValue($container);
+        $this->path = $this->bootPathValue($path);
+    }
 
-        $this->path = match (true) {
-            \is_string($path) => new Path(root: $path),
-            $path === null => new Path(),
-            default => $path,
-        };
+    /**
+     * @param Path|string $path
+     * @return Path
+     */
+    private function bootPathValue(Path|string $path): Path
+    {
+        if ($path instanceof Path) {
+            return $path;
+        }
+
+        return new Path(root: $path);
+    }
+
+    /**
+     * @param ContainerInterface|null $container
+     * @return Container
+     */
+    private function bootContainerValue(?ContainerInterface $container): Container
+    {
+        return new Container($container);
+    }
+
+    /**
+     * @param bool|null $debug
+     * @return bool
+     */
+    private function bootDebugValue(?bool $debug): bool
+    {
+        $result = $debug ?? false;
+
+        // In case of debug is null then use php "zend.assertions"
+        // option to resolve debug environment.
+        if ($debug === null) {
+            assert($result = true);
+        }
+
+        return $result;
     }
 }
