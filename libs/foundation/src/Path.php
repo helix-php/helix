@@ -35,37 +35,37 @@ final class Path
     /**
      * @var non-empty-string
      */
-    public string $root;
+    public readonly string $root;
 
     /**
      * @var non-empty-string
      */
-    public string $app;
+    public readonly string $app;
 
     /**
      * @var non-empty-string
      */
-    public string $storage;
+    public readonly string $storage;
 
     /**
      * @var non-empty-string
      */
-    public string $public;
+    public readonly string $public;
 
     /**
      * @var non-empty-string
      */
-    public string $config;
+    public readonly string $config;
 
     /**
      * @var non-empty-string
      */
-    public string $views;
+    public readonly string $views;
 
     /**
      * @var non-empty-string
      */
-    public string $vendor;
+    public readonly string $vendor;
 
     /**
      * @param non-empty-string|null $root
@@ -85,7 +85,7 @@ final class Path
         string $config = null,
         string $views = null,
         string $vendor = null,
-        private string $delimiter = self::DEFAULT_DELIMITER,
+        private readonly string $delimiter = self::DEFAULT_DELIMITER,
     ) {
         $this->root = $root ?: $this->resolveRootDirectory();
         $this->vendor = $vendor ?: $this->resolveVendorDirectory();
