@@ -61,7 +61,7 @@ final class Application extends BaseApplication
      */
     protected function getName(): string
     {
-        $version = $this->getVersion();
+        $version = $this->version;
 
         if (\ctype_digit($version[0])) {
             $version = 'v' . $version;

@@ -23,8 +23,9 @@ if (\class_exists(SapiServer::class) && SapiServer::isBuiltinServerFile(__FILE__
 }
 
 $app = new Application(new CreateInfo(
-    // Debug Environment
+    // Setting the environment parameters
     debug: $_SERVER['APP_DEBUG'] ?? false,
+    env: $_SERVER['APP_ENV'] ?? CreateInfo::DEFAULT_APP_ENVIRONMENT,
 
     // Application handlers
     handler: \App\Http\Kernel::class,

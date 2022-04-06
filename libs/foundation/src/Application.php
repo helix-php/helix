@@ -24,17 +24,27 @@ abstract class Application implements LoaderInterface
     /**
      * @var Loader
      */
-    private Loader $extensions;
+    private readonly Loader $extensions;
 
     /**
      * @var Container
      */
-    protected Container $container;
+    protected readonly Container $container;
 
     /**
      * @var bool
      */
-    protected bool $debug;
+    public readonly bool $debug;
+
+    /**
+     * @var non-empty-string
+     */
+    public readonly string $env;
+
+    /**
+     * @var non-empty-string
+     */
+    public readonly string $version;
 
     /**
      * @param CreateInfo $info
@@ -44,6 +54,8 @@ abstract class Application implements LoaderInterface
     public function __construct(CreateInfo $info)
     {
         $this->debug = $info->debug;
+        $this->env = $info->env ?: CreateInfo::DEFAULT_APP_ENVIRONMENT;
+        $this->version = InstalledVersions::getPrettyVersion('helix/foundation') ?? 'dev-master';
 
         $this->container = $info->container;
         $this->container->instance($this);
@@ -85,19 +97,12 @@ abstract class Application implements LoaderInterface
     }
 
     /**
+     * @param non-empty-string ...$matches
      * @return bool
      */
-    public function isDebug(): bool
+    public function env(string ...$matches): bool
     {
-        return $this->debug;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getVersion(): string
-    {
-        return InstalledVersions::getPrettyVersion('helix/foundation') ?? 'dev-master';
+        return \in_array($this->env, $matches, true);
     }
 
     /**

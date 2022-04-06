@@ -22,20 +22,22 @@ final class CreateInfo extends BaseCreateInfo
 {
     /**
      * @param bool|null $debug
-     * @param string<RequestHandlerInterface> $handler
+     * @param non-empty-string $env
+     * @param class-string<RequestHandlerInterface> $handler
      * @param class-string<HttpErrorHandlerInterface> $errors
-     * @param ContainerInterface|null $container
-     * @param string|Path $path
+     * @param non-empty-string|Path $path
      * @param array<ExtensionInterface|class-string<ExtensionInterface>> $extensions
+     * @param ContainerInterface|null $container
      */
     public function __construct(
         ?bool $debug = null,
+        string $env = self::DEFAULT_APP_ENVIRONMENT,
         public string $handler = Kernel::class,
         public string $errors = ErrorHandler::class,
         Path|string $path = new Path(),
         public array $extensions = [],
         ContainerInterface $container = null,
     ) {
-        parent::__construct($debug, $path, $extensions, $container);
+        parent::__construct($debug, $env, $path, $extensions, $container);
     }
 }

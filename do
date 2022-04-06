@@ -26,8 +26,9 @@ if (!in_array(PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {
 }
 
 $app = new Application(new CreateInfo(
-    // Debug Environment
+    // Setting the environment parameters
     debug: $_SERVER['APP_DEBUG'] ?? false,
+    env: $_SERVER['APP_ENV'] ?? CreateInfo::DEFAULT_APP_ENVIRONMENT,
 
     // Configuration
     path: __DIR__,
