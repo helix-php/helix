@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace App\Extension;
 
+use Doctrine\Common\Cache\Cache;
+use Doctrine\Common\Cache\Psr6\DoctrineProvider;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Console\Command\ClearCache\CollectionRegionCommand;
@@ -34,6 +36,7 @@ use Helix\Boot\Attribute\Singleton;
 use Helix\Container\Container;
 use Helix\Foundation\Console\Application as CliApplication;
 use Helix\Foundation\Path;
+use Psr\Cache\CacheItemPoolInterface;
 
 final class DatabaseExtension
 {
@@ -50,14 +53,22 @@ final class DatabaseExtension
     }
 
     #[Singleton(as: [EntityManager::class])]
-    public function getEntityManager(Path $path): EntityManagerInterface
+    public function getEntityManager(Path $path, CacheItemPoolInterface $cache = null): EntityManagerInterface
     {
         $config = require $path->config('database.php');
 
-        return EntityManager::create(
-            $config['connection'],
-            Setup::createAttributeMetadataConfiguration($config['entities'], $config['debug']),
+        if ($cache !== null) {
+            $cache = DoctrineProvider::wrap($cache);
+        }
+
+        $doctrine = Setup::createAttributeMetadataConfiguration(
+            $config['entities'] ?? [],
+            $config['debug'] ?? false,
+            $config['proxies'] ?? null,
+            $cache,
         );
+
+        return EntityManager::create($config['connection'], $doctrine);
     }
 
     #[Singleton]

@@ -58,10 +58,11 @@
         "helix/foundation-http": "^1.0",
         "helix/foundation-console": "^1.0",
 
+        "cache/array-adapter": "^1.2",
+        "cache/filesystem-adapter": "^1.2",
         "monolog/monolog": "^2.3",
         "doctrine/orm": "^2.11",
-        "happyr/doctrine-specification": "^1.1",
-        "symfony/cache": "^5.4|^6.0"
+        "happyr/doctrine-specification": "^1.1"
     },
     "autoload": {
         "psr-4": {
