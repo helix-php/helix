@@ -11,11 +11,13 @@ declare(strict_types=1);
 
 namespace Helix\Debug;
 
+use Helix\Boot\Attribute\Info;
 use Helix\Boot\Attribute\Registration;
 use Helix\Boot\RepositoryInterface;
 use Helix\Debug\Command\DebugExtensionsCommand;
 use Symfony\Component\Console\Application;
 
+#[Info(name: 'Kernel Debug Extension', description: 'Provides list of debug utils')]
 class DebugExtension
 {
     #[Registration(ifServiceExists: Application::class)]

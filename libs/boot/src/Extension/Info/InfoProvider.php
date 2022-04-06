@@ -19,10 +19,23 @@ abstract class InfoProvider implements InfoProviderInterface
      * @param string $version
      */
     public function __construct(
-        protected readonly string $name,
-        protected readonly string $description = '',
-        protected readonly string $version = 'dev-master',
+        protected string $name,
+        protected string $description,
+        protected string $version,
     ) {}
+
+    /**
+     * @param InfoProviderInterface $provider
+     * @return static
+     */
+    public static function fromProvider(InfoProviderInterface $provider): self
+    {
+        return new static(
+            $provider->getName(),
+            $provider->getDescription(),
+            $provider->getVersion(),
+        );
+    }
 
     /**
      * {@inheritDoc}

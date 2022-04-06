@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Helix\Boot\Extension\Info;
 
+use Helix\Boot\Attribute\Info;
 use Composer\InstalledVersions;
 use Helix\Boot\Extension\Metadata\MetadataProviderInterface;
 
@@ -56,13 +57,29 @@ final class Factory
      */
     public function create(\ReflectionClass $context): InfoProviderInterface
     {
-        $package = $this->lookup($context->getFileName());
+        $result = MutableInfoProvider::fromProvider(
+            ComposerInfoProvider::create(
+                $this->lookup($context->getFileName()) ?? $this->root,
+                $context
+            )
+        );
 
-        if ($package !== null) {
-            return ComposerInfoProvider::create($package, $context);
+        /** @var Info $info */
+        foreach ($this->provider->getClassMetadata(Info::class) as $info) {
+            if ($info->name !== null) {
+                $result->name = $info->name;
+            }
+
+            if ($info->description !== null) {
+                $result->description = $info->description;
+            }
+
+            if ($info->version !== null) {
+                $result->version = $info->version;
+            }
         }
 
-        return ComposerInfoProvider::create($this->root, $context);
+        return $result;
     }
 
     /**

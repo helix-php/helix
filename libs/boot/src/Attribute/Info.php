@@ -15,13 +15,13 @@ namespace Helix\Boot\Attribute;
 final class Info extends ClassMetadata
 {
     /**
-     * @param string $name
-     * @param string $description
-     * @param string $version
+     * @param string|null $name
+     * @param string|null $description
+     * @param string|null $version
      */
     public function __construct(
-        public readonly string $name,
-        public readonly string $description = '',
-        public readonly string $version = '1.0.0',
+        public readonly ?string $name = null,
+        public readonly ?string $description = null,
+        public readonly ?string $version = null,
     ) {}
 }
