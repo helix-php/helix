@@ -19,15 +19,17 @@ use Psr\Container\ContainerInterface;
 final class CreateInfo extends BaseCreateInfo
 {
     /**
+     * @param bool|null $debug
      * @param ContainerInterface|null $container
      * @param string|Path $path
      * @param array<ExtensionInterface|class-string<ExtensionInterface>> $extensions
      */
     public function __construct(
+        ?bool $debug = null,
         ContainerInterface $container = null,
         string|Path $path = new Path(),
         array $extensions = [],
     ) {
-        parent::__construct($container, $path, $extensions);
+        parent::__construct($debug, $path, $extensions, $container);
     }
 }
