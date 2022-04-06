@@ -13,13 +13,7 @@ use Helix\Foundation\Http\Application;
 use Helix\Foundation\Http\CreateInfo;
 use Helix\Server\Sapi\Server as SapiServer;
 
-require __DIR__ . '/../vendor/autoload.php';
-
-/**
- * This makes our life easier when dealing with paths. Everything is relative
- * to the application root now.
- */
-chdir(dirname(__DIR__));
+require __DIR__ . '/../app/bootstrap.php';
 
 /**
  * Decline static file requests back to the PHP built-in webserver.
@@ -29,6 +23,9 @@ if (\class_exists(SapiServer::class) && SapiServer::isBuiltinServerFile(__FILE__
 }
 
 $app = new Application(new CreateInfo(
+    // Debug Environment
+    debug: $_SERVER['APP_DEBUG'] ?? false,
+
     // Application handlers
     handler: \App\Http\Kernel::class,
     errors: \App\Http\ErrorHandler::class,

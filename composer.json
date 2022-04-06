@@ -62,6 +62,7 @@
         "helix/view-engine-twig": "^1.0",
         "helix/server-sapi": "^1.0",
 
+        "vlucas/phpdotenv": "^5.4",
         "cache/array-adapter": "^1.2",
         "cache/filesystem-adapter": "^1.2",
         "monolog/monolog": "^2.3",

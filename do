@@ -11,9 +11,13 @@
 use Helix\Foundation\Console\Application;
 use Helix\Foundation\Console\CreateInfo;
 
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/app/bootstrap.php';
 
-// Check SAPI
+set_time_limit(0);
+
+/**
+ * Check SAPI
+ */
 if (!in_array(PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {
     throw new \LogicException(
         'Warning: The console should be invoked via the CLI '
@@ -21,9 +25,10 @@ if (!in_array(PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {
     );
 }
 
-set_time_limit(0);
-
 $app = new Application(new CreateInfo(
+    // Debug Environment
+    debug: $_SERVER['APP_DEBUG'] ?? false,
+
     // Configuration
     path: __DIR__,
 
