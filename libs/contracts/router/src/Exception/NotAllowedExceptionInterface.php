@@ -11,9 +11,6 @@ declare(strict_types=1);
 
 namespace Helix\Contracts\Router\Exception;
 
-/**
- * @package router-contracts
- */
 interface NotAllowedExceptionInterface extends RouteMatchingExceptionInterface
 {
 }

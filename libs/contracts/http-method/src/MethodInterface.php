@@ -11,9 +11,6 @@ declare(strict_types=1);
 
 namespace Helix\Contracts\Http\Method;
 
-/**
- * @package http-method-contracts
- */
 interface MethodInterface
 {
     /**

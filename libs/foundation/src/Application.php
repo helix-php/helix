@@ -19,9 +19,6 @@ use Helix\Container\Container;
 use Helix\Container\Exception\RegistrationException;
 use Helix\Contracts\Container\Exception\NotInstantiatableExceptionInterface;
 
-/**
- * @package foundation
- */
 abstract class Application implements LoaderInterface
 {
     /**

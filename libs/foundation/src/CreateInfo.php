@@ -15,9 +15,6 @@ use Helix\Boot\ExtensionInterface;
 use Helix\Container\Container;
 use Psr\Container\ContainerInterface;
 
-/**
- * @package foundation
- */
 abstract class CreateInfo
 {
     /**

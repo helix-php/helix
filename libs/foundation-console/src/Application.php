@@ -17,9 +17,6 @@ use Helix\Foundation\Application as BaseApplication;
 use Symfony\Component\Console\Application as SymfonyApplication;
 use Symfony\Component\Console\Command\Command;
 
-/**
- * @package foundation
- */
 final class Application extends BaseApplication
 {
     /**

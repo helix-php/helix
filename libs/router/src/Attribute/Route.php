@@ -15,7 +15,6 @@ use Helix\Contracts\Router\RouteInterface;
 use Helix\Http\Method\Method;
 
 /**
- * @package router
  * @see RouteInterface
  *
  * @psalm-import-type MiddlewareDefinition from RouteInterface

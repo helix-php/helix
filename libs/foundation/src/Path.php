@@ -13,7 +13,6 @@ namespace Helix\Foundation;
 
 /**
  * @psalm-type PathDelimiterType = non-empty-string
- * @package foundation
  */
 final class Path
 {

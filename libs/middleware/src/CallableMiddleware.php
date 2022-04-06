@@ -17,7 +17,6 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
- * @package middleware
  * @see ServerRequestInterface
  * @see ResponseInterface
  *

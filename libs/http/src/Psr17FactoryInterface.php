@@ -18,9 +18,6 @@ use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\UploadedFileFactoryInterface;
 use Psr\Http\Message\UriFactoryInterface;
 
-/**
- * @package http
- */
 interface Psr17FactoryInterface extends
     ServerRequestFactoryInterface,
     RequestFactoryInterface,

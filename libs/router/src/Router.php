@@ -38,9 +38,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriFactoryInterface;
 
-/**
- * @package router
- */
 class Router implements RegistrarInterface, RepositoryInterface, RouterInterface
 {
     /**

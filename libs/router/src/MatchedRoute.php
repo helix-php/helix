@@ -17,9 +17,6 @@ use Helix\Contracts\Router\RouteInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 
-/**
- * @package router
- */
 class MatchedRoute implements MatchedRouteInterface
 {
     /**

@@ -14,7 +14,6 @@ namespace Helix\Router\Attribute;
 use Helix\Contracts\Router\RouteInterface;
 
 /**
- * @package router
  * @see RouteInterface
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]

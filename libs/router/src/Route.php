@@ -17,9 +17,6 @@ use Helix\Http\Method\Method;
 use Helix\Router\Internal\Normalizer;
 use JetBrains\PhpStorm\Language;
 
-/**
- * @package router
- */
 class Route implements RouteInterface
 {
     /**

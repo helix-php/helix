@@ -25,9 +25,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-/**
- * @package foundation
- */
 class Kernel implements RequestHandlerInterface
 {
     /**

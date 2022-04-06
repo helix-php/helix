@@ -14,9 +14,6 @@ namespace Helix\Router\Exception;
 use Helix\Contracts\Router\Exception\RouteMatchingExceptionInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-/**
- * @package router
- */
 class RouteMatchingException extends RouterException implements RouteMatchingExceptionInterface
 {
     /**

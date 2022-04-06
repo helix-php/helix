@@ -17,7 +17,6 @@ use Helix\Contracts\Router\Exception\NotFoundExceptionInterface;
 use Helix\Contracts\Router\Exception\RouterExceptionInterface;
 
 /**
- * @package router
  * @group router
  */
 class RouterTestCase extends TestCase

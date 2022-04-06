@@ -17,9 +17,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-/**
- * @package middleware
- */
 final class Pipeline implements MutablePipelineInterface
 {
     /**

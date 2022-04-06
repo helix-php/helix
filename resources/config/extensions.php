@@ -14,16 +14,14 @@ return [
     // Kernel Extensions
     //
     \Helix\Foundation\Extension\LoggerExtension::class,
-
-    //
-    // HTTP Kernel Extensions
-    //
     \Helix\Foundation\Http\Extension\HttpExtension::class,
 
     //
-    // Console Kernel Extensions
+    // Debug Extensions
     //
-    \Helix\Foundation\Console\Extension\ConsoleCommandsExtension::class,
+    ...\array_filter([
+        \Helix\Debug\DebugExtension::class,
+    ], \class_exists(...)),
 
     //
     // Application Extensions

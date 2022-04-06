@@ -11,9 +11,6 @@ declare(strict_types=1);
 
 namespace Helix\Router\Exception;
 
-/**
- * @package router
- */
 class BadRouteDefinitionException extends RouterException
 {
 }

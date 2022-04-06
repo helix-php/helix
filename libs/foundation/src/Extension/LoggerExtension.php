@@ -15,9 +15,6 @@ use Helix\Boot\Attribute\Singleton;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
-/**
- * @package foundation
- */
 class LoggerExtension
 {
     #[Singleton]

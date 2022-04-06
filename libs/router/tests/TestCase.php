@@ -20,7 +20,6 @@ use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 
 /**
- * @package router
  * @group router
  */
 abstract class TestCase extends BaseTestCase

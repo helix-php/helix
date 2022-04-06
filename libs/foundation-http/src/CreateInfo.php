@@ -18,9 +18,6 @@ use Helix\Foundation\Path;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-/**
- * @package foundation
- */
 final class CreateInfo extends BaseCreateInfo
 {
     /**

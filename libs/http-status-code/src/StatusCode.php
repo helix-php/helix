@@ -14,7 +14,6 @@ namespace Helix\Http\StatusCode;
 use Helix\Contracts\Http\StatusCode\StatusCodeInterface;
 
 /**
- * @package http-status-code
  * @psalm-type StatusCodeEnumValue = StatusCode::*
  */
 enum StatusCode: int implements StatusCodeInterface

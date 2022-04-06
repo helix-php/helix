@@ -16,9 +16,6 @@ use Helix\Foundation\CreateInfo as BaseCreateInfo;
 use Helix\Foundation\Path;
 use Psr\Container\ContainerInterface;
 
-/**
- * @package foundation
- */
 final class CreateInfo extends BaseCreateInfo
 {
     /**

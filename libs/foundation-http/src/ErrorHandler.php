@@ -23,9 +23,6 @@ use Psr\Log\LoggerInterface;
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\Run;
 
-/**
- * @package foundation
- */
 class ErrorHandler extends BaseErrorHandler implements HttpErrorHandlerInterface
 {
     /**

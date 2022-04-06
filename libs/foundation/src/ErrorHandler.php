@@ -14,9 +14,6 @@ namespace Helix\Foundation;
 use Helix\Contracts\ErrorHandler\ErrorHandlerInterface;
 use Psr\Log\LoggerInterface;
 
-/**
- * @package foundation
- */
 abstract class ErrorHandler implements ErrorHandlerInterface
 {
     /**

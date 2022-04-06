@@ -55,9 +55,7 @@ final class Instantiator implements InstantiatorInterface
             if (\method_exists($instance, self::CONSTRUCTOR_METHOD)) {
                 $constructor = new \ReflectionMethod($instance, self::CONSTRUCTOR_METHOD);
 
-                $constructor->invokeArgs($instance,
-                    $this->resolver->resolve($constructor, $resolver)
-                );
+                $constructor->invokeArgs($instance, $this->resolver->resolve($constructor, $resolver));
             }
 
             return $instance;

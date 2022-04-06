@@ -11,9 +11,6 @@ declare(strict_types=1);
 
 namespace Helix\Contracts\Http\StatusCode;
 
-/**
- * @package http-status-code-contracts
- */
 interface StatusCodeInterface
 {
     /**

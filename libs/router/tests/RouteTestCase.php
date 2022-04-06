@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace Helix\Router\Tests;
 
 /**
- * @package router
  * @group router
  */
 class RouteTestCase extends TestCase

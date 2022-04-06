@@ -13,9 +13,6 @@ namespace Helix\Router;
 
 use Helix\Router\Internal\Normalizer;
 
-/**
- * @package router
- */
 final class Group implements \IteratorAggregate, \Countable
 {
     /**

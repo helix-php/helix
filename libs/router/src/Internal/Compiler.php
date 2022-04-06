@@ -21,7 +21,6 @@ use Helix\Contracts\Router\RouteInterface;
 use Helix\Router\Exception\BadRouteDefinitionException;
 
 /**
- * @package router
  * @internal Compiler is an internal library class, please do not use it in your code.
  * @psalm-internal Helix\Router
  */

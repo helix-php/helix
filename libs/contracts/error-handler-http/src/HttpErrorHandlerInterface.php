@@ -15,9 +15,6 @@ use Helix\Contracts\ErrorHandler\ErrorHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-/**
- * @package error-handler
- */
 interface HttpErrorHandlerInterface extends ErrorHandlerInterface
 {
     /**

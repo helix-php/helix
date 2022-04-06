@@ -15,9 +15,6 @@ use Helix\Contracts\Router\Exception\NotAllowedExceptionInterface;
 use Helix\Contracts\Router\Exception\NotFoundExceptionInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-/**
- * @package router-contracts
- */
 interface RouterInterface
 {
     /**

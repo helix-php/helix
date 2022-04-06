@@ -13,9 +13,6 @@ namespace Helix\Contracts\Middleware;
 
 use Psr\Http\Server\MiddlewareInterface;
 
-/**
- * @package middleware-contracts
- */
 interface PipelineInterface extends MiddlewareInterface
 {
     /**

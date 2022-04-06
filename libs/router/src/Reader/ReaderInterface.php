@@ -14,9 +14,6 @@ namespace Helix\Router\Reader;
 use Helix\Contracts\Router\RouteInterface;
 use Helix\Router\Exception\BadRouteDefinitionException;
 
-/**
- * @package router
- */
 interface ReaderInterface
 {
     /**

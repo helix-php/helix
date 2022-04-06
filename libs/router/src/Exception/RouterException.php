@@ -13,9 +13,6 @@ namespace Helix\Router\Exception;
 
 use Helix\Contracts\Router\Exception\RouterExceptionInterface;
 
-/**
- * @package router
- */
 class RouterException extends \Exception implements RouterExceptionInterface
 {
 }

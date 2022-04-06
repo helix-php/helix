@@ -18,9 +18,6 @@ use Helix\Router\Exception\BadRouteDefinitionException;
 use Helix\Router\Internal\Normalizer;
 use Helix\Router\Route;
 
-/**
- * @package router
- */
 class AttributeReader implements ReaderInterface
 {
     /**

@@ -11,9 +11,6 @@ declare(strict_types=1);
 
 namespace Helix\Contracts\Router;
 
-/**
- * @package router-contracts
- */
 interface RegistrarInterface
 {
     /**

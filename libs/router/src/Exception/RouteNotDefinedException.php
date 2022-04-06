@@ -13,9 +13,6 @@ namespace Helix\Router\Exception;
 
 use Helix\Contracts\Router\Exception\NotFoundExceptionInterface;
 
-/**
- * @package router
- */
 class RouteNotDefinedException extends RouteMatchingException implements NotFoundExceptionInterface
 {
     /**

@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Helix\Foundation\Console\Command;
+namespace Helix\Debug\Command;
 
 use Helix\Boot\ExtensionInterface;
 use Helix\Boot\RepositoryInterface;
@@ -18,7 +18,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-final class ExtListCommand extends Command
+final class DebugExtensionsCommand extends Command
 {
     /**
      * @param RepositoryInterface $repository
@@ -26,7 +26,15 @@ final class ExtListCommand extends Command
     public function __construct(
         private readonly RepositoryInterface $repository,
     ) {
-        parent::__construct('ext:list');
+        parent::__construct('debug:extensions');
+    }
+
+    /**
+     * @return void
+     */
+    protected function configure(): void
+    {
+        $this->setDescription('List loaded extensions');
     }
 
     /**

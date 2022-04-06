@@ -25,7 +25,6 @@ use Psr\Http\Message\UriFactoryInterface;
 use Psr\Http\Message\UriInterface;
 
 /**
- * @package http
  * @psalm-type LikePsr17Factory = (RequestFactoryInterface
  *                              & ServerRequestFactoryInterface
  *                              & ResponseFactoryInterface

@@ -14,9 +14,6 @@ namespace Helix\Contracts\Router;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 
-/**
- * @package router-contracts
- */
 interface MatchedRouteInterface extends RouteInterface
 {
     /**
