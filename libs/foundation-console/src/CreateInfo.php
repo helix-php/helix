@@ -26,9 +26,9 @@ final class CreateInfo extends BaseCreateInfo
      */
     public function __construct(
         ?bool $debug = null,
+        Path|string $path = new Path(),
+        public array $extensions = [],
         ContainerInterface $container = null,
-        string|Path $path = new Path(),
-        array $extensions = [],
     ) {
         parent::__construct($debug, $path, $extensions, $container);
     }

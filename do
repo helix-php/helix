@@ -13,7 +13,15 @@ use Helix\Foundation\Console\CreateInfo;
 
 require __DIR__ . '/vendor/autoload.php';
 
-\set_time_limit(0);
+// Check SAPI
+if (!in_array(PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {
+    throw new \LogicException(
+        'Warning: The console should be invoked via the CLI '
+        . 'version of PHP, not the ' . PHP_SAPI . ' SAPI'
+    );
+}
+
+set_time_limit(0);
 
 $app = new Application(new CreateInfo(
     // Configuration

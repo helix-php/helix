@@ -21,6 +21,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 final class CreateInfo extends BaseCreateInfo
 {
     /**
+     * @param bool|null $debug
      * @param string<RequestHandlerInterface> $handler
      * @param class-string<HttpErrorHandlerInterface> $errors
      * @param ContainerInterface|null $container
@@ -28,12 +29,13 @@ final class CreateInfo extends BaseCreateInfo
      * @param array<ExtensionInterface|class-string<ExtensionInterface>> $extensions
      */
     public function __construct(
+        ?bool $debug = null,
         public string $handler = Kernel::class,
         public string $errors = ErrorHandler::class,
+        Path|string $path = new Path(),
+        public array $extensions = [],
         ContainerInterface $container = null,
-        string|Path $path = new Path(),
-        array $extensions = [],
     ) {
-        parent::__construct($container, $path, $extensions);
+        parent::__construct($debug, $path, $extensions, $container);
     }
 }
