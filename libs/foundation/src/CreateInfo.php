@@ -15,7 +15,7 @@ use Helix\Boot\ExtensionInterface;
 use Helix\Container\Container;
 use Psr\Container\ContainerInterface;
 
-abstract class CreateInfo
+class CreateInfo
 {
     /**
      * @var bool
