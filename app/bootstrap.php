@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 $autoload = require __DIR__ . '/../vendor/autoload.php';
 
+define('HELIX_START', microtime(true));
+
 ini_set('date.timezone', 'UTC');
 
 /**
@@ -23,7 +25,7 @@ chdir(dirname(__DIR__));
  * Load environment variables from `.env` file if exists.
  */
 if (class_exists(Dotenv\Dotenv::class) && is_file(__DIR__ . '/../.env')) {
-    $dotenv = \Dotenv\Dotenv::createImmutable(dirname(__DIR__));
+    $dotenv = \Dotenv\Dotenv::createUnsafeImmutable(dirname(__DIR__));
     $dotenv->load();
 }
 

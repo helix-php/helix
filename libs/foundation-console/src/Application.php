@@ -36,11 +36,11 @@ final class Application extends BaseApplication
      */
     public function __construct(CreateInfo $info)
     {
+        parent::__construct($info);
+
         $info->container->instance(
             $this->cli = new SymfonyApplication($this->getName())
         );
-
-        parent::__construct($info);
     }
 
     /**

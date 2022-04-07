@@ -19,5 +19,7 @@ class Kernel extends BaseHttpKernel
      * {@inheritDoc}
      */
     public array $middleware = [
+        // Debug
+        \Helix\Debug\Middleware\ServerTiming::class,
     ];
 }
