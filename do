@@ -10,6 +10,7 @@
 
 use Helix\Foundation\Console\Application;
 use Helix\Foundation\Console\CreateInfo;
+use Helix\Foundation\Env;
 
 require __DIR__ . '/app/bootstrap.php';
 
@@ -25,10 +26,12 @@ if (!in_array(PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {
     );
 }
 
+dump(Env::all());
+
 $app = new Application(new CreateInfo(
     // Setting the environment parameters
-    debug: ($_SERVER['APP_DEBUG'] ?? false) === 'true',
-    env: $_SERVER['APP_ENV'] ?? CreateInfo::DEFAULT_APP_ENVIRONMENT,
+    debug: Env::get('APP_DEBUG', false),
+    env: Env::get('APP_ENV'),
 
     // Configuration
     path: __DIR__,

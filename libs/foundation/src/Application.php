@@ -53,15 +53,24 @@ abstract class Application implements LoaderInterface
      */
     public function __construct(CreateInfo $info)
     {
-        $this->debug = $info->debug;
-        $this->env = $info->env ?: CreateInfo::DEFAULT_APP_ENVIRONMENT;
-        $this->version = InstalledVersions::getPrettyVersion('helix/foundation') ?? 'dev-master';
+        $this->debug = $info->debug ?? false;
+        $this->env = $info->env ?? 'prod';
 
         $this->container = $info->container;
         $this->container->instance($this);
 
+        $this->bootVersion();
         $this->bootPath($info);
         $this->bootExtensions($info);
+    }
+
+    /**
+     * @return void
+     */
+    private function bootVersion(): void
+    {
+        $this->version = InstalledVersions::getPrettyVersion('helix/foundation')
+            ?? 'dev-master';
     }
 
     /**

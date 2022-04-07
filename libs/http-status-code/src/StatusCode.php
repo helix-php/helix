@@ -1567,11 +1567,18 @@ enum StatusCode: int implements StatusCodeInterface
      */
     private function getInfo(): Info
     {
+        /** @var array<non-empty-string, Info> $memory */
+        static $memory = [];
+
+        if (isset($memory[$this->name])) {
+            return $memory[$this->name];
+        }
+
         $attributes = (new \ReflectionEnumBackedCase(self::class, $this->name))
             ->getAttributes(Info::class);
 
         if (isset($attributes[0])) {
-            return $attributes[0]->newInstance();
+            return $memory[$this->name] = $attributes[0]->newInstance();
         }
 
         throw new \LogicException('Could not resolve status code [' . $this->name . '] info');

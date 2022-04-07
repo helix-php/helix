@@ -9,9 +9,9 @@
 
 declare(strict_types=1);
 
-$autoload = require __DIR__ . '/../vendor/autoload.php';
+use Helix\Foundation\Env;
 
-define('HELIX_START', microtime(true));
+$autoload = require __DIR__ . '/../vendor/autoload.php';
 
 ini_set('date.timezone', 'UTC');
 
@@ -24,9 +24,6 @@ chdir(dirname(__DIR__));
 /**
  * Load environment variables from `.env` file if exists.
  */
-if (class_exists(Dotenv\Dotenv::class) && is_file(__DIR__ . '/../.env')) {
-    $dotenv = \Dotenv\Dotenv::createUnsafeImmutable(dirname(__DIR__));
-    $dotenv->load();
-}
+Env::load(__DIR__ . '/..');
 
 return $autoload;

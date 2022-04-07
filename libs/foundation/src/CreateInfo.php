@@ -18,16 +18,6 @@ use Psr\Container\ContainerInterface;
 class CreateInfo
 {
     /**
-     * @var non-empty-string
-     */
-    public const DEFAULT_APP_ENVIRONMENT = 'prod';
-
-    /**
-     * @var bool
-     */
-    public readonly bool $debug;
-
-    /**
      * @var Path
      */
     public readonly Path $path;
@@ -39,19 +29,18 @@ class CreateInfo
 
     /**
      * @param bool|null $debug
-     * @param non-empty-string $env
+     * @param non-empty-string|null $env
      * @param Path|non-empty-string $path
      * @param array<ExtensionInterface|class-string<ExtensionInterface>> $extensions
      * @param ContainerInterface|null $container
      */
     public function __construct(
-        ?bool $debug = null,
-        public readonly string $env = self::DEFAULT_APP_ENVIRONMENT,
+        public readonly ?bool $debug = null,
+        public readonly ?string $env = null,
         Path|string $path = new Path(),
         public array $extensions = [],
         ContainerInterface $container = null,
     ) {
-        $this->debug = $this->bootDebugValue($debug);
         $this->container = $this->bootContainerValue($container);
         $this->path = $this->bootPathValue($path);
     }

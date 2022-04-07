@@ -618,11 +618,18 @@ enum Method: string implements MethodInterface
      */
     private function getInfo(): Info
     {
+        /** @var array<non-empty-string, Info> $memory */
+        static $memory = [];
+
+        if (isset($memory[$this->name])) {
+            return $memory[$this->name];
+        }
+
         $attributes = (new \ReflectionEnumBackedCase(self::class, $this->name))
             ->getAttributes(Info::class);
 
         if (isset($attributes[0])) {
-            return $attributes[0]->newInstance();
+            return $memory[$this->name] = $attributes[0]->newInstance();
         }
 
         return new Info();

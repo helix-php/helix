@@ -30,7 +30,7 @@ class ServerTiming implements MiddlewareInterface
     public function __construct(
         private readonly Application $app
     ) {
-        $this->boot = \defined('\\HELIX_START') ? \HELIX_START : \microtime(true);
+        $this->boot = \microtime(true);
     }
 
     /**

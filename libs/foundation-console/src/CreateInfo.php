@@ -20,14 +20,14 @@ final class CreateInfo extends BaseCreateInfo
 {
     /**
      * @param bool|null $debug
-     * @param non-empty-string $env
+     * @param non-empty-string|null $env
      * @param non-empty-string|Path $path
      * @param array<ExtensionInterface|class-string<ExtensionInterface>> $extensions
      * @param ContainerInterface|null $container
      */
     public function __construct(
         ?bool $debug = null,
-        string $env = self::DEFAULT_APP_ENVIRONMENT,
+        ?string $env = null,
         Path|string $path = new Path(),
         public array $extensions = [],
         ContainerInterface $container = null,
