@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Helix\View;
+namespace Helix\View\Exception;
 
 use Helix\Contracts\View\Exception\ViewNotFoundExceptionInterface;
 

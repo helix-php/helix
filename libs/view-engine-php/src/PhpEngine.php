@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Helix\View\Engine\Php;
 
 use Helix\View\Engine\FilesystemAwareEngine;
-use Helix\View\ViewNotFoundException;
+use Helix\View\Exception\ViewNotFoundException;
 
 final class PhpEngine extends FilesystemAwareEngine
 {

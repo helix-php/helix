@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Helix\Contracts\View;
 
-use Helix\View\ViewNotFoundException;
+use Helix\View\Exception\ViewNotFoundException;
 
 interface FactoryInterface
 {

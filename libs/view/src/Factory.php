@@ -14,6 +14,7 @@ namespace Helix\View;
 use Helix\Contracts\View\FactoryInterface;
 use Helix\Contracts\View\ViewInterface;
 use Helix\View\Engine\EngineInterface;
+use Helix\View\Exception\EngineNotFoundException;
 
 class Factory implements FactoryInterface, RegistrarInterface
 {
