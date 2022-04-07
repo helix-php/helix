@@ -31,13 +31,15 @@ class ErrorHandler extends BaseErrorHandler implements HttpErrorHandlerInterface
     protected array $mapping = [];
 
     /**
+     * @param Application $app
      * @param ResponseFactoryInterface $responses
      * @param StreamFactoryInterface $streams
      * @param LoggerInterface|null $logger
      */
     public function __construct(
-        protected ResponseFactoryInterface $responses,
-        protected StreamFactoryInterface $streams,
+        private readonly Application $app,
+        protected readonly ResponseFactoryInterface $responses,
+        protected readonly StreamFactoryInterface $streams,
         LoggerInterface $logger = null
     ) {
         parent::__construct($logger);
@@ -83,8 +85,13 @@ class ErrorHandler extends BaseErrorHandler implements HttpErrorHandlerInterface
 
         $response = $this->responses
             ->createResponse($code->getCode(), $code->getReasonPhrase())
-            ->withBody($this->streams->createStream($this->renderException($e)))
         ;
+
+        if ($this->app->debug) {
+            $response = $response->withBody(
+                $this->streams->createStream($this->renderException($e))
+            );
+        }
 
         return $response;
     }
