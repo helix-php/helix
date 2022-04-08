@@ -9,7 +9,6 @@
 
 declare(strict_types=1);
 
-use Helix\Foundation\Env;
 use Helix\Foundation\Http\Application;
 use Helix\Foundation\Http\CreateInfo;
 use Helix\Server\Sapi\Server as SapiServer;
@@ -24,10 +23,6 @@ if (\class_exists(SapiServer::class) && SapiServer::isBuiltinServerFile(__FILE__
 }
 
 $app = new Application(new CreateInfo(
-    // Setting the environment parameters
-    debug: Env::get('APP_DEBUG', false),
-    env: Env::get('APP_ENV'),
-
     // Application handlers
     handler: \App\Http\Kernel::class,
     errors: \App\Http\ErrorHandler::class,
