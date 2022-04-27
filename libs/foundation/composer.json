@@ -3,12 +3,12 @@
     "type": "library",
     "license": "MIT",
     "require": {
-        "php": ">=8.1",
+        "php": "^8.1",
+        "helix/env": "^1.0",
         "helix/boot": "^1.0",
         "helix/config": "^1.0",
         "helix/container": "^1.0",
         "helix/error-handler-contracts": "^1.0",
-        "vlucas/phpdotenv": "^5.4",
         "psr/log": "^1.0|^2.0|^3.0"
     },
     "autoload": {

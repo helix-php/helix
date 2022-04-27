@@ -12,13 +12,13 @@ declare(strict_types=1);
 namespace Helix\Foundation;
 
 use Composer\InstalledVersions;
-use Dotenv\Dotenv;
 use Helix\Boot\Loader;
 use Helix\Boot\LoaderInterface;
 use Helix\Boot\RepositoryInterface;
 use Helix\Container\Container;
 use Helix\Container\Exception\RegistrationException;
 use Helix\Contracts\Container\Exception\NotInstantiatableExceptionInterface;
+use Helix\Env\Environment;
 
 abstract class Application implements LoaderInterface
 {
@@ -66,8 +66,8 @@ abstract class Application implements LoaderInterface
     {
         $this->loadEnvironment($info);
 
-        $this->debug = (bool)($info->debug ?? $this->env(static::ENV_DEBUG, false));
-        $this->env = (string)($info->env ?? $this->env(static::ENV_NAME, 'prod'));
+        $this->debug = (bool)($info->debug ?? Environment::get(static::ENV_DEBUG, false));
+        $this->env = (string)($info->env ?? Environment::get(static::ENV_NAME, 'prod'));
 
         $this->container = $info->container;
         $this->container->instance($this);
@@ -78,31 +78,14 @@ abstract class Application implements LoaderInterface
     }
 
     /**
-     * @param non-empty-string $name
-     * @param mixed|null $default
-     * @return mixed
-     */
-    public function env(string $name, mixed $default = null): mixed
-    {
-        if (isset($_SERVER[$name]) || \array_key_exists($name, $_SERVER)) {
-            return $_SERVER[$name];
-        }
-
-        if (isset($_ENV[$name]) || \array_key_exists($name, $_ENV)) {
-            return $_ENV[$name];
-        }
-
-        return $default;
-    }
-
-    /**
      * @param CreateInfo $info
      * @return void
      */
     private function loadEnvironment(CreateInfo $info): void
     {
-        Dotenv::createUnsafeImmutable($info->path->root)
-            ->load();
+        if (!Environment::loaded()) {
+            Environment::dotenv($info->path->root('.env'));
+        }
     }
 
     /**

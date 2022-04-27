@@ -3,7 +3,7 @@
     "type": "library",
     "license": "MIT",
     "require": {
-        "php": ">=8.1",
+        "php": "^8.1",
         "doctrine/instantiator": "^1.4",
         "helix/container-contracts": "^1.0",
         "helix/container-registrar-contracts": "^1.0",

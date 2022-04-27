@@ -26,7 +26,7 @@ final class Application extends BaseApplication
      * @throws NotInstantiatableExceptionInterface
      * @throws RegistrationException
      */
-    public function __construct(CreateInfo $info)
+    public function __construct(CreateInfo $info = new CreateInfo())
     {
         parent::__construct($info);
 

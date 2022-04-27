@@ -3,7 +3,7 @@
     "type": "library",
     "license": "MIT",
     "require": {
-        "php": ">=8.1",
+        "php": "^8.1",
         "helix/memoizable-contracts": "^1.0",
         "helix/manager-contracts": "^1.0"
     },

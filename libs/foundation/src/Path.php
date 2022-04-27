@@ -208,7 +208,11 @@ final class Path
      */
     private function resolveRootDirectory(): string
     {
-        return $_SERVER['DOCUMENT_ROOT'] ?? \getcwd()
+        return $_SERVER['DOCUMENT_ROOT']
+            ?? \getcwd()
+            ?: \dirname($_SERVER['PHP_SELF'] ?? '')
+            ?: \dirname($_SERVER['SCRIPT_NAME'] ?? '')
+            ?: \dirname($_SERVER['SCRIPT_FILENAME'] ?? '')
             ?: throw new \InvalidArgumentException(self::ERROR_ROOT_DIRECTORY);
     }
 
