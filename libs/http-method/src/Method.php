@@ -598,6 +598,8 @@ enum Method: string implements MethodInterface
      */
     public static function create(string $method, Info $info = null): MethodInterface
     {
+        $method = \strtoupper($method);
+
         if ($info === null) {
             return self::tryFrom($method) ?? new CustomMethod($method);
         }

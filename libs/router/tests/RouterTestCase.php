@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Helix\Router\Tests;
 
+use Helix\Contracts\Http\Method\MethodInterface;
+use Helix\Http\Method\Method;
 use HttpSoft\Message\ServerRequest;
 use Helix\Contracts\Router\Exception\NotAllowedExceptionInterface;
 use Helix\Contracts\Router\Exception\NotFoundExceptionInterface;
@@ -44,10 +46,13 @@ class RouterTestCase extends TestCase
     {
         $this->expectException(RouterExceptionInterface::class);
 
-        $this->router([
+        $router = $this->router([
             $this->route(method: Method::POST),
             $this->route(method: Method::POST),
         ]);
+
+        // Compile router
+        $router->match(new ServerRequest());
     }
 
     public function testRoutesDuplicateWithUniqueMethods()
@@ -66,8 +71,8 @@ class RouterTestCase extends TestCase
     {
         $result = [];
 
-        foreach ((new \ReflectionClass(Method::class))->getConstants() as $name => $value) {
-            $result[$name] = [$value];
+        foreach (Method::cases() as $case) {
+            $result[$case->name] = [$case];
         }
 
         return $result;
@@ -76,15 +81,17 @@ class RouterTestCase extends TestCase
     /**
      * @dataProvider methodsDataProvider
      *
-     * @param string $method
+     * @param MethodInterface $method
      * @throws NotAllowedExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function testMethodsMatching(string $method)
+    public function testMethodsMatching(MethodInterface $method)
     {
-        $router = $this->router([$this->route(handler: 'get', method: $method)]);
+        $router = $this->router([
+            $this->route(handler: 'get', method: $method)
+        ]);
 
-        $matched = $router->match(new ServerRequest(method: $method, uri: '/'));
+        $matched = $router->match(new ServerRequest(method: $method->getName(), uri: '/'));
 
         $this->assertSame($matched->getMethod(), $method);
     }
@@ -97,7 +104,7 @@ class RouterTestCase extends TestCase
             ->connect('/', '')
         ;
 
-        $router->match(new ServerRequest(method: Method::CONNECT, uri: '/'));
+        $router->match(new ServerRequest(method: Method::CONNECT->getName(), uri: '/'));
     }
 
     public function testDeleteMethod(): void
@@ -108,7 +115,7 @@ class RouterTestCase extends TestCase
             ->delete('/', '')
         ;
 
-        $router->match(new ServerRequest(method: Method::DELETE, uri: '/'));
+        $router->match(new ServerRequest(method: Method::DELETE->getName(), uri: '/'));
     }
 
     public function testGetMethod(): void
@@ -119,7 +126,7 @@ class RouterTestCase extends TestCase
             ->get('/', '')
         ;
 
-        $router->match(new ServerRequest(method: Method::GET, uri: '/'));
+        $router->match(new ServerRequest(method: Method::GET->getName(), uri: '/'));
     }
 
     public function testHeadMethod(): void
@@ -130,7 +137,7 @@ class RouterTestCase extends TestCase
             ->head('/', '')
         ;
 
-        $router->match(new ServerRequest(method: Method::HEAD, uri: '/'));
+        $router->match(new ServerRequest(method: Method::HEAD->getName(), uri: '/'));
     }
 
     public function testOptionsMethod(): void
@@ -141,7 +148,7 @@ class RouterTestCase extends TestCase
             ->options('/', '')
         ;
 
-        $router->match(new ServerRequest(method: Method::OPTIONS, uri: '/'));
+        $router->match(new ServerRequest(method: Method::OPTIONS->getName(), uri: '/'));
     }
 
     public function testPostMethod(): void
@@ -152,7 +159,7 @@ class RouterTestCase extends TestCase
             ->post('/', '')
         ;
 
-        $router->match(new ServerRequest(method: Method::POST, uri: '/'));
+        $router->match(new ServerRequest(method: Method::POST->getName(), uri: '/'));
     }
 
     public function testPutMethod(): void
@@ -163,7 +170,7 @@ class RouterTestCase extends TestCase
             ->put('/', '')
         ;
 
-        $router->match(new ServerRequest(method: Method::PUT, uri: '/'));
+        $router->match(new ServerRequest(method: Method::PUT->getName(), uri: '/'));
     }
 
     public function testTraceMethod(): void
@@ -174,7 +181,7 @@ class RouterTestCase extends TestCase
             ->trace('/', '')
         ;
 
-        $router->match(new ServerRequest(method: Method::TRACE, uri: '/'));
+        $router->match(new ServerRequest(method: Method::TRACE->getName(), uri: '/'));
     }
 
     public function testPatchMethod(): void
@@ -182,9 +189,9 @@ class RouterTestCase extends TestCase
         $this->expectNotToPerformAssertions();
 
         ($router = $this->router())
-            ->patch('/', '')
+            ->patch('/')
         ;
 
-        $router->match(new ServerRequest(method: Method::PATCH, uri: '/'));
+        $router->match(new ServerRequest(method: Method::PATCH->getName(), uri: '/'));
     }
 }

@@ -12,6 +12,14 @@
             "Helix\\Boot\\": "src"
         }
     },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5.20"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Helix\\Boot\\Tests\\": "tests"
+        }
+    },
     "extra": {
         "branch-alias": {
             "dev-master": "1.x-dev",

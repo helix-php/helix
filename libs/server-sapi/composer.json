@@ -12,6 +12,14 @@
             "Helix\\Server\\Sapi\\": "src"
         }
     },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5.20"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Helix\\Server\\Sapi\\Tests\\": "tests"
+        }
+    },
     "provide": {
         "helix/server-implementation": "^1.0"
     },

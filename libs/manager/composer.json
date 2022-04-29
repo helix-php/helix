@@ -12,6 +12,14 @@
             "Helix\\Manager\\": "src"
         }
     },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5.20"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Helix\\Manager\\Tests\\": "tests"
+        }
+    },
     "provide": {
         "helix/manager-contracts-implementation": "^1.0"
     },

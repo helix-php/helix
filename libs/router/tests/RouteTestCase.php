@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Helix\Router\Tests;
 
+use Helix\Http\Method\Method;
+
 /**
  * @group router
  */
@@ -53,16 +55,16 @@ class RouteTestCase extends TestCase
 
     public function testMethod()
     {
-        $route = $this->route(method: Http::GET);
+        $route = $this->route(method: Method::GET);
 
-        $this->assertSame(Http::GET, $route->getMethod());
+        $this->assertSame( Method::GET, $route->getMethod());
     }
 
     public function testNormalizeMethod()
     {
         $route = $this->route(method: 'get');
 
-        $this->assertSame(Http::GET, $route->getMethod());
+        $this->assertSame( Method::GET, $route->getMethod());
     }
 
     public function testNameAnonymous()

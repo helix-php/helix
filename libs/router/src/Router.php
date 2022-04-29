@@ -128,7 +128,6 @@ class Router implements RegistrarInterface, RepositoryInterface, RouterInterface
                 $request,
                 $result[self::INFO_VARS]
             ),
-
             Dispatcher::NOT_FOUND => throw new RouteNotFoundException($request, 'Route Not Found'),
             Dispatcher::METHOD_NOT_ALLOWED => throw new RouteNotAllowedException($request, 'Method Not Allowed'),
             default => throw new RouteMatchingException($request, 'Internal Router Error'),

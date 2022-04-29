@@ -31,7 +31,6 @@
         {"type": "path", "url": "libs/contracts/view"},
 
         {"type": "path", "url": "libs/boot"},
-        {"type": "path", "url": "libs/config"},
         {"type": "path", "url": "libs/config-purify"},
         {"type": "path", "url": "libs/container"},
         {"type": "path", "url": "libs/debug"},
@@ -44,6 +43,7 @@
         {"type": "path", "url": "libs/http-status-code"},
         {"type": "path", "url": "libs/manager"},
         {"type": "path", "url": "libs/middleware"},
+        {"type": "path", "url": "libs/param-resolver"},
         {"type": "path", "url": "libs/router"},
         {"type": "path", "url": "libs/router-generator"},
         {"type": "path", "url": "libs/server-sapi"},
@@ -76,14 +76,43 @@
     },
     "require-dev": {
         "helix/debug": "^1.0",
-        "phpunit/phpunit": "^9.5",
+        "phpunit/phpunit": "^9.5.20",
         "symfony/var-dumper": "^5.4|^6.0",
         "vimeo/psalm": "^4.10",
-        "jetbrains/phpstorm-attributes": "^1.0"
+        "jetbrains/phpstorm-attributes": "^1.0",
+        "httpsoft/http-message": "^1.0"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "App\\Tests\\": "tests",
+
+            "Helix\\Boot\\Tests\\": "libs/boot/tests",
+            "Helix\\Config\\Purify\\Tests\\": "libs/config-purify/tests",
+            "Helix\\Container\\Tests\\": "libs/container/tests",
+            "Helix\\Debug\\Tests\\": "libs/debug/tests",
+            "Helix\\Env\\Tests\\": "libs/env/tests",
+            "Helix\\Foundation\\Tests\\": "libs/foundation/tests",
+            "Helix\\Foundation\\Console\\Tests\\": "libs/foundation-console/tests",
+            "Helix\\Foundation\\Http\\Tests\\": "libs/foundation-http/tests",
+            "Helix\\Http\\Tests\\": "libs/http/tests",
+            "Helix\\Http\\Method\\Tests\\": "libs/http-method/tests",
+            "Helix\\Http\\StatusCode\\Tests\\": "libs/http-status-code/tests",
+            "Helix\\Manager\\Tests\\": "libs/manager/tests",
+            "Helix\\Middleware\\Tests\\": "libs/middleware/tests",
+            "Helix\\ParamResolver\\Tests\\": "libs/param-resolver/tests",
+            "Helix\\Router\\Tests\\": "libs/router/tests",
+            "Helix\\Router\\Generator\\Tests\\": "libs/router-generator/tests",
+            "Helix\\Server\\Tests\\": "libs/server/tests",
+            "Helix\\Server\\Sapi\\Tests\\": "libs/server-sapi/tests",
+            "Helix\\View\\Tests\\": "libs/view/tests",
+            "Helix\\View\\Engine\\Php\\Tests\\": "libs/view-engine-php/tests",
+            "Helix\\View\\Engine\\Twig\\Tests\\": "libs/view-engine-twig/tests"
+        }
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.0.x-dev"
+            "dev-master": "1.0.x-dev",
+            "dev-main": "1.0.x-dev"
         }
     },
     "config": {

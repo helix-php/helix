@@ -11,6 +11,14 @@
             "Helix\\View\\Engine\\Php\\": "src"
         }
     },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5.20"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Helix\\View\\Engine\\Php\\Tests\\": "tests"
+        }
+    },
     "provide": {
         "helix/view-contracts-implementation": "^1.0"
     },

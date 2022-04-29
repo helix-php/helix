@@ -15,14 +15,4 @@ use Helix\Contracts\Router\Exception\NotFoundExceptionInterface;
 
 class RouteNotFoundException extends RouteMatchingException implements NotFoundExceptionInterface
 {
-    /**
-     * @param string $name
-     * @param int $code
-     * @param \Throwable|null $prev
-     * @return static
-     */
-    public static function notDefined(string $name, int $code = 0, \Throwable $prev = null): static
-    {
-        return new self(\sprintf('Route named [%s] has not been defined', $name), $code, $prev);
-    }
 }

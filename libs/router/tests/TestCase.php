@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Helix\Router\Tests;
 
+use Helix\Contracts\Http\Method\MethodInterface;
 use Helix\Contracts\Router\RouteInterface;
 use Helix\Contracts\Router\RouterInterface;
 use Helix\Http\Method\Method;
@@ -24,27 +25,24 @@ use PHPUnit\Framework\TestCase as BaseTestCase;
  */
 abstract class TestCase extends BaseTestCase
 {
-    /**
-     * @param string $path
-     * @param callable|string $handler
-     * @param Method $method
-     * @return Route
-     */
-    protected function route(string $path = '/', mixed $handler = 'print', Method $method = Method::GET): Route
-    {
+    protected function route(
+        string $path = '/',
+        mixed $handler = 'print',
+        MethodInterface|string $method = Method::GET
+    ): Route {
         return new Route($path, $handler, $method);
     }
 
     /**
      * @param array<RouteInterface> $routes
-     * @return RouterInterface
+     * @return Router
      */
-    protected function router(array $routes = []): RouterInterface
+    protected function router(array $routes = []): Router
     {
         $router = new Router(new Psr17Factory(), new Psr17Factory());
 
-        if ($routes === []) {
-            return $router;
+        foreach ($routes as $route) {
+            $router->add($route);
         }
 
         return $router;

@@ -13,7 +13,13 @@
     },
     "require-dev": {
         "jetbrains/phpstorm-attributes": "^1.0",
-        "helix/foundation-console": "^1.0"
+        "helix/foundation-console": "^1.0",
+        "phpunit/phpunit": "^9.5.20"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Helix\\Debug\\Tests\\": "tests"
+        }
     },
     "extra": {
         "branch-alias": {

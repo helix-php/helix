@@ -1,25 +1,28 @@
 {
-    "name": "helix/config",
+    "name": "helix/param-resolver",
     "type": "library",
     "license": "MIT",
     "require": {
         "php": "^8.1",
-        "ext-json": "*",
-        "symfony/yaml": "^5.4|^6.0",
-        "symfony/config": "^5.4|^6.0"
+        "psr/container": "^1.0|^2.0"
     },
     "autoload": {
         "psr-4": {
-            "Helix\\Config\\": "src"
+            "Helix\\ParamResolver\\": "src"
         }
     },
     "require-dev": {
-        "jetbrains/phpstorm-attributes": "^1.0"
+        "phpunit/phpunit": "^9.5.20"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Helix\\ParamResolver\\Tests\\": "tests"
+        }
     },
     "extra": {
         "branch-alias": {
             "dev-master": "1.x-dev",
-"dev-main": "1.x-dev"
+            "dev-main": "1.x-dev"
         }
     },
     "minimum-stability": "dev",

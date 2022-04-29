@@ -45,19 +45,26 @@ class Route implements RouteInterface
     private array $middleware = [];
 
     /**
-     * @param MethodInterface $method
+     * @var MethodInterface
+     */
+    protected MethodInterface $method;
+
+    /**
      * @param non-empty-string $path
      * @param mixed $handler
+     * @param MethodInterface|non-empty-string $method
      */
     public function __construct(
         string $path = '/',
         mixed $handler = null,
-        protected MethodInterface $method = Method::GET,
+        MethodInterface|string $method = Method::GET,
     ) {
         $this->path = Normalizer::path($path);
 
         /** @psalm-suppress MissingClosureReturnType */
         $this->handler = $handler ?? (static fn() => null);
+
+        $this->method = $method instanceof MethodInterface ? $method : Method::create($method);
     }
 
     /**
