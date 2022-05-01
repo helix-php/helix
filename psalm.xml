@@ -10,8 +10,19 @@
         <file name="resources/stubs/Fiber.phpstub" />
     </stubs>
     <issueHandlers>
+        <!-- Useless checks -->
         <LessSpecificReturnStatement errorLevel="suppress" />
         <MoreSpecificReturnType errorLevel="suppress" />
+
+        <!-- It makes no sense to check for the mixed type -->
+        <MixedAssignment errorLevel="suppress" />
+        <MixedArgument errorLevel="suppress" />
+
+        <!-- Interferes with the work of invariants -->
+        <RedundantConditionGivenDocblockType errorLevel="suppress" />
+        <RedundantCastGivenDocblockType errorLevel="suppress" />
+        <RedundantCondition errorLevel="suppress" />
+        <RedundantCast errorLevel="suppress" />
     </issueHandlers>
     <projectFiles>
         <directory name="app" />

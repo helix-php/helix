@@ -9,17 +9,12 @@
 
 declare(strict_types=1);
 
-namespace Helix\ParamResolver\Metadata;
+namespace Helix\ParamResolver\Metadata\Type;
 
-use Helix\ParamResolver\Metadata\Type\TypeInterface;
-
-/**
- * @template T of TypeInterface
- */
-interface TypeProviderInterface
+interface TypeInterface
 {
     /**
-     * @return T
+     * @return bool
      */
-    public function getType(): TypeInterface;
+    public function isNullable(): bool;
 }

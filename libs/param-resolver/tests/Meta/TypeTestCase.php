@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Helix\ParamResolver\Tests\Meta;
 
-use Helix\ParamResolver\Metadata\Type;
+use Helix\ParamResolver\Metadata\Type\Type;
 use Helix\ParamResolver\Metadata\Type\UnionType;
 
 class TypeTestCase extends MetaTestCase

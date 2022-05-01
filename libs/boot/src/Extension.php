@@ -16,6 +16,10 @@ use Helix\Boot\Extension\Metadata\AttributesMetadataProvider;
 use Helix\Boot\Extension\Info\InfoProviderInterface;
 use Helix\Boot\Extension\Metadata\MetadataProviderInterface;
 
+/**
+ * @template T of object
+ * @template-implements ExtensionInterface<T>
+ */
 final class Extension implements ExtensionInterface, \Stringable
 {
     /**
@@ -29,10 +33,10 @@ final class Extension implements ExtensionInterface, \Stringable
     private ?InfoProviderInterface $info = null;
 
     /**
-     * @param object $context
+     * @param T $context
      */
     public function __construct(
-        private object $context
+        private readonly object $context,
     ) {
     }
 

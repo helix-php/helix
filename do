@@ -26,11 +26,11 @@ if (!in_array(PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {
 }
 
 $app = new Application(new CreateInfo(
-    // Configuration
+    debug: (bool)env('APP_DEBUG'),
+    env: env('APP_ENV', 'prod'),
     path: __DIR__,
-
-    // Extensions list
     extensions: require __DIR__ . '/resources/config/extensions.php',
 ));
 
-$app->run();
+
+exit($app->run());

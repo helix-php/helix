@@ -17,6 +17,8 @@ use Helix\Boot\Attribute\MethodMetadata;
 use Helix\Boot\Extension\Metadata\MetadataProviderInterface;
 
 /**
+ * @template T of object
+ *
  * @see MethodMetadata
  * @see ClassMetadata
  */
@@ -25,7 +27,7 @@ interface ExtensionInterface extends
     InfoProviderInterface
 {
     /**
-     * @return object
+     * @return T
      */
     public function getContext(): object;
 }

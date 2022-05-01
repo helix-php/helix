@@ -9,12 +9,16 @@
 
 declare(strict_types=1);
 
-namespace Helix\ParamResolver;
+namespace Helix\ParamResolver\Metadata;
 
-use Helix\ParamResolver\Metadata\AttributesProviderInterface;
-use Helix\ParamResolver\Metadata\TypeProviderInterface;
+use Helix\ParamResolver\Metadata\Type\TypeInterface;
 
-interface MetadataInterface extends
+/**
+ * @template T of TypeInterface
+ * @template-implements TypeProviderInterface<T>
+ */
+interface ParameterInterface extends
+    TypeInterface,
     TypeProviderInterface,
     AttributesProviderInterface
 {
@@ -38,4 +42,8 @@ interface MetadataInterface extends
      */
     public function isVariadic(): bool;
 
+    /**
+     * @return bool
+     */
+    public function isPromoted(): bool;
 }

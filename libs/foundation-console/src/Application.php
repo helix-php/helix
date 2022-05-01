@@ -38,22 +38,37 @@ final class Application extends BaseApplication
     {
         parent::__construct($info);
 
-        $info->container->instance(
-            $this->cli = new SymfonyApplication($this->getName())
-        );
+        $this->boot();
     }
 
     /**
-     * @param Command ...$commands
      * @return void
      */
-    public function add(Command ...$commands): void
+    private function boot(): void
+    {
+        $this->cli = new SymfonyApplication($this->getName());
+
+        $this->container->instance($this->cli);
+    }
+
+    /**
+     * @param Command|class-string<Command> ...$commands
+     * @return void
+     * @throws NotInstantiatableExceptionInterface
+     */
+    public function add(Command|string ...$commands): void
     {
         if ($this->running) {
             throw new \LogicException('Can not add command to running CLI application');
         }
 
-        $this->cli->addCommands($commands);
+        foreach ($commands as $command) {
+            if (\is_string($command)) {
+                $command = $this->container->make($command);
+            }
+
+            $this->cli->add($command);
+        }
     }
 
     /**

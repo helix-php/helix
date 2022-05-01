@@ -9,6 +9,8 @@
 
 declare(strict_types=1);
 
+use Helix\Env\Environment;
+
 $autoload = require __DIR__ . '/../vendor/autoload.php';
 
 ini_set('date.timezone', 'UTC');
@@ -18,5 +20,10 @@ ini_set('date.timezone', 'UTC');
  * to the application root now.
  */
 chdir(dirname(__DIR__));
+
+/**
+ * Load environment variables from .env.
+ */
+Environment::dotenv(__DIR__ . '/../.env');
 
 return $autoload;

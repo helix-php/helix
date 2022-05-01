@@ -11,8 +11,6 @@ declare(strict_types=1);
 
 namespace Helix\ParamResolver\Metadata\Type;
 
-use Helix\ParamResolver\Metadata\TypeInterface;
-
 /**
  * @template-implements \ArrayAccess<positive-int|0, TypeInterface>
  * @template-implements \IteratorAggregate<positive-int|0, TypeInterface>

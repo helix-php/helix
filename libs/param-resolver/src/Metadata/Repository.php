@@ -14,8 +14,11 @@ namespace Helix\ParamResolver\Metadata;
 /**
  * @psalm-type ParametersList = array<Parameter>
  * @psalm-type FunctionsList = array<non-empty-string, ParametersList>
+ *
+ * @internal Repository is an internal library class, please do not use it in your code.
+ * @psalm-internal Helix\ParamResolver
  */
-class Repository implements RepositoryInterface
+final class Repository
 {
     /**
      * @var FunctionsList
@@ -27,8 +30,12 @@ class Repository implements RepositoryInterface
      */
     private \WeakMap $callables;
 
-    public function __construct()
-    {
+    /**
+     * @param Factory $factory
+     */
+    public function __construct(
+        private readonly Factory $factory = new Factory(),
+    ) {
         $this->callables = new \WeakMap();
     }
 
@@ -54,12 +61,14 @@ class Repository implements RepositoryInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @param callable-string $name
+     * @return iterable<ParameterInterface>
      * @throws \ReflectionException
      */
     public function byFunction(string $name): iterable
     {
         if (!isset($this->functions[$name])) {
+            /** @psalm-suppress PropertyTypeCoercion */
             return $this->functions[$name] = $this->fromReflection(
                 new \ReflectionFunction($name)
             );
@@ -69,7 +78,9 @@ class Repository implements RepositoryInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @param class-string|object $class
+     * @param non-empty-string $name
+     * @return iterable<ParameterInterface>
      * @throws \ReflectionException
      */
     public function byMethod(string|object $class, string $name): iterable
@@ -90,13 +101,28 @@ class Repository implements RepositoryInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @param callable $callable
+     * @return iterable<ParameterInterface>
      * @throws \ReflectionException
      */
     public function byCallable(callable $callable): iterable
     {
-        $closure = $callable(...);
+        return match(true) {
+            $callable instanceof \Closure => $this->byClosure($callable),
+            \is_string($callable) => $this->byFunction($callable),
+            default => $this->fromReflection(
+                new \ReflectionFunction($callable(...))
+            ),
+        };
+    }
 
+    /**
+     * @param \Closure $closure
+     * @return iterable<ParameterInterface>
+     * @throws \ReflectionException
+     */
+    public function byClosure(\Closure $closure): iterable
+    {
         if (!isset($this->callables[$closure])) {
             return $this->callables[$closure] = $this->fromReflection(
                 new \ReflectionFunction($closure)
@@ -115,7 +141,7 @@ class Repository implements RepositoryInterface
         $result = [];
 
         foreach ($fun->getParameters() as $parameter) {
-            $result[] = Parameter::fromReflection($parameter);
+            $result[] = $this->factory->fromReflectionParameter($parameter);
         }
 
         return $result;

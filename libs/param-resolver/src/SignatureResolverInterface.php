@@ -11,12 +11,37 @@ declare(strict_types=1);
 
 namespace Helix\ParamResolver;
 
+use Helix\ParamResolver\Exception\NotResolvableException;
+use Helix\ParamResolver\Exception\SignatureException;
+use Helix\ParamResolver\Resolver\ResolverInterface;
+
 interface SignatureResolverInterface
 {
     /**
-     * @param iterable<MetadataInterface> $parameters
-     * @param iterable<ResolverInterface> $resolvers
+     * @param callable-string $name
+     * @param iterable<array-key, ResolverInterface> $resolvers
      * @return iterable
+     * @throws NotResolvableException
+     * @throws SignatureException
      */
-    public function resolve(iterable $parameters, iterable $resolvers = []): iterable;
+    public function byFunction(string $name, iterable $resolvers = []): iterable;
+
+    /**
+     * @param class-string|object $class
+     * @param non-empty-string $name
+     * @param iterable<array-key, ResolverInterface> $resolvers
+     * @return iterable
+     * @throws NotResolvableException
+     * @throws SignatureException
+     */
+    public function byMethod(string|object $class, string $name, iterable $resolvers = []): iterable;
+
+    /**
+     * @param callable $callable
+     * @param iterable<array-key, ResolverInterface> $resolvers
+     * @return iterable
+     * @throws NotResolvableException
+     * @throws SignatureException
+     */
+    public function byCallable(callable $callable, iterable $resolvers = []): iterable;
 }

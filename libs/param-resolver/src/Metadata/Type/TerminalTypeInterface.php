@@ -9,18 +9,22 @@
 
 declare(strict_types=1);
 
-namespace Helix\ParamResolver\Metadata;
+namespace Helix\ParamResolver\Metadata\Type;
 
-interface TypeInterface
+interface TerminalTypeInterface extends TypeInterface
 {
     /**
-     * @return bool
+     * @return non-empty-string
      */
-    public function isNullable(): bool;
+    public function getName(): string;
 
     /**
-     * @param non-empty-string $name
      * @return bool
      */
-    public function is(string $name): bool;
+    public function isBuiltin(): bool;
+
+    /**
+     * @return bool
+     */
+    public function isInternal(): bool;
 }

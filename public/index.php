@@ -23,15 +23,12 @@ if (\class_exists(SapiServer::class) && SapiServer::isBuiltinServerFile(__FILE__
 }
 
 $app = new Application(new CreateInfo(
-    // Application handlers
+    debug: (bool)env('APP_DEBUG'),
+    env: env('APP_ENV', 'prod'),
     handler: \App\Http\Kernel::class,
     errors: \App\Http\ErrorHandler::class,
-
-    // Configuration
     path: \dirname(__DIR__),
-
-    // Extensions list
     extensions: require __DIR__ . '/../resources/config/extensions.php',
 ));
 
-$app->run();
+exit($app->run());

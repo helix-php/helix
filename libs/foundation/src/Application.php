@@ -18,20 +18,9 @@ use Helix\Boot\RepositoryInterface;
 use Helix\Container\Container;
 use Helix\Container\Exception\RegistrationException;
 use Helix\Contracts\Container\Exception\NotInstantiatableExceptionInterface;
-use Helix\Env\Environment;
 
 abstract class Application implements LoaderInterface
 {
-    /**
-     * @var non-empty-string
-     */
-    protected const ENV_DEBUG = 'APP_DEBUG';
-
-    /**
-     * @var non-empty-string
-     */
-    protected const ENV_NAME = 'APP_ENV';
-
     /**
      * @var Loader
      */
@@ -40,7 +29,7 @@ abstract class Application implements LoaderInterface
     /**
      * @var Container
      */
-    protected readonly Container $container;
+    public readonly Container $container;
 
     /**
      * @var bool
@@ -64,12 +53,10 @@ abstract class Application implements LoaderInterface
      */
     public function __construct(CreateInfo $info)
     {
-        $this->loadEnvironment($info);
+        $this->env = $info->env;
+        $this->debug = $info->debug;
 
-        $this->debug = (bool)($info->debug ?? Environment::get(static::ENV_DEBUG, false));
-        $this->env = (string)($info->env ?? Environment::get(static::ENV_NAME, 'prod'));
-
-        $this->container = $info->container;
+        $this->container = new Container($info->container);
         $this->container->instance($this);
 
         $this->bootVersion();
@@ -77,16 +64,6 @@ abstract class Application implements LoaderInterface
         $this->bootExtensions($info);
     }
 
-    /**
-     * @param CreateInfo $info
-     * @return void
-     */
-    private function loadEnvironment(CreateInfo $info): void
-    {
-        if (!Environment::loaded()) {
-            Environment::dotenv($info->path->root('.env'));
-        }
-    }
 
     /**
      * @return void

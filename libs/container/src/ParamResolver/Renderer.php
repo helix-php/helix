@@ -55,6 +55,19 @@ final class Renderer
     }
 
     /**
+     * @param \ReflectionClass $class
+     * @return non-empty-string
+     */
+    private static function getClassName(\ReflectionClass $class): string
+    {
+        if ($class->isAnonymous()) {
+            return 'class@anonymous';
+        }
+
+        return $class->getName();
+    }
+
+    /**
      * @param \ReflectionFunctionAbstract $fun
      * @return string
      */
@@ -75,10 +88,8 @@ final class Renderer
         }
 
         if ($fun instanceof \ReflectionMethod) {
-            $class = $fun->getDeclaringClass();
-
             return \vsprintf('function [%s::%s()] defined in [%s:%d]', [
-                $class->getName(),
+                self::getClassName($fun->getDeclaringClass()),
                 $fun->getName(),
                 $fun->getFileName(),
                 $fun->getStartLine(),

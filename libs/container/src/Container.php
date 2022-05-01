@@ -135,7 +135,7 @@ final class Container implements
     /**
      * @return $this
      */
-    public function registerSelf(): self
+    private function registerSelf(): self
     {
         $this->instance($this)
             ->as(self::class)

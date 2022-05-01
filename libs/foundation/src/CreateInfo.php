@@ -12,36 +12,40 @@ declare(strict_types=1);
 namespace Helix\Foundation;
 
 use Helix\Boot\ExtensionInterface;
-use Helix\Container\Container;
 use Psr\Container\ContainerInterface;
 
 class CreateInfo
 {
+    /**
+     * @var non-empty-string
+     */
+    public const DEFAULT_ENVIRONMENT = 'prod';
+
     /**
      * @var Path
      */
     public readonly Path $path;
 
     /**
-     * @var Container
+     * @var bool
      */
-    public readonly Container $container;
+    public readonly bool $debug;
 
     /**
      * @param bool|null $debug
-     * @param non-empty-string|null $env
+     * @param non-empty-string $env
      * @param Path|non-empty-string $path
      * @param array<ExtensionInterface|class-string<ExtensionInterface>> $extensions
      * @param ContainerInterface|null $container
      */
     public function __construct(
-        public readonly ?bool $debug = null,
-        public readonly ?string $env = null,
+        ?bool $debug = null,
+        public readonly string $env = self::DEFAULT_ENVIRONMENT,
         Path|string $path = new Path(),
         public array $extensions = [],
-        ContainerInterface $container = null,
+        public readonly ?ContainerInterface $container = null,
     ) {
-        $this->container = $this->bootContainerValue($container);
+        $this->debug = $this->bootDebugValue($debug);
         $this->path = $this->bootPathValue($path);
     }
 
@@ -56,15 +60,6 @@ class CreateInfo
         }
 
         return new Path(root: $path);
-    }
-
-    /**
-     * @param ContainerInterface|null $container
-     * @return Container
-     */
-    private function bootContainerValue(?ContainerInterface $container): Container
-    {
-        return new Container($container);
     }
 
     /**

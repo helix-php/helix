@@ -22,7 +22,7 @@ final class CreateInfo extends BaseCreateInfo
 {
     /**
      * @param bool|null $debug
-     * @param non-empty-string|null $env
+     * @param non-empty-string $env
      * @param class-string<RequestHandlerInterface> $handler
      * @param class-string<HttpErrorHandlerInterface> $errors
      * @param non-empty-string|Path $path
@@ -31,7 +31,7 @@ final class CreateInfo extends BaseCreateInfo
      */
     public function __construct(
         ?bool $debug = null,
-        ?string $env = null,
+        string $env = self::DEFAULT_ENVIRONMENT,
         public string $handler = Kernel::class,
         public string $errors = ErrorHandler::class,
         Path|string $path = new Path(),

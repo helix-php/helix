@@ -11,9 +11,6 @@ declare(strict_types=1);
 
 namespace Helix\ParamResolver\Metadata\Type;
 
-use Helix\ParamResolver\Metadata\Type;
-use Helix\ParamResolver\Metadata\TypeInterface;
-
 abstract class Composite implements CompositeTypeInterface
 {
     /**
@@ -42,67 +39,6 @@ abstract class Composite implements CompositeTypeInterface
                 $this->unwrap([$first, $second, ...$other])
             )
         )];
-    }
-
-    /**
-     * @param array<non-empty-string> $names
-     * @return array<non-empty-string> & array<lowercase-string>
-     */
-    private function mapNames(array $names): array
-    {
-        return \array_map(\strtolower(...), \array_unique($names));
-    }
-
-    /**
-     * @param non-empty-string $name
-     * @param non-empty-string ...$names
-     * @return bool
-     */
-    public function containsAll(string $name, string ...$names): bool
-    {
-        $expected = $this->mapNames([$name, ...$names]);
-
-        foreach ($this->types as $type) {
-            if (!$type instanceof Type || !\in_array($type->getId(), $expected, true)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * @param non-empty-string $name
-     * @param non-empty-string ...$names
-     * @return bool
-     */
-    public function containsAny(string $name, string ...$names): bool
-    {
-        $expected = $this->mapNames([$name, ...$names]);
-
-        foreach ($this->types as $type) {
-            if ($type instanceof Type && \in_array($type->getId(), $expected, true)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * @param non-empty-string $name
-     * @param non-empty-string ...$names
-     * @return bool
-     */
-    public function is(string $name, string ...$names): bool
-    {
-        $expected = $this->mapNames([$name, ...$names]);
-
-        if (\count($this->types) !== \count($expected)) {
-            return false;
-        }
-
-        return $this->containsAll($name, ...$names);
     }
 
     /**

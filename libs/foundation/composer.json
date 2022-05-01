@@ -4,7 +4,6 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
-        "helix/env": "^1.0",
         "helix/boot": "^1.0",
         "helix/container": "^1.0",
         "helix/error-handler-contracts": "^1.0",
