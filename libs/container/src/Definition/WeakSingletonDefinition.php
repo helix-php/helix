@@ -15,12 +15,12 @@ namespace Helix\Container\Definition;
  * @template TDefinition of object
  * @template-extends LazyDefinition<TDefinition>
  */
-final class WeakSingletonDefinition extends LazyDefinition
+class WeakSingletonDefinition extends LazyDefinition
 {
     /**
      * @var \WeakReference<TDefinition>|null
      */
-    private ?\WeakReference $ref = null;
+    protected ?\WeakReference $ref = null;
 
     /**
      * @param \Closure():TDefinition $initializer

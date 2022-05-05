@@ -15,7 +15,7 @@ namespace Helix\Container\Definition;
  * @template TDefinition of object
  * @template-extends Definition<TDefinition>
  */
-final class InstanceDefinition extends Definition
+class InstanceDefinition extends Definition
 {
     /**
      * @param TDefinition $instance

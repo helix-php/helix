@@ -15,12 +15,12 @@ namespace Helix\Container\Definition;
  * @template TDefinition of object
  * @template-extends LazyDefinition<TDefinition>
  */
-final class SingletonDefinition extends LazyDefinition
+class SingletonDefinition extends LazyDefinition
 {
     /**
      * @var TDefinition|null
      */
-    private ?object $instance = null;
+    protected ?object $instance = null;
 
     /**
      * {@inheritDoc}

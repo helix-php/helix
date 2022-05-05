@@ -11,7 +11,9 @@ declare(strict_types=1);
 
 namespace Helix\Container\Exception;
 
-class ServiceNotFoundException extends ServiceNotResolvableException
+use Psr\Container\NotFoundExceptionInterface;
+
+class ServiceNotFoundException extends ServiceNotResolvableException implements NotFoundExceptionInterface
 {
     /**
      * @param non-empty-string $service

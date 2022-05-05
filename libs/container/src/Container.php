@@ -20,7 +20,6 @@ use Helix\Container\Definition\WeakSingletonDefinition;
 use Helix\Container\Exception\ServiceNotFoundException;
 use Helix\Container\ParamResolver\ContainerServiceResolver;
 use Helix\Container\ParamResolver\ValueResolverInterface;
-use Helix\Contracts\Router\Exception\NotFoundExceptionInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 
@@ -73,7 +72,7 @@ final class Container implements
     /**
      * @return void
      */
-    public function registerSelf(): void
+    private function registerSelf(): void
     {
         $this->instance($this)
             ->withInterfaces();
@@ -154,7 +153,6 @@ final class Container implements
      * @return T
      * @throws ServiceNotFoundException
      * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function get(string $id, iterable $resolvers = []): object
     {

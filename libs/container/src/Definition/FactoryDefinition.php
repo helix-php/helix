@@ -15,7 +15,7 @@ namespace Helix\Container\Definition;
  * @template TDefinition of object
  * @template-extends LazyDefinition<TDefinition>
  */
-final class FactoryDefinition extends LazyDefinition
+class FactoryDefinition extends LazyDefinition
 {
     /**
      * {@inheritDoc}
