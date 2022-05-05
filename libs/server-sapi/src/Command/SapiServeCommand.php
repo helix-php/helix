@@ -47,6 +47,12 @@ final class SapiServeCommand extends Command
             description: 'The port the server should be available on',
             default: '8080'
         );
+        $this->addOption(
+            name: 'workers',
+            mode: InputOption::VALUE_OPTIONAL,
+            description: 'Workers count',
+            default: '2'
+        );
     }
 
     /**
@@ -63,7 +69,7 @@ final class SapiServeCommand extends Command
         [$host, $port] = [$input->getOption('host'), $input->getOption('port')];
 
         $process = new Process(['php', '-S', $host . ':' . $port, 'index.php'], $this->public, [
-            'PHP_CLI_SERVER_WORKERS' => '2'
+            'PHP_CLI_SERVER_WORKERS' => $input->getOption('workers'),
         ]);
 
         $process->setTimeout(null);

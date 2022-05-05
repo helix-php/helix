@@ -17,7 +17,7 @@ use Psr\Http\Message\UriInterface;
 interface MatchedRouteInterface extends RouteInterface
 {
     /**
-     * @return array<string, string>
+     * @return array<non-empty-string, string>
      */
     public function getArguments(): array;
 

@@ -17,7 +17,6 @@ use Helix\Boot\LoaderInterface;
 use Helix\Boot\RepositoryInterface;
 use Helix\Container\Container;
 use Helix\Container\Exception\RegistrationException;
-use Helix\Contracts\Container\Exception\NotInstantiatableExceptionInterface;
 
 abstract class Application implements LoaderInterface
 {
@@ -49,7 +48,6 @@ abstract class Application implements LoaderInterface
     /**
      * @param CreateInfo $info
      * @throws RegistrationException
-     * @throws NotInstantiatableExceptionInterface
      */
     public function __construct(CreateInfo $info)
     {
@@ -77,7 +75,6 @@ abstract class Application implements LoaderInterface
     /**
      * @param CreateInfo $info
      * @return void
-     * @throws NotInstantiatableExceptionInterface
      * @throws RegistrationException
      */
     private function bootExtensions(CreateInfo $info): void

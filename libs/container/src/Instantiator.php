@@ -11,58 +11,74 @@ declare(strict_types=1);
 
 namespace Helix\Container;
 
-use Doctrine\Instantiator\Instantiator as DoctrineInstantiator;
-use Doctrine\Instantiator\InstantiatorInterface as DoctrineInstantiatorInterface;
-use Helix\Container\ParamResolver\ParamResolver;
-use Helix\Contracts\Container\Exception\ContainerExceptionInterface;
-use Helix\Contracts\Container\InstantiatorInterface;
-use Helix\Container\Exception\NotInstantiatableException;
+use Helix\Container\Exception\ParamNotResolvableException;
+use Helix\Container\Exception\ServiceNotFoundException;
+use Helix\Container\Exception\ServiceNotInstantiatableException;
+use Helix\Container\Exception\SignatureException;
+use Helix\Container\ParamResolver\ValueResolverInterface;
 
 final class Instantiator implements InstantiatorInterface
 {
     /**
-     * @var string
+     * @var non-empty-string
      */
-    private const CONSTRUCTOR_METHOD = '__construct';
+    private const ERROR_NOT_FOUND = 'Can not instantiate service [%s]';
 
     /**
-     * @var DoctrineInstantiatorInterface
+     * @var non-empty-string
      */
-    private DoctrineInstantiatorInterface $instantiator;
+    private const ERROR_INSTANTIATION = 'An error occurred while service [%s] instantiation: %s';
 
     /**
-     * @var ParamResolver
+     * @param Registry $registry
+     * @param ParamResolverInterface $resolver
      */
-    private ParamResolver $resolver;
-
-    /**
-     * @param ParamResolver $resolver
-     */
-    public function __construct(ParamResolver $resolver)
-    {
-        $this->resolver = $resolver;
-        $this->instantiator = new DoctrineInstantiator();
+    public function __construct(
+        private readonly Registry $registry,
+        private readonly ParamResolverInterface $resolver = new ParamResolver(),
+    ) {
     }
 
     /**
      * {@inheritDoc}
+     * @throws ParamNotResolvableException
+     * @throws ServiceNotFoundException
+     * @throws ServiceNotInstantiatableException
+     * @throws SignatureException
      */
-    public function make(string $id, callable|array $resolver = null): object
+    public function make(string $id, iterable $resolvers = []): object
     {
-        try {
-            $instance = $this->instantiator->instantiate($id);
+        $concrete = $this->registry->concrete($id);
 
-            if (\method_exists($instance, self::CONSTRUCTOR_METHOD)) {
-                $constructor = new \ReflectionMethod($instance, self::CONSTRUCTOR_METHOD);
-
-                $constructor->invokeArgs($instance, $this->resolver->resolve($constructor, $resolver));
-            }
-
-            return $instance;
-        } catch (ContainerExceptionInterface $e) {
-            throw $e;
-        } catch (\Throwable $e) {
-            throw new NotInstantiatableException($e->getMessage(), $e->getCode(), $e);
+        if (!\class_exists($concrete)) {
+            $alias = $concrete === $id ? $concrete : "$id -> $concrete";
+            throw new ServiceNotFoundException($id, \sprintf(self::ERROR_NOT_FOUND, $alias));
         }
+
+        $arguments = $this->getConstructorArguments($concrete, $resolvers);
+
+        try {
+            /** @psalm-suppress InvalidReturnStatement */
+            return new $concrete(...$arguments);
+        } catch (\Throwable $e) {
+            $message = \sprintf(self::ERROR_INSTANTIATION, $concrete, $e->getMessage());
+            throw new ServiceNotInstantiatableException($concrete, $message, (int)$e->getCode(), $e);
+        }
+    }
+
+    /**
+     * @param class-string $class
+     * @param iterable<ValueResolverInterface> $resolvers
+     * @return iterable
+     * @throws ParamNotResolvableException
+     * @throws SignatureException
+     */
+    private function getConstructorArguments(string $class, iterable $resolvers): iterable
+    {
+        if (\method_exists($class, '__construct')) {
+            return $this->resolver->fromMethod($class, '__construct', $resolvers);
+        }
+
+        return [];
     }
 }

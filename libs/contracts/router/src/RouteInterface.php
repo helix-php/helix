@@ -13,11 +13,6 @@ namespace Helix\Contracts\Router;
 
 use Helix\Contracts\Http\Method\MethodInterface;
 
-/**
- * @see MiddlewareInterface
- *
- * @psalm-type MiddlewareCallableDefinition = callable(ServerRequestInterface, RequestHandlerInterface): ResponseInterface
- */
 interface RouteInterface
 {
     /**

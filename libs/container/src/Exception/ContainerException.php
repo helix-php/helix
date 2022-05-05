@@ -11,8 +11,6 @@ declare(strict_types=1);
 
 namespace Helix\Container\Exception;
 
-use Helix\Contracts\Container\Exception\ContainerExceptionInterface;
-
-class ContainerException extends \Exception implements ContainerExceptionInterface
+class ContainerException extends \Exception
 {
 }

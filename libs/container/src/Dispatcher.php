@@ -11,153 +11,73 @@ declare(strict_types=1);
 
 namespace Helix\Container;
 
-use Helix\Container\ParamResolver\ParamResolver;
+use Helix\Container\Exception\ParamNotResolvableException;
+use Helix\Container\Exception\SignatureException;
+use Helix\Container\ParamResolver\ValueResolverInterface;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
-use Helix\Contracts\Dispatcher\DispatcherInterface;
-use Helix\Contracts\Container\Exception\ContainerExceptionInterface;
-use Helix\Container\Exception\BadSignatureException;
-use Helix\Container\Exception\InvocationException;
-use Helix\Container\Exception\NotResolvableException;
-use Helix\Container\ParamResolver\Renderer;
+use Psr\Container\NotFoundExceptionInterface;
 
 final class Dispatcher implements DispatcherInterface
 {
     /**
-     * @var string
+     * @var non-empty-string
      */
-    private const DELIMITER = '@';
+    private const ERROR_INVALID_SIGNATURE = 'Action signature must be like '
+        . '[service%smethod], but [%s] given';
 
     /**
-     * @var string
+     * @var non-empty-string
      */
-    private const ERROR_DISPATCHING =
-        'An error occurred while dispatching %s'
-    ;
-
-    /**
-     * @var string
-     */
-    private const ERROR_SIGNATURE_FORMAT =
-        'Method string signature DSL must be in "ServiceName' .
-        self::DELIMITER . 'method" format, but "%s" passed'
-    ;
-
-    /**
-     * @var ParamResolver
-     */
-    private ParamResolver $resolver;
-
-    /**
-     * @var ContainerInterface
-     */
-    private ContainerInterface $container;
+    private const DEFAULT_ACTION_DELIMITER = '@';
 
     /**
      * @param ContainerInterface $container
-     * @param ParamResolver $resolver
+     * @param ParamResolverInterface $resolver
+     * @param non-empty-string $delimiter
      */
-    public function __construct(ContainerInterface $container, ParamResolver $resolver)
-    {
-        $this->container = $container;
-        $this->resolver = $resolver;
+    public function __construct(
+        private readonly ContainerInterface $container,
+        private readonly ParamResolverInterface $resolver = new ParamResolver(),
+        private readonly string $delimiter = self::DEFAULT_ACTION_DELIMITER,
+    ) {
     }
 
     /**
      * {@inheritDoc}
+     *
+     * @throws ParamNotResolvableException
+     * @throws SignatureException
      */
-    public function detach(callable|string $fn, callable|array $resolver = null): callable
+    public function call(callable|string $fn, iterable $resolvers = []): mixed
     {
-        return fn () => $this->call($fn, $resolver);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function call(callable|string $fn, callable|array $resolver = null): mixed
-    {
-        try {
-            $handler = $this->resolveHandler($fn, $resolver);
-
-            return $handler->invokeArgs(
-                $this->resolveArguments($handler, $resolver)
-            );
-        } catch (ContainerExceptionInterface $e) {
-            throw $this->dispatchingException($fn, $e);
-        }
-    }
-
-    /**
-     * @param callable|string $fn
-     * @param \Throwable $e
-     * @return InvocationException
-     */
-    private function dispatchingException(callable|string $fn, \Throwable $e): InvocationException
-    {
-        if (\is_callable($fn)) {
-            try {
-                $fn = Renderer::functionToString(new \ReflectionFunction($fn));
-            } catch (\ReflectionException) {
-                $fn = 'unknown function';
-            }
+        if (\is_string($fn) && \str_contains($fn, $this->delimiter)) {
+            return $this->callServiceInstance($fn, $resolvers);
         }
 
-        $message = \sprintf(self::ERROR_DISPATCHING, $fn);
-        return new InvocationException($message, (int)$e->getCode(), $e);
-    }
-
-    /**
-     * @param callable|string $handler
-     * @param callable|array|null $resolver
-     * @return \ReflectionFunction
-     * @throws BadSignatureException
-     * @throws \ReflectionException
-     */
-    private function resolveHandler(callable|string $handler, callable|array|null $resolver): \ReflectionFunction
-    {
-        $handler = \Closure::fromCallable(
-            \is_callable($handler) ? $handler : $this->signature($handler, $resolver)
-        );
-
-        return new \ReflectionFunction($handler);
+        return $fn(...$this->resolver->fromCallable($fn, $resolvers));
     }
 
     /**
      * @param string $signature
-     * @param callable|array|null $resolver
-     * @return callable
-     * @throws BadSignatureException
+     * @param iterable<ValueResolverInterface> $resolvers
+     * @return mixed
+     * @throws ParamNotResolvableException
+     * @throws SignatureException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    private function signature(string $signature, callable|array|null $resolver): callable
+    private function callServiceInstance(string $signature, iterable $resolvers): mixed
     {
-        $chunks = \explode(self::DELIMITER, $signature);
+        $parts = \explode($this->delimiter, $signature);
 
-        if (\count($chunks) !== 2) {
-            throw new BadSignatureException(\sprintf(self::ERROR_SIGNATURE_FORMAT, $signature));
+        if (\count($parts) !== 2) {
+            $message = \sprintf(self::ERROR_INVALID_SIGNATURE, $this->delimiter, $signature);
+            throw new SignatureException($message);
         }
 
-        $result = [$this->container->get($chunks[0], $resolver), $chunks[1]];
+        [$service, $method] = $parts;
 
-        if (! \is_callable($result)) {
-            // TODO Method X not found in service Y
-            throw new BadSignatureException(\sprintf(self::ERROR_SIGNATURE_FORMAT, $signature));
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param \ReflectionFunction $fun
-     * @param callable|array|null $resolver
-     * @return array
-     * @throws NotResolvableException
-     */
-    private function resolveArguments(\ReflectionFunction $fun, callable|array|null $resolver): array
-    {
-        try {
-            return $this->resolver->resolve($fun, $resolver);
-        } catch (NotResolvableException $e) {
-            $message = $e->getMessage() . ' of ' . Renderer::functionToString($fun);
-            throw new NotResolvableException($message, (int)$e->getCode(), $e);
-        }
+        return $this->call([$this->container->get($service), $method], $resolvers);
     }
 }

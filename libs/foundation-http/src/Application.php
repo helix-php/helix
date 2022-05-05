@@ -12,18 +12,18 @@ declare(strict_types=1);
 namespace Helix\Foundation\Http;
 
 use Helix\Container\Exception\RegistrationException;
-use Helix\Contracts\Container\Exception\NotInstantiatableExceptionInterface;
 use Helix\Contracts\ErrorHandler\ErrorHandlerInterface;
 use Helix\Contracts\ErrorHandler\Http\HttpErrorHandlerInterface;
 use Helix\Foundation\Application as BaseApplication;
 use Helix\Server\ServerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 final class Application extends BaseApplication
 {
     /**
      * @param CreateInfo $info
-     * @throws NotInstantiatableExceptionInterface
      * @throws RegistrationException
      */
     public function __construct(CreateInfo $info = new CreateInfo())
@@ -41,7 +41,8 @@ final class Application extends BaseApplication
 
     /**
      * @return int
-     * @throws \Throwable
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function run(): int
     {

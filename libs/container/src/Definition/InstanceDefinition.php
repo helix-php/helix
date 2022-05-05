@@ -11,25 +11,24 @@ declare(strict_types=1);
 
 namespace Helix\Container\Definition;
 
+/**
+ * @template TDefinition of object
+ * @template-extends Definition<TDefinition>
+ */
 final class InstanceDefinition extends Definition
 {
     /**
-     * @var object
+     * @param TDefinition $instance
      */
-    private object $instance;
-
-    /**
-     * @param object $instance
-     */
-    public function __construct(object $instance)
-    {
-        $this->instance = $instance;
+    public function __construct(
+        private readonly object $instance,
+    ) {
     }
 
     /**
      * {@inheritDoc}
      */
-    public function resolve(callable|array $resolver = null): object
+    public function resolve(): object
     {
         return $this->instance;
     }

@@ -11,51 +11,28 @@ declare(strict_types=1);
 
 namespace Helix\Container;
 
-use Helix\Contracts\Container\Definition\DefinitionRegistrarInterface;
-use Helix\Contracts\Container\RegistrarInterface as RegistrarContractInterface;
+use Helix\Container\Definition\DefinitionInterface;
+use Helix\Container\Definition\DefinitionRegistrarInterface;
 
-interface RegistrarInterface extends RegistrarContractInterface
+interface RegistrarInterface
 {
     /**
-     * @param class-string $id
-     * @param class-string|string $alias
-     * @return $this
-     */
-    public function alias(string $id, string $alias): self;
-
-    /**
-     * @param object $entry
-     * @return DefinitionRegistrarInterface
-     */
-    public function instance(object $entry): DefinitionRegistrarInterface;
-
-    /**
-     * @param class-string $id
-     * @param callable|class-string|null $declarator
-     * @return DefinitionRegistrarInterface
-     */
-    public function factory(string $id, callable|string $declarator = null): DefinitionRegistrarInterface;
-
-    /**
-     * @param class-string $id
-     * @param callable|class-string|null $declarator
-     * @return DefinitionRegistrarInterface
-     */
-    public function singleton(string $id, callable|string $declarator = null): DefinitionRegistrarInterface;
-
-    /**
-     * @param class-string $id
-     * @param callable|class-string|null $declarator
-     * @return DefinitionRegistrarInterface
-     */
-    public function weakSingleton(string $id, callable|string $declarator = null): DefinitionRegistrarInterface;
-
-    /**
-     * @template T of object
+     * Creates an alias for an existing or added service in the future.
      *
-     * @param class-string<T> $id
-     * @param T $entry
+     * @param non-empty-string $id
+     * @param non-empty-string $alias
+     * @return void
+     */
+    public function alias(string $id, string $alias): void;
+
+    /**
+     * Registers a definition by it's ID.
+     *
+     * @template T as object
+     *
+     * @param non-empty-string|class-string<T>|interface-string<T> $id
+     * @param DefinitionInterface<T> $service
      * @return DefinitionRegistrarInterface
      */
-    public function cloneable(string $id, object $entry): DefinitionRegistrarInterface;
+    public function define(string $id, DefinitionInterface $service): DefinitionRegistrarInterface;
 }

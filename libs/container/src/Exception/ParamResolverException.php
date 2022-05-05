@@ -11,6 +11,6 @@ declare(strict_types=1);
 
 namespace Helix\Container\Exception;
 
-class RegistrationException extends \Exception
+class ParamResolverException extends ContainerException
 {
 }

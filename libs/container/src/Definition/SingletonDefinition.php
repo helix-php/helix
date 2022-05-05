@@ -11,24 +11,22 @@ declare(strict_types=1);
 
 namespace Helix\Container\Definition;
 
+/**
+ * @template TDefinition of object
+ * @template-extends LazyDefinition<TDefinition>
+ */
 final class SingletonDefinition extends LazyDefinition
 {
     /**
-     * @var object|null
+     * @var TDefinition|null
      */
     private ?object $instance = null;
 
     /**
      * {@inheritDoc}
      */
-    public function resolve(callable|array $resolver = null): object
+    public function resolve(): object
     {
-        $this->resolving();
-
-        try {
-            return $this->instance ??= ($this->declarator)($resolver);
-        } finally {
-            $this->resolved();
-        }
+        return $this->instance ??= $this->initialize();
     }
 }

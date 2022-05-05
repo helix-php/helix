@@ -11,10 +11,16 @@ declare(strict_types=1);
 
 namespace Helix\Container\Definition;
 
-/**
- * @template TDefinition of object
- * @template-implements DefinitionInterface<TDefinition>
- */
-abstract class Definition implements DefinitionInterface
+interface DefinitionRegistrarInterface
 {
+    /**
+     * @param non-empty-string ...$aliases
+     * @return $this
+     */
+    public function as(string ...$aliases): self;
+
+    /**
+     * @return $this
+     */
+    public function withInterfaces(): self;
 }

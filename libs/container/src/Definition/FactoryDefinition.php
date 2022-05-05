@@ -11,19 +11,17 @@ declare(strict_types=1);
 
 namespace Helix\Container\Definition;
 
+/**
+ * @template TDefinition of object
+ * @template-extends LazyDefinition<TDefinition>
+ */
 final class FactoryDefinition extends LazyDefinition
 {
     /**
      * {@inheritDoc}
      */
-    public function resolve(callable|array $resolver = null): object
+    public function resolve(): object
     {
-        $this->resolving();
-
-        try {
-            return ($this->declarator)($resolver);
-        } finally {
-            $this->resolved();
-        }
+        return $this->initialize();
     }
 }

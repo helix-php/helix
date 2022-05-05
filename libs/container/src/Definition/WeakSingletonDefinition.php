@@ -11,40 +11,38 @@ declare(strict_types=1);
 
 namespace Helix\Container\Definition;
 
-use Helix\Container\Container;
-
+/**
+ * @template TDefinition of object
+ * @template-extends LazyDefinition<TDefinition>
+ */
 final class WeakSingletonDefinition extends LazyDefinition
 {
     /**
-     * @var \WeakReference
+     * @var \WeakReference<TDefinition>|null
      */
-    private \WeakReference $instance;
+    private ?\WeakReference $ref = null;
 
     /**
-     * {@inheritDoc}
+     * @param \Closure():TDefinition $initializer
      */
-    public function __construct(string $id, Container $container, callable $declarator)
+    public function __construct(\Closure $initializer)
     {
-        $this->instance = \WeakReference::create(null);
-
-        parent::__construct($id, $container, $declarator);
+        parent::__construct($initializer);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function resolve(callable|array $resolver = null): object
+    public function resolve(): object
     {
-        $this->resolving();
-
-        try {
-            if ($instance = $this->instance->get()) {
-                return $instance;
-            }
-
-            return $this->instance = \WeakReference::create(($this->declarator)($resolver));
-        } finally {
-            $this->resolved();
+        if ($result = $this->ref?->get()) {
+            return $result;
         }
+
+        $this->ref = \WeakReference::create(
+            $result = $this->initialize(),
+        );
+
+        return $result;
     }
 }

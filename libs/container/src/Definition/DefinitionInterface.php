@@ -9,8 +9,15 @@
 
 declare(strict_types=1);
 
-namespace Helix\Container\Exception;
+namespace Helix\Container\Definition;
 
-class RegistrationException extends \Exception
+/**
+ * @template TDefinition of object
+ */
+interface DefinitionInterface
 {
+    /**
+     * @return TDefinition
+     */
+    public function resolve(): object;
 }

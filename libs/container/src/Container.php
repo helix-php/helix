@@ -11,156 +11,123 @@ declare(strict_types=1);
 
 namespace Helix\Container;
 
-use Helix\Container\Definition\Registrar;
-use Helix\Container\Definition\WeakSingletonDefinition;
-use Helix\Container\ParamResolver\ParamResolver;
-use Helix\Contracts\Container\ContainerInterface;
-use Helix\Contracts\Container\Definition\DefinitionInterface;
-use Helix\Contracts\Container\Definition\DefinitionRegistrarInterface;
-use Helix\Contracts\Dispatcher\DispatcherInterface;
-use Helix\Contracts\Container\InstantiatorInterface;
-use Helix\Container\Definition\CloneableDefinition;
-use Helix\Container\Definition\Definition;
+use Helix\Container\Definition\DefinitionInterface;
+use Helix\Container\Definition\DefinitionRegistrarInterface;
 use Helix\Container\Definition\FactoryDefinition;
 use Helix\Container\Definition\InstanceDefinition;
 use Helix\Container\Definition\SingletonDefinition;
-use Helix\Container\Exception\NotFoundException;
-use Helix\Container\Exception\RecursiveDeclarationException;
-use Helix\Container\Exception\RegistrationException;
-use Psr\Container\ContainerInterface as PsrContainerInterface;
+use Helix\Container\Definition\WeakSingletonDefinition;
+use Helix\Container\Exception\ServiceNotFoundException;
+use Helix\Container\ParamResolver\ContainerServiceResolver;
+use Helix\Container\ParamResolver\ValueResolverInterface;
+use Helix\Contracts\Router\Exception\NotFoundExceptionInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
 
+/**
+ * @template-implements \IteratorAggregate<non-empty-string, DefinitionInterface>
+ */
 final class Container implements
     ContainerInterface,
+    RegistrarInterface,
     DispatcherInterface,
-    InstantiatorInterface,
-    RegistrarInterface
+    InstantiatorInterface
 {
     /**
-     * @var string
+     * @var Registry
      */
-    private const ERROR_DECLARATOR = 'The passed service declarator [%s] is not a valid class name';
+    private readonly Registry $definitions;
 
     /**
-     * @var string
+     * @var ParamResolverInterface
      */
-    private const ERROR_NOT_FOUND = 'ServiceDefinition [%s] not found or could not be instantiated';
-
-    /**
-     * @var array<Definition>
-     */
-    private array $services = [];
-
-    /**
-     * @var array<string, string>
-     */
-    private array $aliases = [];
-
-    /**
-     * @var DispatcherInterface
-     */
-    private DispatcherInterface $dispatcher;
+    private readonly ParamResolverInterface $resolver;
 
     /**
      * @var InstantiatorInterface
      */
-    private InstantiatorInterface $instantiator;
+    private readonly InstantiatorInterface $instantiator;
 
     /**
-     * @var array<callable>
+     * @var DispatcherInterface
      */
-    private array $resolving = [];
+    private readonly DispatcherInterface $dispatcher;
 
     /**
-     * @var array<callable>
+     * @param ContainerInterface|null $parent
      */
-    private array $resolved = [];
+    public function __construct(
+        private readonly ?ContainerInterface $parent = null,
+    ) {
+        $this->resolver = new ParamResolver([
+            new ContainerServiceResolver($this),
+        ]);
 
-    /**
-     * @var PsrContainerInterface|null
-     */
-    private ?PsrContainerInterface $parent;
-
-    /**
-     * @param PsrContainerInterface|null $parent
-     */
-    public function __construct(PsrContainerInterface $parent = null)
-    {
-        $this->parent = $parent;
-
-        $resolver = new ParamResolver($this, $this);
-        $this->dispatcher = new Dispatcher($this, $resolver);
-        $this->instantiator = new Instantiator($resolver);
+        $this->definitions = new Registry();
+        $this->instantiator = new Instantiator($this->definitions, $this->resolver);
+        $this->dispatcher = new Dispatcher($this, $this->resolver);
 
         $this->registerSelf();
     }
 
     /**
-     * @return iterable<Definition>
+     * @return void
      */
-    public function services(): iterable
-    {
-        return $this->services;
-    }
-
-    /**
-     * @return iterable<string, string>
-     */
-    public function aliases(): iterable
-    {
-        return $this->aliases;
-    }
-
-    /**
-     * @param callable $handler
-     * @return $this
-     */
-    public function resolving(callable $handler): self
-    {
-        $this->resolving[] = $handler;
-
-        return $this;
-    }
-
-    /**
-     * @param callable $handler
-     * @return $this
-     */
-    public function resolved(callable $handler): self
-    {
-        $this->resolved[] = $handler;
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    private function registerSelf(): self
+    public function registerSelf(): void
     {
         $this->instance($this)
-            ->as(self::class)
-            ->withInterfaces()
-        ;
-
-        return $this;
+            ->withInterfaces();
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function instance(object $entry): DefinitionRegistrarInterface
-    {
-        return $this->instanceAs($entry::class, $entry);
-    }
-
-    /**
-     * @param class-string $id
-     * @param object $entry
+     * @template TIdentifier as object
+     *
+     * @param non-empty-string|class-string<TIdentifier> $id
+     * @param \Closure():TIdentifier|null $registrar
      * @return DefinitionRegistrarInterface
      */
-    public function instanceAs(string $id, object $entry): DefinitionRegistrarInterface
+    public function singleton(string $id, \Closure $registrar = null): DefinitionRegistrarInterface
     {
-        return $this->define($id, new InstanceDefinition($entry));
+        return $this->define($id, new SingletonDefinition(
+            $this->detach($registrar ?? fn () => $this->make($id))
+        ));
+    }
+
+    /**
+     * @template TIdentifier as object
+     *
+     * @param non-empty-string|class-string<TIdentifier> $id
+     * @param \Closure():TIdentifier|null $registrar
+     * @return DefinitionRegistrarInterface
+     */
+    public function weak(string $id, \Closure $registrar = null): DefinitionRegistrarInterface
+    {
+        return $this->define($id, new WeakSingletonDefinition(
+            $this->detach($registrar ?? fn () => $this->make($id))
+        ));
+    }
+
+    /**
+     * @template TIdentifier as object
+     *
+     * @param non-empty-string|class-string<TIdentifier> $id
+     * @param \Closure():TIdentifier|null $registrar
+     * @return DefinitionRegistrarInterface
+     */
+    public function factory(string $id, \Closure $registrar = null): DefinitionRegistrarInterface
+    {
+        return $this->define($id, new FactoryDefinition(
+            $this->detach($registrar ?? fn () => $this->make($id))
+        ));
+    }
+
+    /**
+     * @param object $id
+     * @return DefinitionRegistrarInterface
+     */
+    public function instance(object $id): DefinitionRegistrarInterface
+    {
+        return $this->define($id::class, new InstanceDefinition($id));
     }
 
     /**
@@ -168,179 +135,76 @@ final class Container implements
      */
     public function define(string $id, DefinitionInterface $service): DefinitionRegistrarInterface
     {
-        $this->services[$id] = $service;
-
-        return new Registrar($id, $this);
-    }
-
-    /**
-     * @param class-string $id
-     * @param class-string|string $alias
-     * @return $this
-     */
-    public function alias(string $id, string $alias): self
-    {
-        $this->aliases[$alias] = $id;
-
-        return $this;
+        return $this->definitions->define($id, $service);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function detach(callable|string $fn, callable|array $resolver = null): callable
+    public function alias(string $id, string $alias): void
     {
-        return $this->dispatcher->detach($fn, $resolver);
+        $this->definitions->alias($id, $alias);
     }
 
     /**
-     * {@inheritDoc}
+     * @template T of object
+     *
+     * @param non-empty-string|class-string<T>|interface-string<T> $id
+     * @param iterable<ValueResolverInterface> $resolvers
+     * @return T
+     * @throws ServiceNotFoundException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public function call(callable|string $fn, callable|array $resolver = null): mixed
+    public function get(string $id, iterable $resolvers = []): object
     {
-        return $this->dispatcher->call($fn, $resolver);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function make(string $id, callable|array $resolver = null): object
-    {
-        return $this->instantiator->make($id, $resolver);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function get($id, callable|array $resolver = null): object
-    {
-        assert(\is_string($id));
-
         if ($this->parent?->has($id)) {
-            return $this->parent->get($id, $resolver);
+            return $this->parent->get($id);
         }
 
-        $locator = $id;
+        if ($this->definitions->has($id)) {
+            $definition = $this->definitions->get($id);
 
-        try {
-            if (isset($this->aliases[$locator])) {
-                $locator = $this->aliases[$locator];
-            }
-
-            if (isset($this->services[$locator])) {
-                foreach ($this->resolving as $handler) {
-                    $handler($locator);
-                }
-
-                try {
-                    return $result = $this->services[$locator]->resolve($resolver);
-                } finally {
-                    foreach ($this->resolved as $handler) {
-                        $handler($result, $locator);
-                    }
-                }
-            }
-
-            return $this->instantiator->make($locator, $resolver);
-        } catch (RecursiveDeclarationException $e) {
-            throw $e;
-        } catch (\Throwable $e) {
-            throw new NotFoundException(\sprintf(self::ERROR_NOT_FOUND, $id), $e->getCode(), $e);
+            return $definition->resolve();
         }
+
+        return $this->make($id, $resolvers);
+    }
+
+    /**
+     * @param non-empty-string $id
+     * @return bool
+     */
+    public function has(string $id): bool
+    {
+        return $this->parent?->has($id) || $this->definitions->has($id);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function has($id): bool
+    public function call(callable|string $fn, iterable $resolvers = []): mixed
     {
-        assert(\is_string($id));
+        return $this->dispatcher->call($fn, $resolvers);
+    }
 
-        if (isset($this->aliases[$id])) {
-            return true;
-        }
-
-        if (isset($this->services[$id])) {
-            return true;
-        }
-
-        return (bool)($this->parent?->has($id));
+    /**
+     * @param callable|string $fn
+     * @param iterable<ValueResolverInterface> $resolvers
+     * @return \Closure():mixed
+     */
+    public function detach(callable|string $fn, iterable $resolvers = []): \Closure
+    {
+        return function () use ($fn, $resolvers): mixed {
+            return $this->call($fn, $resolvers);
+        };
     }
 
     /**
      * {@inheritDoc}
-     * @throws RegistrationException
      */
-    public function factory(string $id, callable|string $declarator = null): DefinitionRegistrarInterface
+    public function make(string $id, iterable $resolvers = []): object
     {
-        $declarator = $this->declarator($id, $declarator);
-
-        return $this->define($id, new FactoryDefinition($id, $this, $declarator));
-    }
-
-    /**
-     * @param class-string $id
-     * @param callable|string|null $declarator
-     * @return callable
-     * @throws RegistrationException
-     */
-    private function declarator(string $id, callable|string $declarator = null): callable
-    {
-        $declarator ??= $id;
-
-        if (! \is_callable($declarator)) {
-            if (! \class_exists($declarator)) {
-                throw new RegistrationException(\sprintf(self::ERROR_DECLARATOR, $declarator));
-            }
-
-            return fn () => $this->instantiator->make($declarator);
-        }
-
-        return $declarator;
-    }
-
-    /**
-     * {@inheritDoc}
-     * @throws RegistrationException
-     */
-    public function singleton(string $id, callable|string $declarator = null): DefinitionRegistrarInterface
-    {
-        $declarator = $this->declarator($id, $declarator);
-
-        return $this->define($id, new SingletonDefinition($id, $this, $declarator));
-    }
-    /**
-     * {@inheritDoc}
-     * @throws RegistrationException
-     */
-    public function weakSingleton(string $id, callable|string $declarator = null): DefinitionRegistrarInterface
-    {
-        $declarator = $this->declarator($id, $declarator);
-
-        return $this->define($id, new WeakSingletonDefinition($id, $this, $declarator));
-    }
-
-    /**
-     * @param string $id
-     * @param callable $then
-     * @param callable|array|null $resolver
-     * @return $this
-     */
-    public function when(string $id, callable $then, callable|array $resolver = null): self
-    {
-        if ($this->has($id)) {
-            $then($this->get($id, $resolver));
-        }
-
-        return $this;
-    }
-
-    /**
-     * {@inheritDoc}
-     * @throws RegistrationException
-     */
-    public function cloneable(string $id, object $entry): DefinitionRegistrarInterface
-    {
-        return $this->define($id, new CloneableDefinition($entry));
+        return $this->instantiator->make($id, $resolvers);
     }
 }

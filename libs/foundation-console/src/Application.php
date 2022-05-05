@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace Helix\Foundation\Console;
 
 use Helix\Container\Exception\RegistrationException;
-use Helix\Contracts\Container\Exception\NotInstantiatableExceptionInterface;
 use Helix\Foundation\Application as BaseApplication;
 use Symfony\Component\Console\Application as SymfonyApplication;
 use Symfony\Component\Console\Command\Command;
@@ -31,7 +30,6 @@ final class Application extends BaseApplication
 
     /**
      * @param CreateInfo $info
-     * @throws NotInstantiatableExceptionInterface
      * @throws RegistrationException
      */
     public function __construct(CreateInfo $info)
@@ -54,7 +52,6 @@ final class Application extends BaseApplication
     /**
      * @param Command|class-string<Command> ...$commands
      * @return void
-     * @throws NotInstantiatableExceptionInterface
      */
     public function add(Command|string ...$commands): void
     {

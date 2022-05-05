@@ -15,8 +15,7 @@ use Helix\Boot\Attribute\ServiceDefinition;
 use Helix\Boot\Attribute\Registration;
 use Helix\Container\Container;
 use Helix\Container\Exception\RegistrationException;
-use Helix\Container\ParamResolver\Renderer;
-use Helix\Contracts\Container\Definition\DefinitionInterface;
+use Helix\Container\Definition\DefinitionInterface;
 
 class Loader implements RepositoryInterface, LoaderInterface
 {
@@ -64,9 +63,11 @@ class Loader implements RepositoryInterface, LoaderInterface
 
         foreach ($this->lookupDefinitions($loaded) as $attr => $definition) {
             /** @psalm-suppress PossiblyNullArgument */
-            $this->container->define($attr->id, $definition)
-                ->as(...$attr->aliases)
-            ;
+            $registrar = $this->container->define($attr->id, $definition);
+
+            if ($attr->aliases !== []) {
+                $registrar->as(...$attr->aliases);
+            }
         }
 
         foreach ($this->lookupRegistrars($loaded) as $attr => $action) {
@@ -135,18 +136,18 @@ class Loader implements RepositoryInterface, LoaderInterface
         $type = $method->getReturnType();
 
         if ($type === null) {
-            throw new RegistrationException(
-                \sprintf(self::ERROR_ID_NOT_DEFINED, Renderer::functionToString($method))
-            );
+            $class = $method->getDeclaringClass();
+            $message = \sprintf(self::ERROR_ID_NOT_DEFINED, $class . '::' . $method->getName());
+            throw new RegistrationException($message);
         }
 
         if ($type instanceof \ReflectionNamedType) {
             return $type->getName();
         }
 
-        throw new RegistrationException(
-            \sprintf(self::ERROR_AMBIGUOUS_IDENTIFIER, Renderer::functionToString($method))
-        );
+        $class = $method->getDeclaringClass();
+        $message = \sprintf(self::ERROR_AMBIGUOUS_IDENTIFIER, $class . '::' . $method->getName());
+        throw new RegistrationException($message);
     }
 
     /**

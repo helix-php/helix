@@ -29,7 +29,7 @@ abstract class Execution extends MethodMetadata
     public function isRunnable(ContainerInterface $app): bool
     {
         foreach ((array)$this->ifServiceExists as $service) {
-            if (! $app->has($service)) {
+            if (!$app->has($service)) {
                 return false;
             }
         }

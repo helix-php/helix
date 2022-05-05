@@ -12,8 +12,8 @@ declare(strict_types=1);
 namespace Helix\Boot\Attribute;
 
 use Helix\Container\Container;
+use Helix\Container\Definition\DefinitionInterface;
 use Helix\Container\Definition\FactoryDefinition;
-use Helix\Contracts\Container\Definition\DefinitionInterface;
 
 #[\Attribute(\Attribute::TARGET_METHOD)]
 final class Factory extends ServiceDefinition
@@ -23,6 +23,6 @@ final class Factory extends ServiceDefinition
      */
     public function create(string $id, Container $container, callable $declarator): DefinitionInterface
     {
-        return new FactoryDefinition($id, $container, $declarator);
+        return new FactoryDefinition($container->detach($declarator));
     }
 }

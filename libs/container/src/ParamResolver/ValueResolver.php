@@ -9,8 +9,12 @@
 
 declare(strict_types=1);
 
-namespace Helix\Container\Exception;
+namespace Helix\Container\ParamResolver;
 
-class RegistrationException extends \Exception
+/**
+ * @template T of mixed
+ * @template-implements ValueResolverInterface<T>
+ */
+abstract class ValueResolver implements ValueResolverInterface
 {
 }

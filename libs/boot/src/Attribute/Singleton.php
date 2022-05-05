@@ -13,7 +13,7 @@ namespace Helix\Boot\Attribute;
 
 use Helix\Container\Container;
 use Helix\Container\Definition\SingletonDefinition;
-use Helix\Contracts\Container\Definition\DefinitionInterface;
+use Helix\Container\Definition\DefinitionInterface;
 
 #[\Attribute(\Attribute::TARGET_METHOD)]
 final class Singleton extends ServiceDefinition
@@ -23,6 +23,6 @@ final class Singleton extends ServiceDefinition
      */
     public function create(string $id, Container $container, callable $declarator): DefinitionInterface
     {
-        return new SingletonDefinition($id, $container, $declarator);
+        return new SingletonDefinition($container->detach($declarator));
     }
 }
