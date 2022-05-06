@@ -29,15 +29,7 @@ class ObjectResolver extends ValueResolver
      */
     public function supports(\ReflectionParameter $parameter): bool
     {
-        $type = $parameter->getType();
-
-        if (!$type instanceof \ReflectionNamedType || !$type->isBuiltin()) {
-            return false;
-        }
-
-        $name = $type->getName();
-
-        return $this->context instanceof $name;
+        return Parameter::of($parameter)->allowsInstanceOf($this->context);
     }
 
     /**

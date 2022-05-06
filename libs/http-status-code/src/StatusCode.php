@@ -334,7 +334,7 @@ enum StatusCode: int implements StatusCodeInterface
     /**
      * The 204 (No Content) status code indicates that the server has
      * successfully fulfilled the request and that there is no additional
-     * content to send in the response payload body. Metadata in the response
+     * content to send in the response payload body. Parameter in the response
      * header fields refer to the target resource and its selected
      * representation after the requested action was applied.
      *

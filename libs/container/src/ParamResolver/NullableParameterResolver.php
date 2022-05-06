@@ -18,9 +18,7 @@ final class NullableParameterResolver extends ValueResolver
      */
     public function supports(\ReflectionParameter $parameter): bool
     {
-        $type = $parameter->getType();
-
-        return $type === null || $type->allowsNull();
+        return Parameter::of($parameter)->isNullable();
     }
 
     /**

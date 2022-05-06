@@ -9,13 +9,10 @@
 
 declare(strict_types=1);
 
-namespace Helix\Config\Purify\Tests;
+namespace Helix\Container\Tests\ParamResolver;
 
-use PHPUnit\Framework\TestCase as BaseTestCase;
+use Helix\Container\Tests\TestCase;
 
-/**
- * @group config-purify
- */
-abstract class TestCase extends BaseTestCase
+abstract class ParamResolverTestCase extends TestCase
 {
 }
