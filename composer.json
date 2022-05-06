@@ -28,7 +28,6 @@
         {"type": "path", "url": "libs/contracts/view"},
 
         {"type": "path", "url": "libs/boot"},
-        {"type": "path", "url": "libs/config-purify"},
         {"type": "path", "url": "libs/container"},
         {"type": "path", "url": "libs/debug"},
         {"type": "path", "url": "libs/env"},
@@ -64,6 +63,7 @@
         "cache/filesystem-adapter": "^1.2",
         "monolog/monolog": "^2.3",
         "doctrine/orm": "^2.11",
+        "phpbench/phpbench": "^1.2",
         "happyr/doctrine-specification": "^1.1"
     },
     "autoload": {
@@ -116,6 +116,9 @@
         "allow-plugins": {
             "composer/package-versions-deprecated": true
         }
+    },
+    "scripts": {
+        "bench": "phpbench run tests/Bench --report=aggregate"
     },
     "minimum-stability": "dev",
     "prefer-stable": true
