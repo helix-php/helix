@@ -8,6 +8,7 @@
           initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <link rel="shortcut icon" href="/favicon.ico" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,400i,700,700i&amp;display=swap" rel="stylesheet">
     <title>Welcome to Helix</title>
     <!--
     <?php
@@ -23,6 +24,13 @@
             box-sizing: border-box;
             width: 100vw;
             height: 100vh;
+            font-family: Roboto, Helvetica, sans-serif;
+            font-feature-settings "kern", "liga", "calt";
+        }
+
+        h1, h2, h3 {
+            font-family: Roboto, Helvetica, sans-serif;
+            font-weight: 100;
         }
 
         body {
