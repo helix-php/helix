@@ -47,19 +47,6 @@ class Factory implements FactoryInterface, RegistrarInterface
     }
 
     /**
-     * @param non-empty-string|non-empty-list<non-empty-string> $ext
-     * @return non-empty-array<non-empty-string>
-     */
-    private function getExtensionsArray(string|iterable $ext): array
-    {
-        return match (true) {
-            \is_string($ext) => [$ext],
-            $ext instanceof \Traversable => \iterator_to_array($ext, false),
-            default => $ext,
-        };
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function create(string $name, iterable $vars = []): ViewInterface
@@ -73,5 +60,18 @@ class Factory implements FactoryInterface, RegistrarInterface
         }
 
         throw EngineNotFoundException::create($name);
+    }
+
+    /**
+     * @param non-empty-string|non-empty-list<non-empty-string> $ext
+     * @return non-empty-array<non-empty-string>
+     */
+    private function getExtensionsArray(string|iterable $ext): array
+    {
+        return match (true) {
+            \is_string($ext) => [$ext],
+            $ext instanceof \Traversable => \iterator_to_array($ext, false),
+            default => $ext,
+        };
     }
 }

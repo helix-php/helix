@@ -119,6 +119,14 @@ class Manager implements ManagerInterface, MemoizableInterface
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function free(): void
+    {
+        $this->booted = [];
+    }
+
+    /**
      * @param non-empty-string $name
      * @param T|\Closure(): T $entry
      * @return $this
@@ -134,18 +142,10 @@ class Manager implements ManagerInterface, MemoizableInterface
         if ($entry instanceof \Closure) {
             $this->entries[$name] = $entry(...);
         } else {
-            $this->entries[$name] = static fn() => $entry;
+            $this->entries[$name] = static fn () => $entry;
             $this->booted[$name] = $entry;
         }
 
         return $this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function free(): void
-    {
-        $this->booted = [];
     }
 }

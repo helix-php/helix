@@ -38,20 +38,6 @@ final class Factory
     }
 
     /**
-     * @return void
-     */
-    private function loadPackagePaths(): void
-    {
-        [$section] = InstalledVersions::getAllRawData();
-
-        foreach ($section['versions'] ?? [] as $name => $info) {
-            if (isset($info['install_path'])) {
-                $this->paths[\realpath($info['install_path'])] = $name;
-            }
-        }
-    }
-
-    /**
      * @param \ReflectionClass $context
      * @return InfoProviderInterface
      */
@@ -80,6 +66,20 @@ final class Factory
         }
 
         return $result;
+    }
+
+    /**
+     * @return void
+     */
+    private function loadPackagePaths(): void
+    {
+        [$section] = InstalledVersions::getAllRawData();
+
+        foreach ($section['versions'] ?? [] as $name => $info) {
+            if (isset($info['install_path'])) {
+                $this->paths[\realpath($info['install_path'])] = $name;
+            }
+        }
     }
 
     /**

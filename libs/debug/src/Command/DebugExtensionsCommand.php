@@ -31,6 +31,33 @@ final class DebugExtensionsCommand extends Command
     }
 
     /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int
+     */
+    public function execute(InputInterface $input, OutputInterface $output): int
+    {
+        $descriptionAvailableSize = $this->getConsoleMaxSize()
+            - $this->getNameVersionMaxLength()
+            - 2;
+
+        $rows = [];
+        foreach ($this->repository->getExtensions() as $ext) {
+            $rows[] = [
+                $this->getExtName($ext),
+                $this->getVersion($ext),
+                $this->getExtDescription($ext, $descriptionAvailableSize),
+            ];
+        }
+
+        (new SymfonyStyle($input, $output))
+            ->table(['Name', 'Version', 'Description'], $rows)
+        ;
+
+        return self::SUCCESS;
+    }
+
+    /**
      * @return void
      */
     protected function configure(): void
@@ -63,33 +90,6 @@ final class DebugExtensionsCommand extends Command
         }
 
         return $length;
-    }
-
-    /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @return int
-     */
-    public function execute(InputInterface $input, OutputInterface $output): int
-    {
-        $descriptionAvailableSize = $this->getConsoleMaxSize()
-            - $this->getNameVersionMaxLength()
-            - 2;
-
-        $rows = [];
-        foreach ($this->repository->getExtensions() as $ext) {
-            $rows[] = [
-                $this->getExtName($ext),
-                $this->getVersion($ext),
-                $this->getExtDescription($ext, $descriptionAvailableSize),
-            ];
-        }
-
-        (new SymfonyStyle($input, $output))
-            ->table(['Name', 'Version', 'Description'], $rows)
-        ;
-
-        return self::SUCCESS;
     }
 
     /**

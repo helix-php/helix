@@ -20,5 +20,6 @@ abstract class InternalServerCreateInfo extends ServerCreateInfo
     public function __construct(
         public readonly string $host = '127.0.0.1',
         public readonly int $port = 80,
-    ) {}
+    ) {
+    }
 }

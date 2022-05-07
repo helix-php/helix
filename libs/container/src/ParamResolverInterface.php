@@ -57,5 +57,4 @@ interface ParamResolverInterface extends ReaderInterface
      * @throws SignatureException
      */
     public function fromCallable(callable $callable, iterable $resolvers = []): iterable;
-
 }

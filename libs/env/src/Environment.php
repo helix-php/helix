@@ -45,14 +45,6 @@ final class Environment
     }
 
     /**
-     * @return static
-     */
-    private static function create(): self
-    {
-        return new self([...self::map($_SERVER ?? $_ENV)]);
-    }
-
-    /**
      * @psalm-taint-sink file $files
      * @param iterable<non-empty-string>|non-empty-string $files
      * @return static
@@ -117,9 +109,18 @@ final class Environment
             'false', '(false)' => false,
             'empty', '(empty)' => '',
             'null', '(null)' => null,
-            default => (static fn() => \preg_match('/\A([\'"])(.*)\1\z/', $value, $matches)
+            default => (
+                static fn () => \preg_match('/\A([\'"])(.*)\1\z/', $value, $matches)
             && $matches !== [] ? $matches[2] : $value
             )()
         };
+    }
+
+    /**
+     * @return static
+     */
+    private static function create(): self
+    {
+        return new self([...self::map($_SERVER ?? $_ENV)]);
     }
 }

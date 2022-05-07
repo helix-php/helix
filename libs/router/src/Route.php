@@ -35,6 +35,11 @@ class Route implements RouteInterface
     protected string $path;
 
     /**
+     * @var MethodInterface
+     */
+    protected MethodInterface $method;
+
+    /**
      * @var mixed
      */
     private mixed $handler;
@@ -43,11 +48,6 @@ class Route implements RouteInterface
      * @var array
      */
     private array $middleware = [];
-
-    /**
-     * @var MethodInterface
-     */
-    protected MethodInterface $method;
 
     /**
      * @param non-empty-string $path
@@ -62,7 +62,7 @@ class Route implements RouteInterface
         $this->path = Normalizer::path($path);
 
         /** @psalm-suppress MissingClosureReturnType */
-        $this->handler = $handler ?? (static fn() => null);
+        $this->handler = $handler ?? (static fn () => null);
 
         $this->method = $method instanceof MethodInterface ? $method : Method::create($method);
     }

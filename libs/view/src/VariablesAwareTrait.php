@@ -24,33 +24,6 @@ trait VariablesAwareTrait
     protected array $vars = [];
 
     /**
-     * @param iterable<non-empty-string, mixed> $vars
-     */
-    protected function addMany(iterable $vars = []): self
-    {
-        foreach ($vars as $variable => $value) {
-            $this->vars[$variable] = $value;
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param iterable<non-empty-string, mixed> $vars
-     * @return array<non-empty-string, mixed>
-     */
-    protected function getVariables(iterable $vars): array
-    {
-        $result = $this->vars;
-
-        foreach ($vars as $name => $value) {
-            $result[$name] = $value;
-        }
-
-        return $result;
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function add(string $variable, mixed $value): self
@@ -84,5 +57,32 @@ trait VariablesAwareTrait
         }
 
         return $default;
+    }
+
+    /**
+     * @param iterable<non-empty-string, mixed> $vars
+     */
+    protected function addMany(iterable $vars = []): self
+    {
+        foreach ($vars as $variable => $value) {
+            $this->vars[$variable] = $value;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param iterable<non-empty-string, mixed> $vars
+     * @return array<non-empty-string, mixed>
+     */
+    protected function getVariables(iterable $vars): array
+    {
+        $result = $this->vars;
+
+        foreach ($vars as $name => $value) {
+            $result[$name] = $value;
+        }
+
+        return $result;
     }
 }

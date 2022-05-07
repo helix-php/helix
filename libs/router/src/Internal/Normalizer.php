@@ -28,7 +28,7 @@ final class Normalizer
 
         foreach ($chunks as $chunk) {
             // Skip empty strings
-            if (! \trim($chunk)) {
+            if (!\trim($chunk)) {
                 continue;
             }
 

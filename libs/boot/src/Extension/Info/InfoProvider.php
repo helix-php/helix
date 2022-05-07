@@ -22,7 +22,8 @@ abstract class InfoProvider implements InfoProviderInterface
         protected string $name,
         protected string $description,
         protected string $version,
-    ) {}
+    ) {
+    }
 
     /**
      * @param InfoProviderInterface $provider

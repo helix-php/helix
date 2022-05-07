@@ -40,16 +40,6 @@ final class Pipeline implements MutablePipelineInterface
     }
 
     /**
-     * @param MiddlewareInterface $middleware
-     * @param RequestHandlerInterface $next
-     * @return RequestHandlerInterface
-     */
-    protected function next(MiddlewareInterface $middleware, RequestHandlerInterface $next): RequestHandlerInterface
-    {
-        return new Next($middleware, $next);
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function through(MiddlewareInterface ...$middleware): self
@@ -81,6 +71,28 @@ final class Pipeline implements MutablePipelineInterface
     }
 
     /**
+     * @param ServerRequestInterface $request
+     * @param RequestHandlerInterface $handler
+     * @return ResponseInterface
+     */
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    {
+        $handler = $this->reduce($handler);
+
+        return $handler->handle($request);
+    }
+
+    /**
+     * @param MiddlewareInterface $middleware
+     * @param RequestHandlerInterface $next
+     * @return RequestHandlerInterface
+     */
+    protected function next(MiddlewareInterface $middleware, RequestHandlerInterface $next): RequestHandlerInterface
+    {
+        return new Next($middleware, $next);
+    }
+
+    /**
      * @param RequestHandlerInterface $handler
      * @return RequestHandlerInterface
      */
@@ -95,17 +107,5 @@ final class Pipeline implements MutablePipelineInterface
         }
 
         return $handler;
-    }
-
-    /**
-     * @param ServerRequestInterface $request
-     * @param RequestHandlerInterface $handler
-     * @return ResponseInterface
-     */
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
-    {
-        $handler = $this->reduce($handler);
-
-        return $handler->handle($request);
     }
 }

@@ -18,63 +18,63 @@ use Helix\Http\Method\Method;
  */
 class RouteTestCase extends TestCase
 {
-    public function testHandler()
+    public function testHandler(): void
     {
         $route = $this->route(handler: 'test');
 
         $this->assertSame('test', $route->getHandler());
     }
 
-    public function testPath()
+    public function testPath(): void
     {
         $route = $this->route('/example');
 
         $this->assertSame('/example', $route->getPath());
     }
 
-    public function testPathNormalizePrefix()
+    public function testPathNormalizePrefix(): void
     {
         $route = $this->route('example');
 
         $this->assertSame('/example', $route->getPath());
     }
 
-    public function testPathNormalizeSuffix()
+    public function testPathNormalizeSuffix(): void
     {
         $route = $this->route('example/');
 
         $this->assertSame('/example', $route->getPath());
     }
 
-    public function testPathNormalizeExtraPathDelimiters()
+    public function testPathNormalizeExtraPathDelimiters(): void
     {
         $route = $this->route('///////example//////////');
 
         $this->assertSame('/example', $route->getPath());
     }
 
-    public function testMethod()
+    public function testMethod(): void
     {
         $route = $this->route(method: Method::GET);
 
-        $this->assertSame( Method::GET, $route->getMethod());
+        $this->assertSame(Method::GET, $route->getMethod());
     }
 
-    public function testNormalizeMethod()
+    public function testNormalizeMethod(): void
     {
         $route = $this->route(method: 'get');
 
-        $this->assertSame( Method::GET, $route->getMethod());
+        $this->assertSame(Method::GET, $route->getMethod());
     }
 
-    public function testNameAnonymous()
+    public function testNameAnonymous(): void
     {
         $route = $this->route();
 
         $this->assertNull($route->getName());
     }
 
-    public function testName()
+    public function testName(): void
     {
         $route = $this->route()
             ->as('home')
@@ -83,14 +83,14 @@ class RouteTestCase extends TestCase
         $this->assertSame('home', $route->getName());
     }
 
-    public function testMiddlewareEmptyList()
+    public function testMiddlewareEmptyList(): void
     {
         $route = $this->route();
 
         $this->assertEmpty($route->getMiddleware());
     }
 
-    public function testMiddlewareList()
+    public function testMiddlewareList(): void
     {
         $route = $this->route()
             ->through(...$middleware = ['a', $this, 'b'])
@@ -99,14 +99,14 @@ class RouteTestCase extends TestCase
         $this->assertEquals($middleware, $route->getMiddleware());
     }
 
-    public function testEmptyParameters()
+    public function testEmptyParameters(): void
     {
         $route = $this->route();
 
         $this->assertSame([], $route->getParameters());
     }
 
-    public function testParameters()
+    public function testParameters(): void
     {
         $route = $this->route()
             ->where('name', 'pattern')

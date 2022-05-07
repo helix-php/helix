@@ -616,6 +616,26 @@ enum Method: string implements MethodInterface
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function isIdempotent(): bool
+    {
+        $info = $this->getInfo();
+
+        return $info->idempotent;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isSafe(): bool
+    {
+        $info = $this->getInfo();
+
+        return $info->safe;
+    }
+
+    /**
      * @return Info
      */
     private function getInfo(): Info
@@ -635,25 +655,5 @@ enum Method: string implements MethodInterface
         }
 
         return new Info();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function isIdempotent(): bool
-    {
-        $info = $this->getInfo();
-
-        return $info->idempotent;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function isSafe(): bool
-    {
-        $info = $this->getInfo();
-
-        return $info->safe;
     }
 }

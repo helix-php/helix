@@ -62,7 +62,7 @@ class AttributeReader implements ReaderInterface
             return [];
         }
 
-        if (! $method->isPublic()) {
+        if (!$method->isPublic()) {
             $message = \vsprintf('Route http-method %s::%s must be public', [
                 $class->getName(),
                 $method->getName(),

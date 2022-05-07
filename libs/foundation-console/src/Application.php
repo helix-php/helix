@@ -40,16 +40,6 @@ final class Application extends BaseApplication
     }
 
     /**
-     * @return void
-     */
-    private function boot(): void
-    {
-        $this->cli = new SymfonyApplication($this->getName());
-
-        $this->container->instance($this->cli);
-    }
-
-    /**
      * @param Command|class-string<Command> ...$commands
      * @return void
      */
@@ -69,6 +59,22 @@ final class Application extends BaseApplication
     }
 
     /**
+     * @return int
+     * @throws \Exception
+     */
+    public function run(): int
+    {
+        parent::run();
+
+        try {
+            $this->running = true;
+            return $this->cli->run();
+        } finally {
+            $this->running = false;
+        }
+    }
+
+    /**
      * @return string
      */
     protected function getName(): string
@@ -83,18 +89,12 @@ final class Application extends BaseApplication
     }
 
     /**
-     * @return int
-     * @throws \Exception
+     * @return void
      */
-    public function run(): int
+    private function boot(): void
     {
-        parent::run();
+        $this->cli = new SymfonyApplication($this->getName());
 
-        try {
-            $this->running = true;
-            return $this->cli->run();
-        } finally {
-            $this->running = false;
-        }
+        $this->container->instance($this->cli);
     }
 }

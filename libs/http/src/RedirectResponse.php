@@ -28,7 +28,7 @@ class RedirectResponse extends Response
         array $headers = []
     ) {
         parent::__construct('', $status, \array_merge($headers, [
-            'Location' => (string)$location
+            'Location' => (string)$location,
         ]));
     }
 }

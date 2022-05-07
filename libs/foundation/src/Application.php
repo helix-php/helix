@@ -21,11 +21,6 @@ use Psr\Log\NullLogger;
 abstract class Application implements LoaderInterface
 {
     /**
-     * @var Loader
-     */
-    private readonly Loader $extensions;
-
-    /**
      * @var Container
      */
     public readonly Container $container;
@@ -46,6 +41,11 @@ abstract class Application implements LoaderInterface
     public readonly string $version;
 
     /**
+     * @var Loader
+     */
+    private readonly Loader $extensions;
+
+    /**
      * @param CreateInfo $info
      * @throws RegistrationException
      */
@@ -60,6 +60,35 @@ abstract class Application implements LoaderInterface
 
         $this->bindDefaults($info);
         $this->loadMany($info->extensions);
+    }
+
+
+    /**
+     * @param non-empty-string ...$matches
+     * @return bool
+     */
+    public function env(string ...$matches): bool
+    {
+        return \in_array($this->env, $matches, true);
+    }
+
+    /**
+     * @param object $extension
+     * @throws RegistrationException
+     */
+    public function load(object $extension): void
+    {
+        $this->extensions->load($extension);
+    }
+
+    /**
+     * @return int
+     */
+    public function run(): int
+    {
+        $this->extensions->boot();
+
+        return 0;
     }
 
     /**
@@ -102,34 +131,5 @@ abstract class Application implements LoaderInterface
                 $this->load($extension);
             }
         }
-    }
-
-
-    /**
-     * @param non-empty-string ...$matches
-     * @return bool
-     */
-    public function env(string ...$matches): bool
-    {
-        return \in_array($this->env, $matches, true);
-    }
-
-    /**
-     * @param object $extension
-     * @throws RegistrationException
-     */
-    public function load(object $extension): void
-    {
-        $this->extensions->load($extension);
-    }
-
-    /**
-     * @return int
-     */
-    public function run(): int
-    {
-        $this->extensions->boot();
-
-        return 0;
     }
 }

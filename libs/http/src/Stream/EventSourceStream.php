@@ -29,6 +29,14 @@ final class EventSourceStream implements StreamInterface
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function __toString(): string
+    {
+        throw new \LogicException(__METHOD__ . ' not available');
+    }
+
+    /**
      * @param mixed $data
      * @return static
      */
@@ -44,15 +52,7 @@ final class EventSourceStream implements StreamInterface
     /**
      * {@inheritDoc}
      */
-    public function __toString(): string
-    {
-        throw new \LogicException(__METHOD__ . ' not available');
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function close()
+    public function close(): void
     {
         throw new \LogicException(__METHOD__ . ' not implemented yet');
     }
@@ -60,7 +60,7 @@ final class EventSourceStream implements StreamInterface
     /**
      * {@inheritDoc}
      */
-    public function detach()
+    public function detach(): void
     {
         throw new \LogicException(__METHOD__ . ' not implemented yet');
     }
@@ -76,7 +76,7 @@ final class EventSourceStream implements StreamInterface
     /**
      * {@inheritDoc}
      */
-    public function tell()
+    public function tell(): void
     {
         throw new \LogicException(__METHOD__ . ' not available');
     }
@@ -116,7 +116,7 @@ final class EventSourceStream implements StreamInterface
     /**
      * {@inheritDoc}
      */
-    public function write($string)
+    public function write($string): void
     {
         throw new \LogicException(__METHOD__ . ' not available');
     }
@@ -148,15 +148,6 @@ final class EventSourceStream implements StreamInterface
     }
 
     /**
-     * @param string $data
-     * @return string
-     */
-    private function escape(string $data): string
-    {
-        return \str_replace("\n", '', $data);
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function getContents(): string
@@ -170,18 +161,18 @@ final class EventSourceStream implements StreamInterface
     public function getMetadata($key = null)
     {
         $data = [
-            "timed_out" => false,
-            "blocked" => false,
-            "eof" => $this->eof(),
-            "unread_bytes" => -1,
-            "stream_type" => 'stream',
-            "wrapper_type" => 'stream',
-            "wrapper_data" => 'stream',
-            "mode" => 'rb',
-            "seekable" => false,
-            "uri" => 'php://memory',
-            "crypto" => [],
-            "mediatype" => 'text/event-stream'
+            'timed_out' => false,
+            'blocked' => false,
+            'eof' => $this->eof(),
+            'unread_bytes' => -1,
+            'stream_type' => 'stream',
+            'wrapper_type' => 'stream',
+            'wrapper_data' => 'stream',
+            'mode' => 'rb',
+            'seekable' => false,
+            'uri' => 'php://memory',
+            'crypto' => [],
+            'mediatype' => 'text/event-stream',
         ];
 
         if ($key === null) {
@@ -197,5 +188,14 @@ final class EventSourceStream implements StreamInterface
     public function eof(): bool
     {
         return !$this->stream->valid();
+    }
+
+    /**
+     * @param string $data
+     * @return string
+     */
+    private function escape(string $data): string
+    {
+        return \str_replace("\n", '', $data);
     }
 }

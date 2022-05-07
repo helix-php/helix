@@ -122,7 +122,7 @@ class Router implements RegistrarInterface, RepositoryInterface, RouterInterface
         /** @var array{int, mixed, array<string>} $result */
         $result = $this->dispatcher->dispatch($request->getMethod(), $path);
 
-        return match($result[self::INFO_STATUS]) {
+        return match ($result[self::INFO_STATUS]) {
             Dispatcher::FOUND => new MatchedRoute(
                 $this->routes[$result[self::INFO_HANDLER]],
                 $request,
@@ -255,46 +255,6 @@ class Router implements RegistrarInterface, RepositoryInterface, RouterInterface
      * @param non-empty-string $path
      * @param string|\Stringable $location
      * @param iterable<MethodInterface> $methods
-     * @param StatusCodeInterface $code
-     * @return Group
-     */
-    private function redirectToUri(
-        string $path,
-        string|\Stringable $location,
-        StatusCodeInterface $code = StatusCode::FOUND,
-        iterable $methods = [],
-    ): Group {
-        return $this->oneOf($methods, $path, fn () =>
-            $this->responses->createResponse($code->getCode(), $code->getReasonPhrase())
-                ->withAddedHeader('Location', (string)$location)
-            );
-    }
-
-    /**
-     * @param non-empty-string $path
-     * @param non-empty-string $route
-     * @param iterable<string, string> $args
-     * @param StatusCodeInterface $code
-     * @param iterable<MethodInterface> $methods
-     * @return Group
-     * @throws RouteGeneratorExceptionInterface
-     */
-    private function redirectToRoute(
-        string $path,
-        string $route,
-        iterable $args = [],
-        StatusCodeInterface $code = StatusCode::FOUND,
-        iterable $methods = [],
-    ): Group {
-        $location = $this->generator->generate($route, $args);
-
-        return $this->redirectToUri($path, $location, $code, $methods);
-    }
-
-    /**
-     * @param non-empty-string $path
-     * @param string|\Stringable $location
-     * @param iterable<MethodInterface> $methods
      * @return Group
      */
     public function redirect(string $path, string|\Stringable $location, iterable $methods = []): Group
@@ -405,7 +365,7 @@ class Router implements RegistrarInterface, RepositoryInterface, RouterInterface
      */
     public function oneOf(iterable $methods, string $path, mixed $handler = null): Group
     {
-        return $this->group(function (Router $router) use ($methods, $path, $handler) {
+        return $this->group(function (Router $router) use ($methods, $path, $handler): void {
             foreach ($methods as $method) {
                 $router->make($method, $path, $handler);
             }
@@ -435,14 +395,6 @@ class Router implements RegistrarInterface, RepositoryInterface, RouterInterface
                 $this->add($route);
             }
         }
-    }
-
-    /**
-     * @return $this
-     */
-    protected function new(): self
-    {
-        return new self($this->responses, $this->uris, $this->reader);
     }
 
     /**
@@ -489,6 +441,57 @@ class Router implements RegistrarInterface, RepositoryInterface, RouterInterface
         }
 
         return null;
+    }
+
+    /**
+     * @return $this
+     */
+    protected function new(): self
+    {
+        return new self($this->responses, $this->uris, $this->reader);
+    }
+
+    /**
+     * @param non-empty-string $path
+     * @param string|\Stringable $location
+     * @param iterable<MethodInterface> $methods
+     * @param StatusCodeInterface $code
+     * @return Group
+     */
+    private function redirectToUri(
+        string $path,
+        string|\Stringable $location,
+        StatusCodeInterface $code = StatusCode::FOUND,
+        iterable $methods = [],
+    ): Group {
+        return $this->oneOf(
+            $methods,
+            $path,
+            fn () =>
+            $this->responses->createResponse($code->getCode(), $code->getReasonPhrase())
+                ->withAddedHeader('Location', (string)$location)
+        );
+    }
+
+    /**
+     * @param non-empty-string $path
+     * @param non-empty-string $route
+     * @param iterable<string, string> $args
+     * @param StatusCodeInterface $code
+     * @param iterable<MethodInterface> $methods
+     * @return Group
+     * @throws RouteGeneratorExceptionInterface
+     */
+    private function redirectToRoute(
+        string $path,
+        string $route,
+        iterable $args = [],
+        StatusCodeInterface $code = StatusCode::FOUND,
+        iterable $methods = [],
+    ): Group {
+        $location = $this->generator->generate($route, $args);
+
+        return $this->redirectToUri($path, $location, $code, $methods);
     }
 
     /**

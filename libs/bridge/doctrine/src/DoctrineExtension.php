@@ -41,17 +41,6 @@ use Psr\Cache\CacheItemPoolInterface;
 
 final class DoctrineExtension
 {
-    /**
-     * @param Path $path
-     * @return array
-     */
-    private function config(Path $path): array
-    {
-        $pathname = $path->config('doctrine.php');
-
-        return (array)(\is_file($pathname) ? require $pathname : []);
-    }
-
     #[Registration]
     public function loadRepositoryInterfaces(Path $path, Container $app): void
     {
@@ -112,5 +101,15 @@ final class DoctrineExtension
         $cli->add(new ValidateSchemaCommand($em));
         $cli->add(new MappingDescribeCommand($em));
         $cli->add(new GenerateProxiesCommand($em));
+    }
+    /**
+     * @param Path $path
+     * @return array
+     */
+    private function config(Path $path): array
+    {
+        $pathname = $path->config('doctrine.php');
+
+        return (array)(\is_file($pathname) ? require $pathname : []);
     }
 }

@@ -131,16 +131,6 @@ final class Type
     }
 
     /**
-     * @param \ReflectionNamedType $type
-     * @return bool
-     */
-    private function matchIterable(\ReflectionNamedType $type): bool
-    {
-        return $type->isBuiltin()
-            && $type->getName() === self::HINT_ITERABLE;
-    }
-
-    /**
      * @return bool
      */
     public function isIterable(): bool
@@ -158,15 +148,6 @@ final class Type
     }
 
     /**
-     * @param \ReflectionNamedType $type
-     * @return bool
-     */
-    private function matchBuiltin(\ReflectionNamedType $type): bool
-    {
-        return $type->isBuiltin();
-    }
-
-    /**
      * @return bool
      */
     public function isBuiltin(): bool
@@ -181,15 +162,6 @@ final class Type
     public function allowsBuiltin(): bool
     {
         return $this->match($this->matchBuiltin(...));
-    }
-
-    /**
-     * @param \ReflectionNamedType $type
-     * @return bool
-     */
-    private function matchScalar(\ReflectionNamedType $type): bool
-    {
-        return \in_array($type->getName(), self::HINT_SCALARS, true);
     }
 
     /**
@@ -216,6 +188,77 @@ final class Type
     public function match(callable $match): bool
     {
         return $this->matchType($this->type, $match);
+    }
+
+    /**
+     * @param object $instance
+     * @return bool
+     */
+    public function isInstanceOf(object $instance): bool
+    {
+        return $this->type instanceof \ReflectionNamedType
+            && $this->matchInstanceOf($this->type, $instance);
+    }
+
+    /**
+     * @param object $instance
+     * @return bool
+     */
+    public function allowsInstanceOf(object $instance): bool
+    {
+        return $this->match(
+            fn (\ReflectionNamedType $type): bool =>
+            $this->matchInstanceOf($type, $instance)
+        );
+    }
+
+    /**
+     * @return bool
+     */
+    public function isNullable(): bool
+    {
+        if ($this->isMixed()) {
+            return true;
+        }
+
+        return $this->type->allowsNull();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isMixed(): bool
+    {
+        return $this->type instanceof \ReflectionNamedType
+            && $this->type->getName() === 'mixed';
+    }
+
+    /**
+     * @param \ReflectionNamedType $type
+     * @return bool
+     */
+    private function matchIterable(\ReflectionNamedType $type): bool
+    {
+        return $type->isBuiltin()
+            && $type->getName() === self::HINT_ITERABLE;
+    }
+
+    /**
+     * @param \ReflectionNamedType $type
+     * @return bool
+     */
+    private function matchBuiltin(\ReflectionNamedType $type): bool
+    {
+        return $type->isBuiltin();
+    }
+
+    /**
+     * @param \ReflectionNamedType $type
+     * @return bool
+     */
+    private function matchScalar(\ReflectionNamedType $type): bool
+    {
+        return \in_array($type->getName(), self::HINT_SCALARS, true);
     }
 
     /**
@@ -273,47 +316,5 @@ final class Type
     private function matchInstanceOf(\ReflectionNamedType $type, object $expected): bool
     {
         return !$type->isBuiltin() && $expected instanceof ($type->getName());
-    }
-
-    /**
-     * @param object $instance
-     * @return bool
-     */
-    public function isInstanceOf(object $instance): bool
-    {
-        return $this->type instanceof \ReflectionNamedType
-            && $this->matchInstanceOf($this->type, $instance);
-    }
-
-    /**
-     * @param object $instance
-     * @return bool
-     */
-    public function allowsInstanceOf(object $instance): bool
-    {
-        return $this->match(fn(\ReflectionNamedType $type): bool =>
-            $this->matchInstanceOf($type, $instance)
-        );
-    }
-
-    /**
-     * @return bool
-     */
-    public function isNullable(): bool
-    {
-        if ($this->isMixed()) {
-            return true;
-        }
-
-        return $this->type->allowsNull();
-    }
-
-    /**
-     * @return bool
-     */
-    public function isMixed(): bool
-    {
-        return $this->type instanceof \ReflectionNamedType
-            && $this->type->getName() === 'mixed';
     }
 }

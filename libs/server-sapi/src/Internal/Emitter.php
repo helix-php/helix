@@ -148,7 +148,7 @@ final class Emitter
             $body->rewind();
         }
 
-        while (! $body->eof()) {
+        while (!$body->eof()) {
             echo $body->read($this->info->bufferLength);
             \flush();
         }
@@ -195,13 +195,13 @@ final class Emitter
             $body->seek($first);
         }
 
-        while ($length >= $this->info->bufferLength && ! $body->eof()) {
+        while ($length >= $this->info->bufferLength && !$body->eof()) {
             $contents = $body->read($this->info->bufferLength);
             $length -= \strlen($contents);
             echo $contents;
         }
 
-        if ($length > 0 && ! $body->eof()) {
+        if ($length > 0 && !$body->eof()) {
             echo $body->read($length);
         }
     }

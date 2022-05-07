@@ -1563,6 +1563,26 @@ enum StatusCode: int implements StatusCodeInterface
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function getReasonPhrase(): string
+    {
+        $info = $this->getInfo();
+
+        return $info->reasonPhrase;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getCategory(): Category
+    {
+        $info = $this->getInfo();
+
+        return $info->category;
+    }
+
+    /**
      * @return Info
      */
     private function getInfo(): Info
@@ -1582,25 +1602,5 @@ enum StatusCode: int implements StatusCodeInterface
         }
 
         throw new \LogicException('Could not resolve status code [' . $this->name . '] info');
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getReasonPhrase(): string
-    {
-        $info = $this->getInfo();
-
-        return $info->reasonPhrase;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getCategory(): Category
-    {
-        $info = $this->getInfo();
-
-        return $info->category;
     }
 }

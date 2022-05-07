@@ -26,7 +26,8 @@ class Generator implements GeneratorInterface
     public function __construct(
         private UriFactoryInterface $uris,
         private RepositoryInterface $routes,
-    ) {}
+    ) {
+    }
 
     /**
      * {@inheritDoc}
@@ -47,7 +48,7 @@ class Generator implements GeneratorInterface
      */
     private function replace(array $arguments): \Closure
     {
-        return static function(array $matches) use ($arguments): string {
+        return static function (array $matches) use ($arguments): string {
             [,$name, $pattern] = $matches;
 
             $result = $arguments[$name] ?? throw InvalidRouteParameterException::notPassed($name);

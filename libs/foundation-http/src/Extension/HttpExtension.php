@@ -34,7 +34,7 @@ final class HttpExtension
         ResponseFactoryInterface::class,
         StreamFactoryInterface::class,
         UploadedFileFactoryInterface::class,
-        UriFactoryInterface::class
+        UriFactoryInterface::class,
     ];
 
     #[Singleton(as: self::PSR_FACTORY_ALIASES)]

@@ -28,6 +28,18 @@ final class Version implements VersionInterface
     /**
      * {@inheritDoc}
      */
+    public function __toString(): string
+    {
+        return \vsprintf('%d.%d.%d', [
+            $this->getMajor(),
+            $this->getMinor(),
+            $this->getPatch(),
+        ]);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getMajor(): int
     {
         return $this->major;
@@ -47,17 +59,5 @@ final class Version implements VersionInterface
     public function getPatch(): int
     {
         return $this->patch;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function __toString(): string
-    {
-        return \vsprintf('%d.%d.%d', [
-            $this->getMajor(),
-            $this->getMinor(),
-            $this->getPatch(),
-        ]);
     }
 }

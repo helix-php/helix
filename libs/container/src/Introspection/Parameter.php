@@ -14,14 +14,13 @@ namespace Helix\Container\Introspection;
 final class Parameter
 {
     /**
-     * @var \ReflectionType|null
-     */
-    private static ?\ReflectionType $mixed = null;
-
-    /**
      * @var Type
      */
     public readonly Type $type;
+    /**
+     * @var \ReflectionType|null
+     */
+    private static ?\ReflectionType $mixed = null;
 
     /**
      * @param \ReflectionParameter $parameter

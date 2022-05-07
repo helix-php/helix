@@ -23,7 +23,7 @@ use Helix\Contracts\Router\Exception\RouterExceptionInterface;
  */
 class RouterTestCase extends TestCase
 {
-    public function testNotFound()
+    public function testNotFound(): void
     {
         $this->expectException(NotFoundExceptionInterface::class);
 
@@ -31,7 +31,7 @@ class RouterTestCase extends TestCase
         $router->match(new ServerRequest(uri: '/'));
     }
 
-    public function testNotAllowed()
+    public function testNotAllowed(): void
     {
         $this->expectException(NotAllowedExceptionInterface::class);
 
@@ -42,7 +42,7 @@ class RouterTestCase extends TestCase
         $router->match(new ServerRequest(uri: '/'));
     }
 
-    public function testRoutesDuplicate()
+    public function testRoutesDuplicate(): void
     {
         $this->expectException(RouterExceptionInterface::class);
 
@@ -55,7 +55,7 @@ class RouterTestCase extends TestCase
         $router->match(new ServerRequest());
     }
 
-    public function testRoutesDuplicateWithUniqueMethods()
+    public function testRoutesDuplicateWithUniqueMethods(): void
     {
         $this->expectNotToPerformAssertions();
 
@@ -85,10 +85,10 @@ class RouterTestCase extends TestCase
      * @throws NotAllowedExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function testMethodsMatching(MethodInterface $method)
+    public function testMethodsMatching(MethodInterface $method): void
     {
         $router = $this->router([
-            $this->route(handler: 'get', method: $method)
+            $this->route(handler: 'get', method: $method),
         ]);
 
         $matched = $router->match(new ServerRequest(method: $method->getName(), uri: '/'));

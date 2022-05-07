@@ -20,7 +20,7 @@ class ViewException extends \Exception implements ViewExceptionInterface
      * @param positive-int|0 $code
      * @param \Throwable|null $previous
      */
-    final public function __construct(string $message = "", int $code = 0, ?\Throwable $previous = null)
+    final public function __construct(string $message = '', int $code = 0, ?\Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }

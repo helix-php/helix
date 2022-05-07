@@ -25,5 +25,6 @@ abstract class Server implements ServerInterface
     public function __construct(
         protected readonly Psr17FactoryInterface $factory,
         protected readonly ServerCreateInfo $info,
-    ) {}
+    ) {
+    }
 }

@@ -53,20 +53,6 @@ final class ParamResolver implements ParamResolverInterface
     }
 
     /**
-     * @return iterable<ValueResolver>
-     */
-    private function getDefaultResolvers(): iterable
-    {
-        $result = [];
-
-        foreach (self::DEFAULT_RESOLVERS as $class) {
-            $result[] = new $class();
-        }
-
-        return $result;
-    }
-
-    /**
      * @param ValueResolverInterface ...$resolvers
      * @return void
      */
@@ -96,32 +82,6 @@ final class ParamResolver implements ParamResolverInterface
         $self->prepend(...$resolvers);
 
         return $self;
-    }
-
-    /**
-     * @param iterable<\ReflectionParameter> $parameters
-     * @return iterable
-     * @throws ParamNotResolvableException
-     * @psalm-suppress InvalidReturnType
-     */
-    private function resolve(iterable $parameters): iterable
-    {
-        $result = [];
-
-        foreach ($parameters as $id => $parameter) {
-            foreach ($this->resolvers as $resolver) {
-                if ($resolver->supports($parameter)) {
-                    $result[] = $resolver->resolve($parameter);
-
-                    continue 2;
-                }
-            }
-
-            $message = \sprintf(self::ERROR_PARAM_NOT_RESOLVABLE, $id, $parameter->getName());
-            throw new ParamNotResolvableException($parameter, $message);
-        }
-
-        return $result;
     }
 
     /**
@@ -186,5 +146,45 @@ final class ParamResolver implements ParamResolverInterface
         }
 
         return $this->with(...$resolvers)->resolve($parameters);
+    }
+
+    /**
+     * @return iterable<ValueResolver>
+     */
+    private function getDefaultResolvers(): iterable
+    {
+        $result = [];
+
+        foreach (self::DEFAULT_RESOLVERS as $class) {
+            $result[] = new $class();
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param iterable<\ReflectionParameter> $parameters
+     * @return iterable
+     * @throws ParamNotResolvableException
+     * @psalm-suppress InvalidReturnType
+     */
+    private function resolve(iterable $parameters): iterable
+    {
+        $result = [];
+
+        foreach ($parameters as $id => $parameter) {
+            foreach ($this->resolvers as $resolver) {
+                if ($resolver->supports($parameter)) {
+                    $result[] = $resolver->resolve($parameter);
+
+                    continue 2;
+                }
+            }
+
+            $message = \sprintf(self::ERROR_PARAM_NOT_RESOLVABLE, $id, $parameter->getName());
+            throw new ParamNotResolvableException($parameter, $message);
+        }
+
+        return $result;
     }
 }

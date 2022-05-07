@@ -20,7 +20,8 @@ abstract class Execution implements MethodMetadataInterface
      */
     public function __construct(
         public readonly array|string $ifServiceExists = []
-    ) {}
+    ) {
+    }
 
     /**
      * @param ContainerInterface $app

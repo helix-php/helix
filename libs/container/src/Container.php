@@ -70,15 +70,6 @@ final class Container implements
     }
 
     /**
-     * @return void
-     */
-    private function registerSelf(): void
-    {
-        $this->instance($this)
-            ->withInterfaces();
-    }
-
-    /**
      * @template TIdentifier as object
      *
      * @param non-empty-string|class-string<TIdentifier> $id
@@ -204,5 +195,14 @@ final class Container implements
     public function make(string $id, iterable $resolvers = []): object
     {
         return $this->instantiator->make($id, $resolvers);
+    }
+
+    /**
+     * @return void
+     */
+    private function registerSelf(): void
+    {
+        $this->instance($this)
+            ->withInterfaces();
     }
 }

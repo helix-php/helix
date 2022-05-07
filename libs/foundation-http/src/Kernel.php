@@ -47,6 +47,20 @@ class Kernel implements RequestHandlerInterface
     }
 
     /**
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
+    public function handle(ServerRequestInterface $request): ResponseInterface
+    {
+        $handler = new CallableHandler(function (ServerRequestInterface $request): mixed {
+            return $this->dispatch($request, $this->router->match($request));
+        });
+
+        return $this->pipeline($this->middleware, $this->getRequestValueResolvers($request))
+            ->process($request, $handler);
+    }
+
+    /**
      * @param string|MiddlewareInterface $middleware
      * @param iterable<ValueResolverInterface> $resolvers
      * @return MiddlewareInterface
@@ -81,7 +95,8 @@ class Kernel implements RequestHandlerInterface
     {
         $resolvers = $this->getMiddlewareValueResolvers($request, $route);
 
-        $handler = new CallableHandler(fn (): mixed =>
+        $handler = new CallableHandler(
+            fn (): mixed =>
             $this->dispatcher->call($route->getHandler(), $resolvers)
         );
 
@@ -99,7 +114,7 @@ class Kernel implements RequestHandlerInterface
         return [
             new ObjectResolver($request),
             new ObjectResolver($route),
-            new NamedArgumentsResolver($route->getArguments())
+            new NamedArgumentsResolver($route->getArguments()),
         ];
     }
 
@@ -112,20 +127,6 @@ class Kernel implements RequestHandlerInterface
         return [
             new ObjectResolver($request),
         ];
-    }
-
-    /**
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
-     */
-    public function handle(ServerRequestInterface $request): ResponseInterface
-    {
-        $handler = new CallableHandler(function (ServerRequestInterface $request): mixed {
-            return $this->dispatch($request, $this->router->match($request));
-        });
-
-        return $this->pipeline($this->middleware, $this->getRequestValueResolvers($request))
-            ->process($request, $handler);
     }
 
     /**

@@ -99,16 +99,6 @@ final class Path
     }
 
     /**
-     * @param non-empty-string $prefix
-     * @param non-empty-string ...$chunks
-     * @return non-empty-string
-     */
-    private function to(string $prefix, string ...$chunks): string
-    {
-        return self::join([$prefix, ...$chunks], $this->delimiter);
-    }
-
-    /**
      * @param non-empty-string ...$suffix
      * @return non-empty-string
      */
@@ -201,6 +191,16 @@ final class Path
     {
         /** @psalm-suppress ArgumentTypeCoercion */
         return self::normalize(\implode($delimiter, \array_filter($parts)));
+    }
+
+    /**
+     * @param non-empty-string $prefix
+     * @param non-empty-string ...$chunks
+     * @return non-empty-string
+     */
+    private function to(string $prefix, string ...$chunks): string
+    {
+        return self::join([$prefix, ...$chunks], $this->delimiter);
     }
 
     /**

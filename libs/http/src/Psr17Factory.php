@@ -49,7 +49,8 @@ final class Psr17Factory implements Psr17FactoryInterface
         private StreamFactoryInterface $streams,
         private UploadedFileFactoryInterface $files,
         private UriFactoryInterface $uris
-    ) {}
+    ) {
+    }
 
     /**
      * @param LikePsr17Factory $factory

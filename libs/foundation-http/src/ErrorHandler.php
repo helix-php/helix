@@ -47,6 +47,18 @@ class ErrorHandler extends BaseErrorHandler implements HttpErrorHandlerInterface
 
     /**
      * @param \Throwable $e
+     * @param ServerRequestInterface|null $request
+     * @return ResponseInterface
+     */
+    public function throw(\Throwable $e, ServerRequestInterface $request = null): ResponseInterface
+    {
+        $this->report($e);
+
+        return $this->respond($e, $request);
+    }
+
+    /**
+     * @param \Throwable $e
      * @return StatusCodeInterface
      */
     protected function getStatusCodeFromException(\Throwable $e): StatusCodeInterface
@@ -70,18 +82,6 @@ class ErrorHandler extends BaseErrorHandler implements HttpErrorHandlerInterface
             ->getCategory();
 
         return parent::isReportable($e) && $category->isError(server: true);
-    }
-
-    /**
-     * @param \Throwable $e
-     * @param ServerRequestInterface|null $request
-     * @return ResponseInterface
-     */
-    public function throw(\Throwable $e, ServerRequestInterface $request = null): ResponseInterface
-    {
-        $this->report($e);
-
-        return $this->respond($e, $request);
     }
 
     /**

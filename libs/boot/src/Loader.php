@@ -94,6 +94,14 @@ class Loader implements RepositoryInterface, LoaderInterface
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function getExtensions(): iterable
+    {
+        return $this->extensions;
+    }
+
+    /**
      * @param ExtensionInterface $provider
      * @return iterable<ServiceDefinition, DefinitionInterface>
      * @throws RegistrationException
@@ -150,13 +158,5 @@ class Loader implements RepositoryInterface, LoaderInterface
         $class = $method->getDeclaringClass();
         $message = \sprintf(self::ERROR_AMBIGUOUS_IDENTIFIER, $class . '::' . $method->getName());
         throw new RegistrationException($message);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getExtensions(): iterable
-    {
-        return $this->extensions;
     }
 }

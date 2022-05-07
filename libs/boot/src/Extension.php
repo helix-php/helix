@@ -41,6 +41,15 @@ final class Extension implements ExtensionInterface, \Stringable
     }
 
     /**
+     * @return string
+     * @throws \JsonException
+     */
+    public function __toString(): string
+    {
+        return \json_encode($this->toArray(), \JSON_THROW_ON_ERROR | \JSON_PRETTY_PRINT);
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function getClassMetadata(string $attribute = null): iterable
@@ -48,16 +57,6 @@ final class Extension implements ExtensionInterface, \Stringable
         $meta = $this->getMetadata();
 
         return $meta->getClassMetadata($attribute);
-    }
-
-    /**
-     * @return MetadataProviderInterface
-     */
-    private function getMetadata(): MetadataProviderInterface
-    {
-        return $this->metadata ??= new AttributesMetadataProvider(
-            new \ReflectionObject($this->getContext())
-        );
     }
 
     /**
@@ -76,39 +75,6 @@ final class Extension implements ExtensionInterface, \Stringable
         $meta = $this->getMetadata();
 
         return $meta->getMethodMetadata($attribute);
-    }
-
-    /**
-     * @return array
-     */
-    private function toArray(): array
-    {
-        return [
-            'name' => $this->getName(),
-            'description' => $this->getDescription(),
-            'version' => $this->getVersion(),
-        ];
-    }
-
-    /**
-     * @return string
-     * @throws \JsonException
-     */
-    public function __toString(): string
-    {
-        return \json_encode($this->toArray(), \JSON_THROW_ON_ERROR | \JSON_PRETTY_PRINT);
-    }
-
-    /**
-     * @return InfoProviderInterface
-     */
-    private function getInfo(): InfoProviderInterface
-    {
-        $factory = new Factory($this->getMetadata());
-
-        return $this->info ??= $factory->create(
-            new \ReflectionObject($this->getContext())
-        );
     }
 
     /**
@@ -139,5 +105,39 @@ final class Extension implements ExtensionInterface, \Stringable
         $info = $this->getInfo();
 
         return $info->getVersion();
+    }
+
+    /**
+     * @return MetadataProviderInterface
+     */
+    private function getMetadata(): MetadataProviderInterface
+    {
+        return $this->metadata ??= new AttributesMetadataProvider(
+            new \ReflectionObject($this->getContext())
+        );
+    }
+
+    /**
+     * @return array
+     */
+    private function toArray(): array
+    {
+        return [
+            'name' => $this->getName(),
+            'description' => $this->getDescription(),
+            'version' => $this->getVersion(),
+        ];
+    }
+
+    /**
+     * @return InfoProviderInterface
+     */
+    private function getInfo(): InfoProviderInterface
+    {
+        $factory = new Factory($this->getMetadata());
+
+        return $this->info ??= $factory->create(
+            new \ReflectionObject($this->getContext())
+        );
     }
 }

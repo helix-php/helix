@@ -80,7 +80,8 @@
         "symfony/var-dumper": "^5.4|^6.0",
         "vimeo/psalm": "^4.10",
         "jetbrains/phpstorm-attributes": "^1.0",
-        "httpsoft/http-message": "^1.0"
+        "httpsoft/http-message": "^1.0",
+        "friendsofphp/php-cs-fixer": "*"
     },
     "autoload-dev": {
         "psr-4": {
@@ -120,6 +121,7 @@
         }
     },
     "scripts": {
+        "phpcs": "php-cs-fixer fix --config=.php-cs-fixer.php",
         "bench": "phpbench run tests/Bench --report=aggregate"
     },
     "minimum-stability": "dev",

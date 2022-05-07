@@ -51,7 +51,7 @@ class StatelessReader implements ReaderInterface
      */
     public function fromCallable(callable $callable): iterable
     {
-        return match(true) {
+        return match (true) {
             $callable instanceof \Closure => $this->fromClosure($callable),
             \is_string($callable) => $this->fromFunction($callable),
             default => $this->fromClosure($callable(...)),

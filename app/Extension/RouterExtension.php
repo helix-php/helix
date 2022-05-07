@@ -25,16 +25,6 @@ use Psr\Http\Message\UriFactoryInterface;
 final class RouterExtension
 {
     /**
-     * @param Router $router
-     * @return void
-     * @throws BadRouteDefinitionException
-     */
-    private function routes(Router $router): void
-    {
-        $router->import(\App\Http\Controller\HomeController::class);
-    }
-
-    /**
      * @param ResponseFactoryInterface $resp
      * @param UriFactoryInterface $uris
      * @return RouterInterface
@@ -57,5 +47,14 @@ final class RouterExtension
     public function getRouteGenerator(UriFactoryInterface $uris, RepositoryInterface $router): GeneratorInterface
     {
         return new Generator($uris, $router);
+    }
+    /**
+     * @param Router $router
+     * @return void
+     * @throws BadRouteDefinitionException
+     */
+    private function routes(Router $router): void
+    {
+        $router->import(\App\Http\Controller\HomeController::class);
     }
 }
