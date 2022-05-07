@@ -13,8 +13,8 @@ return [
     //
     // Kernel Extensions
     //
-    \Helix\Foundation\Extension\LoggerExtension::class,
     \Helix\Foundation\Http\Extension\HttpExtension::class,
+    \Helix\Bridge\Doctrine\DoctrineExtension::class,
 
     //
     // Debug Extensions
@@ -22,6 +22,7 @@ return [
     ...\array_filter([
         \Helix\Debug\DebugExtension::class,
     ], \class_exists(...)),
+
 
     //
     // Application Extensions
@@ -31,5 +32,4 @@ return [
     \App\Extension\ServerExtension::class,
     \App\Extension\LoggerExtension::class,
     \App\Extension\ViewExtension::class,
-    \App\Extension\DatabaseExtension::class,
 ];

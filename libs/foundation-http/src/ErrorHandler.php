@@ -81,26 +81,49 @@ class ErrorHandler extends BaseErrorHandler implements HttpErrorHandlerInterface
     {
         $this->report($e);
 
-        $code = $this->getStatusCodeFromException($e);
-
-        $response = $this->responses
-            ->createResponse($code->getCode(), $code->getReasonPhrase())
-        ;
-
-        if ($this->app->debug) {
-            $response = $response->withBody(
-                $this->streams->createStream($this->renderException($e))
-            );
-        }
-
-        return $response;
+        return $this->respond($e, $request);
     }
 
     /**
      * @param \Throwable $e
+     * @param ServerRequestInterface|null $request
+     * @return ResponseInterface
+     */
+    private function respond(\Throwable $e, ?ServerRequestInterface $request): ResponseInterface
+    {
+        $code = $this->getStatusCodeFromException($e);
+
+        return $this->responses
+            ->createResponse($code->getCode(), $code->getReasonPhrase())
+            ->withBody($this->streams->createStream(
+                $this->getResponseBody($code, $e)
+            ));
+    }
+
+    /**
+     * @param StatusCodeInterface $code
+     * @param \Throwable $e
      * @return string
      */
-    protected function renderException(\Throwable $e): string
+    private function getResponseBody(StatusCodeInterface $code, \Throwable $e): string
+    {
+        if ($this->app->debug) {
+            return $this->getDebugResponseBody($e);
+        }
+
+        \ob_start();
+
+        try {
+            require __DIR__ . '/../resources/template/error.php';
+        } catch (\Throwable) {
+            \ob_clean();
+            return $code->getReasonPhrase();
+        }
+
+        return (string)(\ob_get_clean() ?: $code->getReasonPhrase());
+    }
+
+    private function getDebugResponseBody(\Throwable $e): string
     {
         $whoops = new Run();
         $whoops->allowQuit(false);

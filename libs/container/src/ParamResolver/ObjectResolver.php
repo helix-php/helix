@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Helix\Container\ParamResolver;
 
+use Helix\Container\Introspection\Parameter;
+
 /**
  * @template T of object
  */
@@ -29,7 +31,8 @@ class ObjectResolver extends ValueResolver
      */
     public function supports(\ReflectionParameter $parameter): bool
     {
-        return Parameter::of($parameter)->allowsInstanceOf($this->context);
+        return Parameter::of($parameter)
+            ->type->allowsInstanceOf($this->context);
     }
 
     /**

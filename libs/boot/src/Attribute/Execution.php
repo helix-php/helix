@@ -13,7 +13,7 @@ namespace Helix\Boot\Attribute;
 
 use Psr\Container\ContainerInterface;
 
-abstract class Execution extends MethodMetadata
+abstract class Execution implements MethodMetadataInterface
 {
     /**
      * @param array<class-string>|class-string $ifServiceExists
@@ -26,7 +26,7 @@ abstract class Execution extends MethodMetadata
      * @param ContainerInterface $app
      * @return bool
      */
-    public function isRunnable(ContainerInterface $app): bool
+    public function shouldLoad(ContainerInterface $app): bool
     {
         foreach ((array)$this->ifServiceExists as $service) {
             if (!$app->has($service)) {

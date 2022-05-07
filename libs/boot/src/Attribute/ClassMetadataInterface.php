@@ -11,6 +11,6 @@ declare(strict_types=1);
 
 namespace Helix\Boot\Attribute;
 
-abstract class ClassMetadata
+interface ClassMetadataInterface
 {
 }

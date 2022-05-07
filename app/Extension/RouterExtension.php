@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace App\Extension;
 
-use App\Http\Controller\HomeController;
 use Helix\Boot\Attribute\Singleton;
 use Helix\Contracts\Router\RegistrarInterface;
 use Helix\Contracts\Router\RepositoryInterface;

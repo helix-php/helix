@@ -11,18 +11,18 @@ declare(strict_types=1);
 
 namespace Helix\Boot\Extension\Metadata;
 
-use Helix\Boot\Attribute\ClassMetadata;
-use Helix\Boot\Attribute\MethodMetadata;
+use Helix\Boot\Attribute\ClassMetadataInterface;
+use Helix\Boot\Attribute\MethodMetadataInterface;
 
 abstract class MetadataProvider implements MetadataProviderInterface
 {
     /**
-     * @var array<ClassMetadata>
+     * @var array<ClassMetadataInterface>
      */
     protected array $class = [];
 
     /**
-     * @var array<array{\ReflectionMethod, MethodMetadata}>
+     * @var array<array{\ReflectionMethod, MethodMetadataInterface}>
      */
     protected array $methods = [];
 

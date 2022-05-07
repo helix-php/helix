@@ -27,6 +27,8 @@
         {"type": "path", "url": "libs/contracts/router"},
         {"type": "path", "url": "libs/contracts/view"},
 
+        {"type": "path", "url": "libs/bridge/doctrine"},
+
         {"type": "path", "url": "libs/boot"},
         {"type": "path", "url": "libs/container"},
         {"type": "path", "url": "libs/debug"},
@@ -52,6 +54,8 @@
         "ext-pdo": "*",
         "ext-mbstring": "*",
 
+        "helix/doctrine-bridge": "^1.0",
+
         "helix/env": "^1.0",
         "helix/foundation-http": "^1.0",
         "helix/foundation-console": "^1.0",
@@ -62,9 +66,7 @@
         "cache/array-adapter": "^1.2",
         "cache/filesystem-adapter": "^1.2",
         "monolog/monolog": "^2.3",
-        "doctrine/orm": "^2.11",
-        "phpbench/phpbench": "^1.2",
-        "happyr/doctrine-specification": "^1.1"
+        "symfony/finder": "^5.4|^6.0"
     },
     "autoload": {
         "psr-4": {
@@ -72,6 +74,7 @@
         }
     },
     "require-dev": {
+        "phpbench/phpbench": "^1.2",
         "helix/debug": "^1.0",
         "phpunit/phpunit": "^9.5.20",
         "symfony/var-dumper": "^5.4|^6.0",
@@ -84,7 +87,6 @@
             "App\\Tests\\": "tests",
 
             "Helix\\Boot\\Tests\\": "libs/boot/tests",
-            "Helix\\Config\\Purify\\Tests\\": "libs/config-purify/tests",
             "Helix\\Container\\Tests\\": "libs/container/tests",
             "Helix\\Debug\\Tests\\": "libs/debug/tests",
             "Helix\\Env\\Tests\\": "libs/env/tests",

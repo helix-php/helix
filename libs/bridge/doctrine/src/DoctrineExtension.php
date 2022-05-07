@@ -9,12 +9,13 @@
 
 declare(strict_types=1);
 
-namespace App\Extension;
+namespace Helix\Bridge\Doctrine;
 
-use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\Psr6\DoctrineProvider;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Exception\EntityManagerClosed;
+use Doctrine\ORM\ORMSetup;
 use Doctrine\ORM\Tools\Console\Command\ClearCache\CollectionRegionCommand;
 use Doctrine\ORM\Tools\Console\Command\ClearCache\EntityRegionCommand;
 use Doctrine\ORM\Tools\Console\Command\ClearCache\MetadataCommand;
@@ -30,7 +31,7 @@ use Doctrine\ORM\Tools\Console\Command\SchemaTool\DropCommand;
 use Doctrine\ORM\Tools\Console\Command\SchemaTool\UpdateCommand;
 use Doctrine\ORM\Tools\Console\Command\ValidateSchemaCommand;
 use Doctrine\ORM\Tools\Console\EntityManagerProvider;
-use Doctrine\ORM\Tools\Setup;
+use Doctrine\ORM\Tools\Console\EntityManagerProvider\SingleManagerProvider;
 use Helix\Boot\Attribute\Registration;
 use Helix\Boot\Attribute\Singleton;
 use Helix\Container\Container;
@@ -38,15 +39,26 @@ use Helix\Foundation\Console\Application as CliApplication;
 use Helix\Foundation\Path;
 use Psr\Cache\CacheItemPoolInterface;
 
-final class DatabaseExtension
+final class DoctrineExtension
 {
+    /**
+     * @param Path $path
+     * @return array
+     */
+    private function config(Path $path): array
+    {
+        $pathname = $path->config('doctrine.php');
+
+        return (array)(\is_file($pathname) ? require $pathname : []);
+    }
+
     #[Registration]
     public function loadRepositoryInterfaces(Path $path, Container $app): void
     {
-        $config = require $path->config('database.php');
+        $config = $this->config($path);
 
-        foreach ($config['repositories'] as $alias => $entity) {
-            $app->singleton($alias, static function (EntityManagerInterface $em) use ($entity) {
+        foreach (($config['repositories'] ?? []) as $alias => $entity) {
+            $app->singleton($alias, static function (EntityManagerInterface $em) use ($entity): object {
                 return $em->getRepository($entity);
             });
         }
@@ -55,18 +67,19 @@ final class DatabaseExtension
     #[Singleton(as: [EntityManager::class])]
     public function getEntityManager(Path $path, CacheItemPoolInterface $cache = null): EntityManagerInterface
     {
-        $config = require $path->config('database.php');
+        $config = $this->config($path);
 
-        if ($cache !== null) {
-            $cache = DoctrineProvider::wrap($cache);
-        }
-
-        $doctrine = Setup::createAttributeMetadataConfiguration(
+        $doctrine = ORMSetup::createAttributeMetadataConfiguration(
             $config['entities'] ?? [],
             $config['debug'] ?? false,
             $config['proxies'] ?? null,
             $cache,
         );
+
+        $config['connection'] ??= [
+            'driver' => 'pdo_sqlite',
+            'memory' => true,
+        ];
 
         return EntityManager::create($config['connection'], $doctrine);
     }
@@ -74,7 +87,7 @@ final class DatabaseExtension
     #[Singleton]
     public function getEntityManagerProvider(EntityManagerInterface $em): EntityManagerProvider
     {
-        return new EntityManagerProvider\SingleManagerProvider($em);
+        return new SingleManagerProvider($em);
     }
 
     #[Registration(ifServiceExists: CliApplication::class)]

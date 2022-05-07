@@ -25,7 +25,7 @@ final class SapiServeCommand extends Command
      */
     public function __construct(private string $public)
     {
-        parent::__construct('serve:sapi');
+        parent::__construct('serve');
     }
 
     /**
@@ -33,8 +33,8 @@ final class SapiServeCommand extends Command
      */
     public function configure(): void
     {
-        $this->setProcessTitle('Helix SAPI Server');
-        $this->setDescription('Executes SAPI server');
+        $this->setProcessTitle('Helix Server');
+        $this->setDescription('Executes PHP Builtin Server');
         $this->addOption(
             name: 'host',
             mode: InputOption::VALUE_OPTIONAL,
@@ -68,10 +68,12 @@ final class SapiServeCommand extends Command
          */
         [$host, $port] = [$input->getOption('host'), $input->getOption('port')];
 
-        $process = new Process(['php', '-S', $host . ':' . $port, 'index.php'], $this->public, [
-            'PHP_CLI_SERVER_WORKERS' => $input->getOption('workers'),
-        ]);
+        $options = [];
+        if ($input->getOption('workers') > 1) {
+            $options['PHP_CLI_SERVER_WORKERS'] = $input->getOption('workers');
+        }
 
+        $process = new Process([\PHP_BINARY, '-S', $host . ':' . $port, 'index.php'], $this->public, $options);
         $process->setTimeout(null);
 
         return $process->run($this->processHandler(
@@ -130,12 +132,19 @@ final class SapiServeCommand extends Command
             }
 
             if (\str_starts_with(\ltrim($line), 'thrown in ')) {
-                $io->newLine();
                 break;
             }
 
             if (\preg_match('/^#(\d+)\h+(.+?):\h(.+?)$/isum', $line, $m)) {
+                if (!$io->isVerbose()) {
+                    continue;
+                }
+
                 $io->writeln(\sprintf(' <fg=gray>#%-2s</><fg=yellow> %s </>', $m[1], $m[3]));
+
+                if (!$io->isVeryVerbose()) {
+                    continue;
+                }
 
                 if (\preg_match('/^(.+?)\((\d+)\)$/isum', $m[2], $fm)) {
                     $io->writeln(\sprintf('     <fg=green;href=%s:%d>%1$s:%2$d</>', $fm[1], $fm[2]));
@@ -178,7 +187,7 @@ final class SapiServeCommand extends Command
      */
     private function printHeader(string $line, SymfonyStyle $io): void
     {
-        $io->info($this->removeDate(\trim($line)));
+        $io->writeln(' ✔ <info>' . $this->removeDate(\trim($line)) . '.</info>');
     }
 
     /**

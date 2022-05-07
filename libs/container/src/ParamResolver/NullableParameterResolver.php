@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Helix\Container\ParamResolver;
 
+use Helix\Container\Introspection\Parameter;
+
 final class NullableParameterResolver extends ValueResolver
 {
     /**

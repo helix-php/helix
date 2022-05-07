@@ -14,9 +14,9 @@ namespace Helix\Foundation;
 use Composer\InstalledVersions;
 use Helix\Boot\Loader;
 use Helix\Boot\LoaderInterface;
-use Helix\Boot\RepositoryInterface;
 use Helix\Container\Container;
 use Helix\Container\Exception\RegistrationException;
+use Psr\Log\NullLogger;
 
 abstract class Application implements LoaderInterface
 {
@@ -53,55 +53,57 @@ abstract class Application implements LoaderInterface
     {
         $this->env = $info->env;
         $this->debug = $info->debug;
-
         $this->container = new Container($info->container);
-        $this->container->instance($this);
+        $this->extensions = new Loader($this->container);
+        $this->initVersion();
 
-        $this->bootVersion();
-        $this->bootPath($info);
-        $this->bootExtensions($info);
+
+        $this->bindDefaults($info);
+        $this->loadMany($info->extensions);
     }
 
+    /**
+     * @param CreateInfo $info
+     * @return void
+     */
+    private function bindDefaults(CreateInfo $info): void
+    {
+        $this->container->instance($this);
+        $this->container->instance($info->path);
+
+        $this->container->instance(new NullLogger())
+            ->withInterfaces();
+        $this->container->instance($this->extensions)
+            ->withInterfaces();
+    }
 
     /**
      * @return void
      */
-    private function bootVersion(): void
+    private function initVersion(): void
     {
         $this->version = InstalledVersions::getPrettyVersion('helix/foundation')
             ?? 'dev-master';
     }
 
     /**
-     * @param CreateInfo $info
+     * @param iterable<string|object> $extensions
      * @return void
      * @throws RegistrationException
      */
-    private function bootExtensions(CreateInfo $info): void
+    private function loadMany(iterable $extensions): void
     {
-        $this->extensions = new Loader($this->container);
+        foreach ($extensions as $extension) {
+            if ($extension) {
+                if (\is_string($extension)) {
+                    $extension = $this->container->make($extension);
+                }
 
-        $this->container->instance($this->extensions)
-            ->as(RepositoryInterface::class)
-        ;
-
-        foreach ($info->extensions as $extension) {
-            if (\is_string($extension)) {
-                $extension = $this->container->make($extension);
+                $this->load($extension);
             }
-
-            $this->load($extension);
         }
     }
 
-    /**
-     * @param CreateInfo $info
-     * @return void
-     */
-    private function bootPath(CreateInfo $info): void
-    {
-        $this->container->instance($info->path);
-    }
 
     /**
      * @param non-empty-string ...$matches

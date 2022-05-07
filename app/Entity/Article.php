@@ -26,24 +26,12 @@ use Doctrine\ORM\Mapping as ORM;
 class Article
 {
     /**
-     * @var positive-int|0
+     * @var positive-int|0|null
      */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(name: 'id', type: Types::BIGINT)]
-    public int $id;
-
-    /**
-     * @var non-empty-string
-     */
-    #[ORM\Column(name: 'title', type: Types::STRING)]
-    public string $title;
-
-    /**
-     * @var string
-     */
-    #[ORM\Column(name: 'content', type: Types::TEXT)]
-    public string $content;
+    public ?int $id = null;
 
     /**
      * @var \DateTimeInterface
@@ -52,8 +40,21 @@ class Article
     public \DateTimeInterface $createdAt;
 
     /**
-     * @var \DateTimeInterface
+     * @var \DateTimeInterface|null
      */
-    #[ORM\Column(name: 'updated_at', type: Types::DATETIMETZ_IMMUTABLE)]
-    public \DateTimeInterface $updatedAt;
+    #[ORM\Column(name: 'updated_at', type: Types::DATETIMETZ_IMMUTABLE, nullable: true)]
+    public ?\DateTimeInterface $updatedAt = null;
+
+    /**
+     * @param non-empty-string $title
+     * @param non-empty-string $content
+     */
+    public function __construct(
+        #[ORM\Column(name: 'title', type: Types::STRING)]
+        public string $title,
+        #[ORM\Column(name: 'content', type: Types::TEXT)]
+        public string $content,
+    ) {
+        $this->createdAt = new \DateTime();
+    }
 }

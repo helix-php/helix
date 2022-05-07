@@ -12,15 +12,15 @@ declare(strict_types=1);
 namespace Helix\Boot;
 
 use Helix\Boot\Extension\Info\InfoProviderInterface;
-use Helix\Boot\Attribute\ClassMetadata;
-use Helix\Boot\Attribute\MethodMetadata;
+use Helix\Boot\Attribute\ClassMetadataInterface;
+use Helix\Boot\Attribute\MethodMetadataInterface;
 use Helix\Boot\Extension\Metadata\MetadataProviderInterface;
 
 /**
  * @template T of object
  *
- * @see MethodMetadata
- * @see ClassMetadata
+ * @see MethodMetadataInterface
+ * @see ClassMetadataInterface
  */
 interface ExtensionInterface extends
     MetadataProviderInterface,

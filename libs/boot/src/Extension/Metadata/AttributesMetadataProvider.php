@@ -11,20 +11,20 @@ declare(strict_types=1);
 
 namespace Helix\Boot\Extension\Metadata;
 
-use Helix\Boot\Attribute\ClassMetadata;
-use Helix\Boot\Attribute\MethodMetadata;
+use Helix\Boot\Attribute\ClassMetadataInterface;
+use Helix\Boot\Attribute\MethodMetadataInterface;
 
 final class AttributesMetadataProvider extends MetadataProvider
 {
     /**
      * @var class-string
      */
-    private const DEFAULT_CLASS_METADATA = ClassMetadata::class;
+    private const DEFAULT_CLASS_METADATA = ClassMetadataInterface::class;
 
     /**
      * @var class-string
      */
-    private const DEFAULT_METHOD_METADATA = MethodMetadata::class;
+    private const DEFAULT_METHOD_METADATA = MethodMetadataInterface::class;
 
     /**
      * @param \ReflectionClass $context
@@ -56,7 +56,7 @@ final class AttributesMetadataProvider extends MetadataProvider
 
     /**
      * @param \ReflectionClass $reflection
-     * @return iterable<ClassMetadata>
+     * @return iterable<ClassMetadataInterface>
      */
     private function classAttributes(\ReflectionClass $reflection): iterable
     {
@@ -69,7 +69,7 @@ final class AttributesMetadataProvider extends MetadataProvider
 
     /**
      * @param \ReflectionClass $reflection
-     * @return iterable<\ReflectionMethod, MethodMetadata>
+     * @return iterable<\ReflectionMethod, MethodMetadataInterface>
      * @psalm-suppress InvalidReturnType
      */
     private function methodAttributes(\ReflectionClass $reflection): iterable

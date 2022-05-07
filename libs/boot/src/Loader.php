@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Helix\Boot;
 
+use Helix\Boot\Attribute\Execution;
 use Helix\Boot\Attribute\ServiceDefinition;
 use Helix\Boot\Attribute\Registration;
 use Helix\Container\Container;
@@ -49,7 +50,7 @@ class Loader implements RepositoryInterface, LoaderInterface
      * @param Container $container
      */
     public function __construct(
-        private readonly Container $container
+        private readonly Container $container,
     ) {
     }
 
@@ -83,9 +84,10 @@ class Loader implements RepositoryInterface, LoaderInterface
     public function boot(): void
     {
         while ($this->registrable !== []) {
+            /** @var Execution $attr */
             [$attr, $action] = \array_shift($this->registrable);
 
-            if ($attr->isRunnable($this->container)) {
+            if ($attr->shouldLoad($this->container)) {
                 $this->container->call($action);
             }
         }

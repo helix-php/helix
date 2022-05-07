@@ -24,8 +24,9 @@ abstract class ErrorHandler implements ErrorHandlerInterface
     /**
      * @param LoggerInterface|null $logger
      */
-    public function __construct(protected ?LoggerInterface $logger = null)
-    {
+    public function __construct(
+        protected ?LoggerInterface $logger = null
+    ) {
     }
 
     /**

@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Helix\Boot\Attribute;
 
 #[\Attribute(\Attribute::TARGET_CLASS)]
-final class Info extends ClassMetadata
+final class Info implements ClassMetadataInterface
 {
     /**
      * @param string|null $name

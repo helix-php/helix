@@ -14,7 +14,7 @@ namespace Helix\Boot\Attribute;
 use Helix\Container\Container;
 use Helix\Container\Definition\DefinitionInterface;
 
-abstract class ServiceDefinition extends MethodMetadata
+abstract class ServiceDefinition implements MethodMetadataInterface
 {
     /**
      * @var array<non-empty-string>
