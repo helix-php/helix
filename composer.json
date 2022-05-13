@@ -90,6 +90,7 @@
             "App\\Tests\\": "tests",
 
             "Helix\\Boot\\Tests\\": "libs/boot/tests",
+            "Helix\\Config\\Tests\\": "libs/config/tests",
             "Helix\\Container\\Tests\\": "libs/container/tests",
             "Helix\\Debug\\Tests\\": "libs/debug/tests",
             "Helix\\Env\\Tests\\": "libs/env/tests",
