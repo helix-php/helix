@@ -123,6 +123,10 @@ class ErrorHandler extends BaseErrorHandler implements HttpErrorHandlerInterface
         return (string)(\ob_get_clean() ?: $code->getReasonPhrase());
     }
 
+    /**
+     * @param \Throwable $e
+     * @return string
+     */
     private function getDebugResponseBody(\Throwable $e): string
     {
         $whoops = new Run();

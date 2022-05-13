@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Helix\Foundation\Http;
 
 use Helix\Container\Exception\RegistrationException;
+use Helix\Container\Exception\ServiceNotFoundException;
 use Helix\Contracts\ErrorHandler\ErrorHandlerInterface;
 use Helix\Contracts\ErrorHandler\Http\HttpErrorHandlerInterface;
 use Helix\Foundation\Application as BaseApplication;
@@ -42,7 +43,8 @@ final class Application extends BaseApplication
     /**
      * @return int
      * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
+     * @throws ServiceNotFoundException
+     * @throws \Throwable
      */
     public function run(): int
     {
