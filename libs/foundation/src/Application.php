@@ -95,7 +95,8 @@ abstract class Application implements LoaderInterface
      */
     private function bindDefaults(CreateInfo $info): void
     {
-        $this->container->instance($this);
+        $this->container->instance($this)
+            ->as(self::class);
         $this->container->instance($info->path);
 
         $this->container->instance(new NullLogger())

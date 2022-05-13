@@ -1,0 +1,52 @@
+doctrine:
+  pool:
+    # Max available connections:
+    #
+    # <= 0: Unlimited connections.
+    # >= 1: The specified number of connections.
+    max: 1024
+
+    # Connections establishment algorithm:
+    #
+    # - single_read_uniq_write: General connection for reading, separate for
+    #                           writing for each client (request).
+    # - uniq:                   Separate for each client (request).
+    # - single:                 Use one general connection.
+    #
+    # Modes other than "single" make sense when working
+    # in an event loop instead of FCGI mode.
+    poller: single_read_uniq_write
+
+  # Default entity manager
+  default: default
+
+  # List of available entity managers
+  orm:
+    default:
+      paths: [ '%path.app%/Entity' ]
+      # ...
+      query_cache_driver:
+      # ...
+      metadata_cache_driver:
+      # ...
+      result_cache_driver:
+      # ...
+      connection: sqlite_local
+      class_metadata_factory_name: Doctrine\ORM\Mapping\ClassMetadataFactory
+      default_repository_class: Doctrine\ORM\EntityRepository
+      auto_mapping: false
+      hydrators: []
+      # ...
+      mappings: []
+      # ...
+      dql: []
+      # ...
+      filters: []
+      # ...
+
+  # List of available connections
+  connections:
+    default:
+      driver: pdo_sqlite
+      path: '%path.root%/resources/database/db.sqlite'
+

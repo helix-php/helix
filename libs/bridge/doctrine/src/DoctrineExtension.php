@@ -11,10 +11,7 @@ declare(strict_types=1);
 
 namespace Helix\Bridge\Doctrine;
 
-use Doctrine\Common\Cache\Psr6\DoctrineProvider;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Exception\EntityManagerClosed;
 use Doctrine\ORM\ORMSetup;
 use Doctrine\ORM\Tools\Console\Command\ClearCache\CollectionRegionCommand;
 use Doctrine\ORM\Tools\Console\Command\ClearCache\EntityRegionCommand;
@@ -31,52 +28,103 @@ use Doctrine\ORM\Tools\Console\Command\SchemaTool\DropCommand;
 use Doctrine\ORM\Tools\Console\Command\SchemaTool\UpdateCommand;
 use Doctrine\ORM\Tools\Console\Command\ValidateSchemaCommand;
 use Doctrine\ORM\Tools\Console\EntityManagerProvider;
-use Doctrine\ORM\Tools\Console\EntityManagerProvider\SingleManagerProvider;
 use Helix\Boot\Attribute\Registration;
 use Helix\Boot\Attribute\Singleton;
-use Helix\Container\Container;
+use Helix\Bridge\Doctrine\Connection\EntityManagerInstantiator;
+use Helix\Bridge\Doctrine\Connection\Pool\Manager;
+use Helix\Bridge\Doctrine\Connection\Pool\PollerType;
+use Helix\Bridge\Doctrine\Connection\Pool\Pool;
+use Helix\Bridge\Doctrine\Connection\Pool\PoolCreateInfo;
+use Helix\Bridge\Doctrine\Connection\Pool\PoolManagerInterface;
+use Helix\Config\ConfigInterface;
+use Helix\Config\RegistrarInterface;
 use Helix\Foundation\Console\Application as CliApplication;
-use Helix\Foundation\Path;
 use Psr\Cache\CacheItemPoolInterface;
 
 final class DoctrineExtension
 {
     #[Registration]
-    public function loadRepositoryInterfaces(Path $path, Container $app): void
+    public function loadConfiguration(RegistrarInterface $registrar): void
     {
-        $config = $this->config($path);
-
-        foreach (($config['repositories'] ?? []) as $alias => $entity) {
-            $app->singleton($alias, static function (EntityManagerInterface $em) use ($entity): object {
-                return $em->getRepository($entity);
-            });
-        }
+        $registrar->addFile('doctrine.yml');
     }
 
-    #[Singleton(as: [EntityManager::class])]
-    public function getEntityManager(Path $path, CacheItemPoolInterface $cache = null): EntityManagerInterface
+    /**
+     * Creates global PoolCreateInfo object from configuration section:
+     * ```
+     *  doctrine:
+     *    pool:
+     *      max: X
+     *      poller: Y
+     * ```
+     *
+     * @param ConfigInterface $config
+     * @return PoolCreateInfo
+     */
+    #[Singleton]
+    public function getPoolGlobalConfiguration(ConfigInterface $config): PoolCreateInfo
     {
-        $config = $this->config($path);
+        $doctrine = $config->get('doctrine');
 
-        $doctrine = ORMSetup::createAttributeMetadataConfiguration(
-            $config['entities'] ?? [],
-            $config['debug'] ?? false,
-            $config['proxies'] ?? null,
-            $cache,
+        return $this->createPoolCreateInfo($doctrine['pool']);
+    }
+
+    /**
+     * @param array{
+     *  max?: int,
+     *  poller?: non-empty-string
+     * } $config
+     * @return PoolCreateInfo
+     */
+    private function createPoolCreateInfo(array $config): PoolCreateInfo
+    {
+        // Default poller type
+        $poller = PollerType::SINGLE_READ_UNIQUE_WRITE;
+
+        return new PoolCreateInfo(
+            max: $config['max'] ?? 1024,
+            poller: PollerType::from($config['poller'] ?? $poller->value),
         );
-
-        $config['connection'] ??= [
-            'driver' => 'pdo_sqlite',
-            'memory' => true,
-        ];
-
-        return EntityManager::create($config['connection'], $doctrine);
     }
 
     #[Singleton]
-    public function getEntityManagerProvider(EntityManagerInterface $em): EntityManagerProvider
-    {
-        return new SingleManagerProvider($em);
+    public function getPoolManager(
+        ConfigInterface $config,
+        PoolCreateInfo $info,
+        CacheItemPoolInterface $cache = null,
+    ): PoolManagerInterface {
+        /** @var array{connections?: array<string, array>} */
+        $doctrine = $config->get('doctrine');
+
+        $connections = [];
+
+        foreach (($doctrine['connections'] ?? []) as $name => $config) {
+            $orm = ORMSetup::createAttributeMetadataConfiguration(
+                paths: [__DIR__ . '/'],
+                cache: $cache,
+            );
+
+            $instantiator = new EntityManagerInstantiator((array)$config, $orm);
+
+            $connections[$name] = new Pool($instantiator, $info);
+        }
+
+        /** @psalm-suppress MixedArgumentTypeCoercion */
+        return new Manager($connections);
+    }
+
+    /**
+     * @param PoolManagerInterface<object, EntityManagerInterface> $pool
+     */
+    #[Singleton(as: [EntityManagerProvider::class])]
+    public function getEntityManagerFactory(
+        ConfigInterface $config,
+        PoolManagerInterface $pool,
+    ): EntityManagerFactoryInterface {
+        /** @var array{default?: string} */
+        $doctrine = $config->get('doctrine');
+
+        return new EntityMangerFactory($doctrine['default'] ?? 'default', $pool);
     }
 
     #[Registration(ifServiceExists: CliApplication::class)]
@@ -101,15 +149,5 @@ final class DoctrineExtension
         $cli->add(new ValidateSchemaCommand($em));
         $cli->add(new MappingDescribeCommand($em));
         $cli->add(new GenerateProxiesCommand($em));
-    }
-    /**
-     * @param Path $path
-     * @return array
-     */
-    private function config(Path $path): array
-    {
-        $pathname = $path->config('doctrine.php');
-
-        return (array)(\is_file($pathname) ? require $pathname : []);
     }
 }
