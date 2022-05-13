@@ -11,13 +11,13 @@ declare(strict_types=1);
 
 namespace Helix\Debug\Command;
 
+use Helix\Boot\Attribute\Execution;
 use Helix\Boot\ExtensionInterface;
 use Helix\Boot\RepositoryInterface;
 use SebastianBergmann\Environment\Console;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 
 final class DebugExtensionsCommand extends Command
 {
@@ -34,35 +34,66 @@ final class DebugExtensionsCommand extends Command
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return int
+     * @throws \ReflectionException
      */
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        $descriptionAvailableSize = $this->getConsoleMaxSize()
-            - $this->getNameVersionMaxLength()
-            - 2;
+        $size = $this->getConsoleMaxSize();
 
-        $rows = [];
-        foreach ($this->repository->getExtensions() as $ext) {
-            $rows[] = [
-                $this->getExtName($ext),
-                $this->getVersion($ext),
-                $this->getExtDescription($ext, $descriptionAvailableSize),
-            ];
+        foreach ($this->repository->getExtensions() as $extension) {
+            $context = $extension->getContext();
+            $reflection = new \ReflectionObject($context);
+
+            $extensionClassName = $reflection->getName();
+            $extensionFileName = $reflection->getFileName();
+            $extensionShortClassName = $reflection->getShortName();
+
+            $this->separator($output, $size);
+
+            $output->writeln('');
+            $output->writeln(' ' . $this->getExtName($extension));
+            if ($description = $this->getExtDescription($extension)) {
+                $output->writeln(' ' . $description);
+            }
+
+            $output->writeln('');
+
+            $output->writeln(\vsprintf(' <href=%s>%s</> (%s)', [
+                $extensionFileName,
+                $extensionClassName,
+                $this->getVersion($extension),
+            ]));
+
+            $output->writeln('');
+
+            /** @var \ReflectionMethod $method */
+            foreach ($extension->getMethodMetadata() as $method => $meta) {
+                $metadataShortClassName = (new \ReflectionClass($meta))->getShortName();
+
+                $color = $meta instanceof Execution ? 'blue' : 'yellow';
+
+                $output->writeln(\vsprintf(' <fg=%s>#[%s]</>: %s::%s()', [
+                    $color,
+                    $metadataShortClassName,
+                    $extensionShortClassName,
+                    $method->getName(),
+                ]));
+            }
+
+            $output->writeln('');
         }
-
-        (new SymfonyStyle($input, $output))
-            ->table(['Name', 'Version', 'Description'], $rows)
-        ;
 
         return self::SUCCESS;
     }
 
     /**
+     * @param OutputInterface $out
+     * @param int $size
      * @return void
      */
-    protected function configure(): void
+    private function separator(OutputInterface $out, int $size): void
     {
-        $this->setDescription('Displays a list of registered extensions');
+        $out->writeln('<fg=gray>' . \str_repeat('┄', $size) . '</>');
     }
 
     /**
@@ -78,18 +109,11 @@ final class DebugExtensionsCommand extends Command
     }
 
     /**
-     * @return int
+     * @return void
      */
-    private function getNameVersionMaxLength(): int
+    protected function configure(): void
     {
-        $length = 0;
-
-        foreach ($this->repository->getExtensions() as $extension) {
-            $actual = \mb_strlen($extension->getName()) + \mb_strlen($extension->getVersion()) + 4;
-            $length = \max($length, $actual);
-        }
-
-        return $length;
+        $this->setDescription('Displays a list of registered extensions');
     }
 
     /**
@@ -103,19 +127,14 @@ final class DebugExtensionsCommand extends Command
 
     /**
      * @param ExtensionInterface $ext
-     * @param int $size
      * @return string
      */
-    private function getExtDescription(ExtensionInterface $ext, int $size): string
+    private function getExtDescription(ExtensionInterface $ext): string
     {
         $description = $ext->getDescription();
 
         if ($description !== '' && !\str_ends_with($description, '.')) {
             $description .= '.';
-        }
-
-        if ($size > 10) {
-            return \wordwrap($description, $size);
         }
 
         return $description;
@@ -127,6 +146,6 @@ final class DebugExtensionsCommand extends Command
      */
     private function getExtName(ExtensionInterface $ext): string
     {
-        return \sprintf('%s', $ext->getName());
+        return \sprintf('<fg=green>%s</>', $ext->getName());
     }
 }
