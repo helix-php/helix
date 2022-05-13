@@ -13,44 +13,58 @@ namespace Helix\Debug\Command;
 
 use Helix\Contracts\Router\RepositoryInterface;
 use Helix\Contracts\Router\RouteInterface;
+use Helix\Foundation\Console\Command;
 use SebastianBergmann\Environment\Console;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 
 final class DebugRouterCommand extends Command
 {
+    protected string $name = 'debug:router';
+    protected string $description = 'Displays a list of registered routes';
+
     /**
      * @param RepositoryInterface $routes
-     */
-    public function __construct(
-        private readonly RepositoryInterface $routes,
-    ) {
-        parent::__construct('debug:router');
-    }
-
-    /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
      * @return int
      */
-    public function execute(InputInterface $input, OutputInterface $output): int
+    public function invoke(RepositoryInterface $routes): int
     {
-        $size = $this->getConsoleMaxSize();
+        $methodSize = $this->getMaxMethodSize($routes);
 
-        foreach ($this->routes as $route) {
-            $prefix = $this->getFormattedRouteMethod($route);
+        foreach ($routes as $route) {
+            $prefix = $this->getFormattedRouteMethod($route, $methodSize);
             $prefix .= $this->getFormattedRoutePath($route);
-
             $suffix = $this->getFormattedRouteHandler($route);
 
-            $line = $size - \mb_strlen(\strip_tags($prefix)) - \mb_strlen(\strip_tags($suffix));
-            $delimiter = \sprintf('<fg=gray>%s</> ', \str_repeat('┄', $line - 1));
+            $this->item($prefix, $suffix);
 
-            $output->writeln($prefix . $delimiter . $suffix);
+            $count = \count($route->getParameters());
+            $current = 0;
+
+            foreach ($route->getParameters() as $parameter => $value) {
+                $prefix = "<fg=yellow>$parameter</>";
+                $suffix = "<fg=gray>/</><fg=blue>$value</><fg=gray>/</>";
+
+                $this->child(++$current, $count, $prefix . ' = ' . $suffix);
+            }
         }
 
         return self::SUCCESS;
+    }
+
+    /**
+     * @param RepositoryInterface $routes
+     * @return int
+     */
+    private function getMaxMethodSize(RepositoryInterface $routes): int
+    {
+        $size = 0;
+
+        foreach ($routes as $route) {
+            $method = $route->getMethod();
+
+            $size = \max($size, \mb_strlen($method->getName()));
+        }
+
+        return $size;
     }
 
     /**
@@ -70,14 +84,15 @@ final class DebugRouterCommand extends Command
 
     /**
      * @param RouteInterface $route
+     * @param int $size
      * @return non-empty-string
      */
-    private function getFormattedRouteMethod(RouteInterface $route): string
+    private function getFormattedRouteMethod(RouteInterface $route, int $size): string
     {
         $method = $route->getMethod();
         $color = $method->isIdempotent() ? 'green' : 'red';
 
-        return \sprintf(" <fg=$color>%-8s</> ", $method->getName());
+        return \sprintf("<fg=$color>%-{$size}s</> ", $method->getName());
     }
 
     /**
@@ -90,14 +105,6 @@ final class DebugRouterCommand extends Command
         $path = \preg_replace('/\{.+?}/', '<fg=yellow;options=bold>$0</>', $path);
 
         return \sprintf('<options=bold>%s</> ', $path);
-    }
-
-    /**
-     * @return void
-     */
-    protected function configure(): void
-    {
-        $this->setDescription('Displays a list of registered routes');
     }
 
     /**

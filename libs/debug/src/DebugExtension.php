@@ -13,6 +13,7 @@ namespace Helix\Debug;
 
 use Helix\Boot\Attribute\Info;
 use Helix\Boot\Attribute\Registration;
+use Helix\Debug\Command\DebugContainerCommand;
 use Helix\Debug\Command\DebugExtensionsCommand;
 use Helix\Debug\Command\DebugRouterCommand;
 use Helix\Foundation\Console\Application;
@@ -25,5 +26,6 @@ class DebugExtension
     {
         $cli->add(DebugExtensionsCommand::class);
         $cli->add(DebugRouterCommand::class);
+        $cli->add(DebugContainerCommand::class);
     }
 }
