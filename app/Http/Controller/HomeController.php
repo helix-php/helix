@@ -13,23 +13,13 @@ namespace App\Http\Controller;
 
 use Helix\Contracts\View\FactoryInterface;
 use Helix\Http\HtmlResponse;
-use Helix\Http\PermanentRedirectResponse;
 use Helix\Router\Attribute\Route;
-use Helix\Router\Generator\GeneratorInterface;
 use Psr\Http\Message\ResponseInterface;
 
 class HomeController
 {
-    #[Route('/')]
-    public function index(GeneratorInterface $route): ResponseInterface
-    {
-        return new PermanentRedirectResponse(
-            $route->generate('home')
-        );
-    }
-
-    #[Route(path: '/home', as: 'home')]
-    public function home(FactoryInterface $views): ResponseInterface
+    #[Route(path: '/', as: 'home')]
+    public function index(FactoryInterface $views): ResponseInterface
     {
         return new HtmlResponse(
             $views->create('welcome.html.php')
