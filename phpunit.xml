@@ -17,11 +17,14 @@
         </include>
     </coverage>
     <testsuites>
-        <testsuite name="Application Test Suite">
+        <testsuite name="app">
             <directory suffix="TestCase.php">tests</directory>
         </testsuite>
-        <testsuite name="Libraries Test Suite">
+        <testsuite name="libs">
             <directory suffix="TestCase.php">libs/*/tests</directory>
+        </testsuite>
+        <testsuite name="bridges">
+            <directory suffix="TestCase.php">libs/bridge/*/tests</directory>
         </testsuite>
     </testsuites>
     <php>
