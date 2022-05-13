@@ -13,16 +13,17 @@ namespace Helix\Debug;
 
 use Helix\Boot\Attribute\Info;
 use Helix\Boot\Attribute\Registration;
-use Helix\Boot\RepositoryInterface;
 use Helix\Debug\Command\DebugExtensionsCommand;
-use Symfony\Component\Console\Application;
+use Helix\Debug\Command\DebugRouterCommand;
+use Helix\Foundation\Console\Application;
 
 #[Info(name: 'Kernel Debug Extension', description: 'Provides list of debug utils')]
 class DebugExtension
 {
     #[Registration(ifServiceExists: Application::class)]
-    public function addCommands(Application $cli, RepositoryInterface $boot): void
+    public function addCommands(Application $cli): void
     {
-        $cli->add(new DebugExtensionsCommand($boot));
+        $cli->add(DebugExtensionsCommand::class);
+        $cli->add(DebugRouterCommand::class);
     }
 }
