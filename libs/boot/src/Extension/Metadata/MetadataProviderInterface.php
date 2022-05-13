@@ -20,17 +20,15 @@ interface MetadataProviderInterface
      * @template T of ClassMetadata
      * @param class-string<T>|null $attribute
      * @return iterable<T>
-     *@see ClassMetadataInterface
-     *
+     * @see ClassMetadataInterface
      */
     public function getClassMetadata(string $attribute = null): iterable;
 
     /**
      * @template T of MethodMetadata
      * @param class-string<T>|null $attribute
-     * @return iterable<T, \ReflectionMethod>
-     *@see MethodMetadataInterface
-     *
+     * @return iterable<\ReflectionMethod, T>
+     * @see MethodMetadataInterface
      */
     public function getMethodMetadata(string $attribute = null): iterable;
 }
