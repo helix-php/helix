@@ -57,11 +57,9 @@ abstract class Application implements LoaderInterface
         $this->extensions = new Loader($this->container);
         $this->initVersion();
 
-
         $this->bindDefaults($info);
         $this->loadMany($info->extensions);
     }
-
 
     /**
      * @param non-empty-string ...$matches
