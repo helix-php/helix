@@ -29,7 +29,7 @@ $app = new Application(new CreateInfo(
     debug: (bool)env('APP_DEBUG'),
     env: env('APP_ENV', 'prod'),
     path: __DIR__,
-    extensions: require __DIR__ . '/resources/config/extensions.php',
+    extensions: require __DIR__ . '/app/extensions.php',
 ));
 
 

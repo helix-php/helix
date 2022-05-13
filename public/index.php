@@ -28,7 +28,7 @@ $app = new Application(new CreateInfo(
     handler: \App\Http\Kernel::class,
     errors: \App\Http\ErrorHandler::class,
     path: \dirname(__DIR__),
-    extensions: require __DIR__ . '/../resources/config/extensions.php',
+    extensions: require __DIR__ . '/../app/extensions.php',
 ));
 
 exit($app->run());
