@@ -65,16 +65,16 @@ class Server extends ExternalServer
             $request = $this->factory->createServerRequest(
                 $this->normalizeMethod($this->info->server),
                 $this->normalizeUri($this->info->server),
-                $this->info->server
+                $this->info->server,
             );
 
             $this->emitter->emit($handler->handle($request));
         } catch (\Throwable $e) {
             if ($error !== null) {
                 $this->emitter->emit($error->throw($e, $request ?? null));
+            } else {
+                throw $e;
             }
-
-            throw $e;
         }
     }
 }
