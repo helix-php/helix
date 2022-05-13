@@ -17,14 +17,14 @@ return $config
                 '!=' => 'single_space',
                 '==' => 'single_space',
                 '===' => 'single_space',
-            ]
+            ],
         ],
         'modernize_strpos' => true,
         'ordered_class_elements' => true,
         'trailing_comma_in_multiline' => [
             'elements' => [
-                'arrays'
-            ]
+                'arrays',
+            ],
         ],
         'declare_strict_types' => true,
         'linebreak_after_opening_tag' => true,
@@ -34,7 +34,7 @@ return $config
         'short_scalar_cast' => true,
         'no_leading_import_slash' => true,
         'declare_equal_normalize' => [
-            'space' => 'none'
+            'space' => 'none',
         ],
         'new_with_braces' => true,
         'no_blank_lines_after_phpdoc' => true,
@@ -43,7 +43,7 @@ return $config
         'unary_operator_spaces' => true,
         'return_type_declaration' => true,
         'concat_space' => [
-            'spacing' => 'one'
+            'spacing' => 'one',
         ],
         'no_useless_else' => true,
         'no_useless_return' => true,
