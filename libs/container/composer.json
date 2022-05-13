@@ -20,11 +20,6 @@
             "Helix\\Container\\Tests\\": "tests"
         }
     },
-    "provide": {
-        "helix/container-contracts-implementation": "^1.0",
-        "helix/dispatcher-contracts-implementation": "^1.0",
-        "helix/container-registrar-contracts-implementation": "^1.0"
-    },
     "extra": {
         "branch-alias": {
             "dev-master": "1.x-dev",

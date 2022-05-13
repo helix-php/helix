@@ -20,19 +20,12 @@ use Psr\Container\ContainerInterface;
 final class Registry implements
     RegistrarInterface,
     ContainerInterface,
-    \IteratorAggregate,
-    \Countable
+    RepositoryInterface
 {
     /**
      * @var non-empty-string
      */
     private const ERROR_NOT_FOUND = 'Service [%s] has not been registered';
-
-    /**
-     * @var non-empty-string
-     */
-    private const ERROR_CIRCULAR_DEPENDENCY = 'Circular dependency of [%s] '
-        . 'aliases detected while receiving service [%s]';
 
     /**
      * @var array<non-empty-string, DefinitionInterface>
@@ -109,12 +102,11 @@ final class Registry implements
 
     /**
      * {@inheritDoc}
-     * @throws CircularReferenceException
      * @throws ServiceNotFoundException
      */
     public function getIterator(): \Traversable
     {
-        yield $this->definitions;
+        yield from $this->definitions;
 
         foreach ($this->aliases as $alias => $_) {
             yield $alias => $this->get($alias);

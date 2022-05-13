@@ -23,10 +23,8 @@ use Helix\Container\ParamResolver\ValueResolverInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 
-/**
- * @template-implements \IteratorAggregate<non-empty-string, DefinitionInterface>
- */
 final class Container implements
+    RepositoryInterface,
     ContainerInterface,
     RegistrarInterface,
     DispatcherInterface,
@@ -198,11 +196,32 @@ final class Container implements
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function getIterator(): \Traversable
+    {
+        return $this->definitions->getIterator();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function count(): int
+    {
+        return $this->definitions->count();
+    }
+
+    /**
      * @return void
      */
     private function registerSelf(): void
     {
-        $this->instance($this)
-            ->withInterfaces();
+        $this->instance($this)->as(
+            RepositoryInterface::class,
+            ContainerInterface::class,
+            RegistrarInterface::class,
+            DispatcherInterface::class,
+            InstantiatorInterface::class,
+        );
     }
 }
