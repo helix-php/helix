@@ -58,6 +58,6 @@ final class ComposerInfoProvider extends InfoProvider
      */
     private static function parseName(\ReflectionClass $class): string
     {
-        return $class->getName();
+        return $class->getShortName();
     }
 }
