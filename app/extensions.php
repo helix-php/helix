@@ -15,6 +15,7 @@ return [
     //
     \Helix\Foundation\Extension\ConfigExtension::class,
     \Helix\Foundation\Http\Extension\HttpExtension::class,
+    \Helix\Bridge\Monolog\MonologExtension::class,
     \Helix\Bridge\Cache\CacheExtension::class,
     \Helix\Bridge\Doctrine\DoctrineExtension::class,
 
@@ -31,7 +32,6 @@ return [
     //
     \App\Extension\RouterExtension::class,
     \App\Extension\ServerExtension::class,
-    \App\Extension\LoggerExtension::class,
     \App\Extension\ViewExtension::class,
     \App\Extension\ConsoleExtension::class,
 ];

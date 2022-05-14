@@ -29,8 +29,9 @@
         {"type": "path", "url": "libs/contracts/router"},
         {"type": "path", "url": "libs/contracts/view"},
 
-        {"type": "path", "url": "libs/bridge/doctrine"},
         {"type": "path", "url": "libs/bridge/cache"},
+        {"type": "path", "url": "libs/bridge/doctrine"},
+        {"type": "path", "url": "libs/bridge/monolog"},
 
         {"type": "path", "url": "libs/boot"},
         {"type": "path", "url": "libs/config"},
@@ -58,18 +59,17 @@
         "php": "^8.1",
         "ext-pdo": "*",
         "ext-mbstring": "*",
-        "helix/doctrine-bridge": "^1.0",
+
         "helix/cache-bridge": "^1.0",
+        "helix/doctrine-bridge": "^1.0",
+        "helix/monolog-bridge": "^1.0",
 
         "helix/env": "^1.0",
         "helix/foundation-http": "^1.0",
         "helix/foundation-console": "^1.0",
         "helix/view-engine-php": "^1.0",
         "helix/view-engine-twig": "^1.0",
-        "helix/server-sapi": "^1.0",
-
-        "monolog/monolog": "^2.3",
-        "symfony/finder": "^5.4|^6.0"
+        "helix/server-sapi": "^1.0"
     },
     "autoload": {
         "psr-4": {

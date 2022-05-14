@@ -1,0 +1,22 @@
+{
+    "name": "helix/monolog-bridge",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^8.1",
+        "monolog/monolog": "^2.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Helix\\Bridge\\Monolog\\": "src"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev",
+            "dev-main": "1.x-dev"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
