@@ -18,12 +18,6 @@ doctrine:
     poller: single_read_uniq_write
 
   #
-  # List of repository interface bindings
-  #
-  repositories:
-    App\Entity\Article: App\Entity\Article\ArticleRepositoryInterface
-
-  #
   # Default Entity Manager
   #
   default: default

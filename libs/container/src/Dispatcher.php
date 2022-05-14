@@ -46,6 +46,8 @@ final class Dispatcher implements DispatcherInterface
     /**
      * {@inheritDoc}
      *
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      * @throws ParamNotResolvableException
      * @throws SignatureException
      */
@@ -78,6 +80,6 @@ final class Dispatcher implements DispatcherInterface
 
         [$service, $method] = $parts;
 
-        return $this->call([$this->container->get($service), $method], $resolvers);
+        return $this->call([$this->container->get($service, $resolvers), $method], $resolvers);
     }
 }

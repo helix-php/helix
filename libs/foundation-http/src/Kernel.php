@@ -16,12 +16,12 @@ use Helix\Container\InstantiatorInterface;
 use Helix\Container\ParamResolver\NamedArgumentsResolver;
 use Helix\Container\ParamResolver\ObjectResolver;
 use Helix\Container\ParamResolver\ValueResolverInterface;
-use Helix\Contracts\Middleware\PipelineInterface;
 use Helix\Contracts\Router\MatchedRouteInterface;
 use Helix\Contracts\Router\RouterInterface;
 use Helix\Middleware\CallableHandler;
 use Helix\Middleware\Pipeline;
-use Psr\Http\Message\RequestInterface;
+use Helix\Router\ProvidesMiddlewareInterface;
+use Helix\Router\ProvidesResolversInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -30,9 +30,14 @@ use Psr\Http\Server\RequestHandlerInterface;
 class Kernel implements RequestHandlerInterface
 {
     /**
-     * @var array<MiddlewareInterface>
+     * @var array<class-string<MiddlewareInterface>|MiddlewareInterface>
      */
     protected array $middleware = [];
+
+    /**
+     * @var array<class-string<ValueResolverInterface>|ValueResolverInterface>
+     */
+    protected array $resolvers = [];
 
     /**
      * @param RouterInterface $router
@@ -44,6 +49,22 @@ class Kernel implements RequestHandlerInterface
         private readonly DispatcherInterface $dispatcher,
         private readonly InstantiatorInterface $instantiator,
     ) {
+        $this->onBoot();
+    }
+
+    /**
+     * @return void
+     */
+    protected function onBoot(): void
+    {
+    }
+
+    /**
+     * @param ServerRequestInterface $request
+     * @return void
+     */
+    protected function onDispatch(ServerRequestInterface $request): void
+    {
     }
 
     /**
@@ -52,38 +73,24 @@ class Kernel implements RequestHandlerInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $handler = new CallableHandler(function (ServerRequestInterface $request): mixed {
-            return $this->dispatch($request, $this->router->match($request));
-        });
+        $this->onDispatch($request);
 
-        return $this->pipeline($this->middleware, $this->getRequestValueResolvers($request))
-            ->process($request, $handler);
+        return $this->preRouting($request);
     }
 
     /**
-     * @param string|MiddlewareInterface $middleware
-     * @param iterable<ValueResolverInterface> $resolvers
-     * @return MiddlewareInterface
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
      */
-    protected function make(string|MiddlewareInterface $middleware, iterable $resolvers = []): MiddlewareInterface
+    private function preRouting(ServerRequestInterface $request): ResponseInterface
     {
-        if ($middleware instanceof MiddlewareInterface) {
-            return $middleware;
-        }
+        $resolvers = $this->getPreRoutingValueResolvers($request);
+        $middleware = $this->getPreRoutingMiddleware();
 
-        return $this->instantiator->make($middleware, $resolvers);
-    }
-
-    /**
-     * @param iterable<string|MiddlewareInterface> $middleware
-     * @param iterable<ValueResolverInterface> $resolvers
-     * @return iterable<MiddlewareInterface>
-     */
-    protected function getMiddleware(iterable $middleware = [], iterable $resolvers = []): iterable
-    {
-        foreach ($middleware as $concrete) {
-            yield $this->make($concrete, $resolvers);
-        }
+        return (new Pipeline($this->getMiddlewareInstances($middleware, $resolvers)))
+            ->process($request, new CallableHandler(fn (ServerRequestInterface $request): ResponseInterface =>
+                $this->postRouting($request, $this->router->match($request))
+            ));
     }
 
     /**
@@ -91,17 +98,68 @@ class Kernel implements RequestHandlerInterface
      * @param MatchedRouteInterface $route
      * @return ResponseInterface
      */
-    protected function dispatch(ServerRequestInterface $request, MatchedRouteInterface $route): ResponseInterface
+    private function postRouting(ServerRequestInterface $request, MatchedRouteInterface $route): ResponseInterface
     {
-        $resolvers = $this->getMiddlewareValueResolvers($request, $route);
+        $resolvers = $this->getPostRoutingValueResolvers($request, $route);
+        $middleware = $this->getPostRoutingMiddleware($route);
 
-        $handler = new CallableHandler(
-            fn (): mixed =>
-            $this->dispatcher->call($route->getHandler(), $resolvers)
-        );
+        return (new Pipeline($this->getMiddlewareInstances($middleware, $resolvers)))
+            ->process($request, new CallableHandler(fn (): ResponseInterface =>
+                $this->dispatcher->call($route->getHandler(), $resolvers)
+            ));
+    }
 
-        return $this->pipeline($route->getMiddleware(), $resolvers)
-            ->process($request, $handler);
+    /**
+     * @param iterable<class-string<MiddlewareInterface>|MiddlewareInterface> $middleware
+     * @param iterable<ValueResolverInterface> $resolvers
+     * @return iterable<MiddlewareInterface>
+     */
+    private function getMiddlewareInstances(iterable $middleware = [], iterable $resolvers = []): iterable
+    {
+        foreach ($middleware as $concrete) {
+            yield $concrete instanceof MiddlewareInterface
+                ? $concrete
+                : $this->instantiator->make($concrete, $resolvers)
+            ;
+        }
+    }
+
+    /**
+     * @param iterable<class-string<ValueResolverInterface>|ValueResolverInterface> $resolvers
+     * @param array<ValueResolverInterface> $previous
+     * @return array<ValueResolverInterface>
+     */
+    private function getValueResolverInstances(iterable $resolvers = [], array $previous = []): array
+    {
+        foreach ($resolvers as $resolver) {
+            $previous[] = $resolver instanceof ValueResolverInterface
+                ? $resolver
+                : $this->instantiator->make($resolver, $previous)
+            ;
+        }
+
+        return $previous;
+    }
+
+    /**
+     * @param MatchedRouteInterface $route
+     * @return iterable<non-empty-string|class-string|MiddlewareInterface>
+     */
+    private function getPostRoutingMiddleware(MatchedRouteInterface $route): iterable
+    {
+        if ($route instanceof ProvidesMiddlewareInterface) {
+            return $route->getMiddleware();
+        }
+
+        return [];
+    }
+
+    /**
+     * @return iterable<non-empty-string|class-string|MiddlewareInterface>
+     */
+    private function getPreRoutingMiddleware(): iterable
+    {
+        return $this->middleware;
     }
 
     /**
@@ -109,33 +167,31 @@ class Kernel implements RequestHandlerInterface
      * @param MatchedRouteInterface $route
      * @return iterable<ValueResolverInterface>
      */
-    private function getMiddlewareValueResolvers(ServerRequestInterface $request, MatchedRouteInterface $route): iterable
+    private function getPostRoutingValueResolvers(ServerRequestInterface $request, MatchedRouteInterface $route): iterable
     {
-        return [
+        $resolvers = $this->resolvers;
+
+        if ($route instanceof ProvidesResolversInterface) {
+            foreach ($route->getResolvers() as $resolver) {
+                $resolvers[] = $resolver;
+            }
+        }
+
+        return $this->getValueResolverInstances($resolvers, [
             new ObjectResolver($request),
             new ObjectResolver($route),
             new NamedArgumentsResolver($route->getArguments()),
-        ];
+        ]);
     }
 
     /**
      * @param ServerRequestInterface $request
      * @return iterable<ValueResolverInterface>
      */
-    private function getRequestValueResolvers(ServerRequestInterface $request): iterable
+    private function getPreRoutingValueResolvers(ServerRequestInterface $request): iterable
     {
-        return [
+        return $this->getValueResolverInstances($this->resolvers, [
             new ObjectResolver($request),
-        ];
-    }
-
-    /**
-     * @param iterable $middleware
-     * @param iterable<ValueResolverInterface> $resolvers
-     * @return PipelineInterface
-     */
-    private function pipeline(iterable $middleware, iterable $resolvers): PipelineInterface
-    {
-        return new Pipeline($this->getMiddleware($middleware, $resolvers));
+        ]);
     }
 }

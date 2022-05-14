@@ -32,6 +32,9 @@ return $config
         'lowercase_cast' => true,
         'short_scalar_cast' => true,
         'no_leading_import_slash' => true,
+        'method_argument_space' => [
+            'on_multiline' => 'ignore',
+        ],
         'declare_equal_normalize' => [
             'space' => 'none',
         ],
