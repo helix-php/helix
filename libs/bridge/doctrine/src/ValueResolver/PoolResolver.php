@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Helix\Bridge\Doctrine\ValueResolver;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Helix\Bridge\Doctrine\Attribute\EntityManager;
 use Helix\Bridge\Doctrine\EntityManagerFactoryInterface;
 use Helix\Container\ParamResolver\ValueResolverInterface;
 
@@ -28,6 +29,31 @@ abstract class PoolResolver implements ValueResolverInterface
         protected readonly object $reference,
         protected readonly EntityManagerFactoryInterface $factory,
     ) {
+    }
+
+    /**
+     * @param \ReflectionParameter $parameter
+     * @return EntityManagerInterface
+     */
+    protected function getEntityManagerByParameter(\ReflectionParameter $parameter): EntityManagerInterface
+    {
+        return $this->getEntityManager($this->getEntityManagerName($parameter));
+    }
+
+    /**
+     * @param \ReflectionParameter $parameter
+     * @return string|null
+     */
+    protected function getEntityManagerName(\ReflectionParameter $parameter): ?string
+    {
+        foreach ($parameter->getAttributes(EntityManager::class, \ReflectionAttribute::IS_INSTANCEOF) as $attribute) {
+            /** @var EntityManager $attr */
+            $attr = $attribute->newInstance();
+
+            return $attr->name;
+        }
+
+        return null;
     }
 
     /**

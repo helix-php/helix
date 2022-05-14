@@ -36,6 +36,6 @@ class EntityManagerResolver extends PoolResolver
      */
     public function resolve(\ReflectionParameter $parameter): EntityManagerInterface
     {
-        return $this->getEntityManager();
+        return $this->getEntityManagerByParameter($parameter);
     }
 }

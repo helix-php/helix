@@ -11,15 +11,13 @@ declare(strict_types=1);
 
 namespace App\Http\Controller\Api;
 
-use App\Entity\Article;
 use App\Entity\Article\ArticleRepositoryInterface;
-use Doctrine\ORM\EntityManagerInterface;
 use Helix\Http\JsonResponse;
 use Helix\Router\Attribute\Group;
 use Helix\Router\Attribute\Route;
 use Psr\Http\Message\ResponseInterface;
 
-#[Group(prefix: 'api', suffix: '{suffix}', where: ['suffix' => '(?:\.json)?'])]
+#[Group(prefix: 'api', suffix: '{ext}', where: ['ext' => '(?:\.json)?'])]
 final class ArticleController
 {
     /**

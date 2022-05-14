@@ -22,7 +22,6 @@ class ErrorHandler extends BaseErrorHandler
      * {@inheritDoc}
      */
     public array $mapping = [
-        \InvalidArgumentException::class => StatusCode::BAD_REQUEST,
         NotFoundExceptionInterface::class => StatusCode::NOT_FOUND,
         NotAllowedExceptionInterface::class => StatusCode::METHOD_NOT_ALLOWED,
     ];

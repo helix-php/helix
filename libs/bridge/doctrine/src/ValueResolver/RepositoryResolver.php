@@ -69,7 +69,7 @@ class RepositoryResolver extends PoolResolver
 
         foreach ($this->getRepositories() as $interface => $entity) {
             if ($info->type->allowsSubclassOf($interface)) {
-                $em = $this->getEntityManager();
+                $em = $this->getEntityManagerByParameter($parameter);
 
                 return $em->getRepository($entity);
             }

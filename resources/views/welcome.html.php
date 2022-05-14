@@ -249,7 +249,7 @@
     </section>
     <h1>Welcome to <?=\htmlspecialchars(($name ?? 'Helix') ?: 'Helix')?></h1>
     <nav>
-        <a href="<?=$route->generate('api.articles')?>">Articles</a>
+        <a href="<?=$route->generate('api.articles', ['ext' => '.json'])?>">Articles</a>
     </nav>
     <section class="status">
         <code>
