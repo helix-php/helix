@@ -9,24 +9,20 @@
 
 declare(strict_types=1);
 
-namespace Helix\Container\ParamResolver;
+namespace Helix\ParamResolver\Reader;
 
 use Helix\Contracts\Memoizable\MemoizableInterface;
-use ReflectionParameter as FunctionsList;
 
 /**
  * @psalm-type ParametersList = array<\ReflectionParameter>
- * @psalm-type FunctionsList = array<non-empty-string, ParametersList>
+ * @psalm-type FunctionsList = array<non-empty-string, array<\ReflectionParameter>>
  *
  * @template-implements ReaderInterface<\ReflectionParameter>
- *
- * @internal MemoizableReader is an internal library class, please do not use it in your code.
- * @psalm-internal Helix\Container
  */
 class MemoizableReader implements ReaderInterface, MemoizableInterface
 {
     /**
-     * @var FunctionsList
+     * @var ParametersList
      */
     private array $functions = [];
 

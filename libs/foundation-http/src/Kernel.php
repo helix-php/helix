@@ -11,8 +11,6 @@ declare(strict_types=1);
 
 namespace Helix\Foundation\Http;
 
-use Helix\Container\ParamResolver\NamedArgumentsResolver;
-use Helix\Container\ParamResolver\ObjectResolver;
 use Helix\Contracts\Container\DispatcherInterface;
 use Helix\Contracts\Container\InstantiatorInterface;
 use Helix\Contracts\ParamResolver\ValueResolverInterface;
@@ -20,6 +18,8 @@ use Helix\Contracts\Router\MatchedRouteInterface;
 use Helix\Contracts\Router\RouterInterface;
 use Helix\Middleware\CallableHandler;
 use Helix\Middleware\Pipeline;
+use Helix\ParamResolver\ValueResolver\NamedArgumentsResolver;
+use Helix\ParamResolver\ValueResolver\ObjectResolver;
 use Helix\Router\ProvidesMiddlewareInterface;
 use Helix\Router\ProvidesResolversInterface;
 use Psr\Http\Message\ResponseInterface;

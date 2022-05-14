@@ -9,18 +9,26 @@
 
 declare(strict_types=1);
 
-namespace Helix\Container\ParamResolver;
+namespace Helix\ParamResolver\ValueResolver;
 
-use Helix\Container\Introspection\Parameter;
-
-final class NullableParameterResolver extends ValueResolver
+class NamedArgumentsResolver extends ValueResolver
 {
+    /**
+     * @param array<non-empty-string, mixed> $arguments
+     */
+    public function __construct(
+        private readonly array $arguments,
+    ) {
+    }
+
     /**
      * {@inheritDoc}
      */
     public function supports(\ReflectionParameter $parameter): bool
     {
-        return Parameter::of($parameter)->isNullable();
+        $type = $parameter->getType();
+
+        return isset($this->arguments[$parameter->getName()]) && $type?->isBuiltin() !== false;
     }
 
     /**
@@ -28,6 +36,6 @@ final class NullableParameterResolver extends ValueResolver
      */
     public function resolve(\ReflectionParameter $parameter): mixed
     {
-        return null;
+        return $this->arguments[$parameter->getName()];
     }
 }

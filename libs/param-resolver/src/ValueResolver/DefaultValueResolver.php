@@ -9,26 +9,16 @@
 
 declare(strict_types=1);
 
-namespace Helix\Container\ParamResolver;
+namespace Helix\ParamResolver\ValueResolver;
 
-class NamedArgumentsResolver extends ValueResolver
+final class DefaultValueResolver extends ValueResolver
 {
-    /**
-     * @param array<non-empty-string, mixed> $arguments
-     */
-    public function __construct(
-        private readonly array $arguments,
-    ) {
-    }
-
     /**
      * {@inheritDoc}
      */
     public function supports(\ReflectionParameter $parameter): bool
     {
-        $type = $parameter->getType();
-
-        return isset($this->arguments[$parameter->getName()]) && $type?->isBuiltin() !== false;
+        return $parameter->isDefaultValueAvailable();
     }
 
     /**
@@ -36,6 +26,6 @@ class NamedArgumentsResolver extends ValueResolver
      */
     public function resolve(\ReflectionParameter $parameter): mixed
     {
-        return $this->arguments[$parameter->getName()];
+        return $parameter->getDefaultValue();
     }
 }

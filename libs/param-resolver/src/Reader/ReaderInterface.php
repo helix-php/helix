@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Helix\Container\ParamResolver;
+namespace Helix\ParamResolver\Reader;
 
 /**
  * @template T of mixed

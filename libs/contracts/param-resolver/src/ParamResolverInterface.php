@@ -11,9 +11,9 @@ declare(strict_types=1);
 
 namespace Helix\Contracts\ParamResolver;
 
-use Helix\Container\Exception\ParamNotResolvableException;
-use Helix\Container\Exception\SignatureException;
-use Helix\Container\ParamResolver\ReaderInterface;
+use Helix\ParamResolver\Exception\ParamNotResolvableException;
+use Helix\ParamResolver\Exception\SignatureException;
+use Helix\ParamResolver\Reader\ReaderInterface;
 
 /**
  * @psalm-type ResolversList = iterable<array-key, ValueResolverInterface>

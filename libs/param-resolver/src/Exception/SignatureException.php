@@ -9,10 +9,8 @@
 
 declare(strict_types=1);
 
-namespace Helix\Container\Tests\ParamResolver;
+namespace Helix\ParamResolver\Exception;
 
-use Helix\Container\Tests\TestCase;
-
-abstract class ParamResolverTestCase extends TestCase
+class SignatureException extends ParamResolverException
 {
 }

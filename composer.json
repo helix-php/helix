@@ -46,6 +46,7 @@
         {"type": "path", "url": "libs/http-status-code"},
         {"type": "path", "url": "libs/manager"},
         {"type": "path", "url": "libs/middleware"},
+        {"type": "path", "url": "libs/param-resolver"},
         {"type": "path", "url": "libs/router"},
         {"type": "path", "url": "libs/router-generator"},
         {"type": "path", "url": "libs/server-sapi"},

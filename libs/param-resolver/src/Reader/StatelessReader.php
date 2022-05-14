@@ -9,13 +9,10 @@
 
 declare(strict_types=1);
 
-namespace Helix\Container\ParamResolver;
+namespace Helix\ParamResolver\Reader;
 
 /**
  * @template-implements ReaderInterface<\ReflectionParameter>
- *
- * @internal Reader is an internal library class, please do not use it in your code.
- * @psalm-internal Helix\Container
  */
 class StatelessReader implements ReaderInterface
 {

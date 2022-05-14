@@ -9,8 +9,8 @@
 
 declare(strict_types=1);
 
-namespace Helix\Container\Exception;
+namespace Helix\ParamResolver\Exception;
 
-class ParamResolverException extends ContainerException
+class ParamResolverException extends \Exception
 {
 }

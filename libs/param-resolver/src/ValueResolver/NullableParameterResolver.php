@@ -9,16 +9,18 @@
 
 declare(strict_types=1);
 
-namespace Helix\Container\ParamResolver;
+namespace Helix\ParamResolver\ValueResolver;
 
-final class DefaultValueResolver extends ValueResolver
+use Helix\ParamResolver\Introspection\Parameter;
+
+final class NullableParameterResolver extends ValueResolver
 {
     /**
      * {@inheritDoc}
      */
     public function supports(\ReflectionParameter $parameter): bool
     {
-        return $parameter->isDefaultValueAvailable();
+        return Parameter::of($parameter)->isNullable();
     }
 
     /**
@@ -26,6 +28,6 @@ final class DefaultValueResolver extends ValueResolver
      */
     public function resolve(\ReflectionParameter $parameter): mixed
     {
-        return $parameter->getDefaultValue();
+        return null;
     }
 }

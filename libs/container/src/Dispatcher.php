@@ -11,11 +11,12 @@ declare(strict_types=1);
 
 namespace Helix\Container;
 
-use Helix\Container\Exception\ParamNotResolvableException;
-use Helix\Container\Exception\SignatureException;
 use Helix\Contracts\Container\DispatcherInterface;
 use Helix\Contracts\ParamResolver\ParamResolverInterface;
 use Helix\Contracts\ParamResolver\ValueResolverInterface;
+use Helix\ParamResolver\Exception\ParamNotResolvableException;
+use Helix\ParamResolver\Exception\SignatureException;
+use Helix\ParamResolver\Resolver;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -40,7 +41,7 @@ final class Dispatcher implements DispatcherInterface
      */
     public function __construct(
         private readonly ContainerInterface $container,
-        private readonly ParamResolverInterface $resolver = new ParamResolver(),
+        private readonly ParamResolverInterface $resolver = new Resolver(),
         private readonly string $delimiter = self::DEFAULT_ACTION_DELIMITER,
     ) {
     }

@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Helix\Container\Introspection;
+namespace Helix\ParamResolver\Introspection;
 
 final class Parameter
 {
@@ -17,6 +17,7 @@ final class Parameter
      * @var Type
      */
     public readonly Type $type;
+
     /**
      * @var \ReflectionType|null
      */

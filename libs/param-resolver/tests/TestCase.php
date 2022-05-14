@@ -9,8 +9,10 @@
 
 declare(strict_types=1);
 
-namespace Helix\Container\Exception;
+namespace Helix\Container\Tests;
 
-class SignatureException extends ParamResolverException
+use PHPUnit\Framework\TestCase as BaseTestCase;
+
+abstract class TestCase extends BaseTestCase
 {
 }

@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Helix\Container\Exception;
+namespace Helix\ParamResolver\Exception;
 
 class ParamNotResolvableException extends ParamResolverException
 {

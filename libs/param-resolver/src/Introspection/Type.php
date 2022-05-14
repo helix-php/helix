@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Helix\Container\Introspection;
+namespace Helix\ParamResolver\Introspection;
 
 final class Type
 {

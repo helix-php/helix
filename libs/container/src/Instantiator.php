@@ -11,13 +11,14 @@ declare(strict_types=1);
 
 namespace Helix\Container;
 
-use Helix\Container\Exception\ParamNotResolvableException;
 use Helix\Container\Exception\ServiceNotFoundException;
 use Helix\Container\Exception\ServiceNotInstantiatableException;
-use Helix\Container\Exception\SignatureException;
 use Helix\Contracts\Container\InstantiatorInterface;
 use Helix\Contracts\ParamResolver\ParamResolverInterface;
 use Helix\Contracts\ParamResolver\ValueResolverInterface;
+use Helix\ParamResolver\Exception\ParamNotResolvableException;
+use Helix\ParamResolver\Exception\SignatureException;
+use Helix\ParamResolver\Resolver;
 
 final class Instantiator implements InstantiatorInterface
 {
@@ -37,7 +38,7 @@ final class Instantiator implements InstantiatorInterface
      */
     public function __construct(
         private readonly Registry $registry,
-        private readonly ParamResolverInterface $resolver = new ParamResolver(),
+        private readonly ParamResolverInterface $resolver = new Resolver(),
     ) {
     }
 

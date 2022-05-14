@@ -9,22 +9,25 @@
 
 declare(strict_types=1);
 
-namespace Helix\Container;
+namespace Helix\ParamResolver;
 
-use Helix\Container\Exception\ParamNotResolvableException;
-use Helix\Container\Exception\ParamResolverException;
-use Helix\Container\Exception\SignatureException;
-use Helix\Container\ParamResolver\DefaultValueResolver;
-use Helix\Container\ParamResolver\MemoizableReader;
-use Helix\Container\ParamResolver\NullableParameterResolver;
-use Helix\Container\ParamResolver\ReaderInterface;
-use Helix\Container\ParamResolver\ValueResolver;
 use Helix\Contracts\ParamResolver\ParamResolverInterface;
 use Helix\Contracts\ParamResolver\RegistrarInterface;
 use Helix\Contracts\ParamResolver\RepositoryInterface;
 use Helix\Contracts\ParamResolver\ValueResolverInterface;
+use Helix\ParamResolver\Exception\ParamNotResolvableException;
+use Helix\ParamResolver\Exception\ParamResolverException;
+use Helix\ParamResolver\Exception\SignatureException;
+use Helix\ParamResolver\Reader\MemoizableReader;
+use Helix\ParamResolver\Reader\ReaderInterface;
+use Helix\ParamResolver\ValueResolver\DefaultValueResolver;
+use Helix\ParamResolver\ValueResolver\NullableParameterResolver;
+use Helix\ParamResolver\ValueResolver\ValueResolver;
 
-final class ParamResolver implements ParamResolverInterface, RegistrarInterface, RepositoryInterface
+final class Resolver implements
+    ParamResolverInterface,
+    RegistrarInterface,
+    RepositoryInterface
 {
     /**
      * @var non-empty-string

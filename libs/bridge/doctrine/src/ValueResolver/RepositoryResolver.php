@@ -12,8 +12,8 @@ declare(strict_types=1);
 namespace Helix\Bridge\Doctrine\ValueResolver;
 
 use Doctrine\Persistence\ObjectRepository;
-use Helix\Container\Exception\ParamNotResolvableException;
-use Helix\Container\Introspection\Parameter;
+use Helix\ParamResolver\Exception\ParamNotResolvableException;
+use Helix\ParamResolver\Introspection\Parameter;
 
 /**
  * @template TReference of object

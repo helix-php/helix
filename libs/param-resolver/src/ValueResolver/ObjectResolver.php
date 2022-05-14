@@ -9,9 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Helix\Container\ParamResolver;
+namespace Helix\ParamResolver\ValueResolver;
 
-use Helix\Container\Introspection\Parameter;
+use Helix\ParamResolver\Introspection\Parameter;
 
 /**
  * @template T of object

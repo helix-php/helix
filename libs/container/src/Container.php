@@ -17,7 +17,6 @@ use Helix\Container\Definition\InstanceDefinition;
 use Helix\Container\Definition\SingletonDefinition;
 use Helix\Container\Definition\WeakSingletonDefinition;
 use Helix\Container\Exception\ServiceNotFoundException;
-use Helix\Container\ParamResolver\ContainerServiceResolver;
 use Helix\Contracts\Container\DefinitionInterface;
 use Helix\Contracts\Container\DispatcherInterface;
 use Helix\Contracts\Container\InstantiatorInterface;
@@ -25,6 +24,8 @@ use Helix\Contracts\Container\RegistrarInterface;
 use Helix\Contracts\Container\RepositoryInterface;
 use Helix\Contracts\ParamResolver\ParamResolverInterface;
 use Helix\Contracts\ParamResolver\ValueResolverInterface;
+use Helix\ParamResolver\Resolver;
+use Helix\ParamResolver\ValueResolver\ContainerServiceResolver;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 
@@ -61,7 +62,7 @@ final class Container implements
     public function __construct(
         private readonly ?ContainerInterface $parent = null,
     ) {
-        $this->resolver = new ParamResolver([
+        $this->resolver = new Resolver([
             new ContainerServiceResolver($this),
         ]);
 
