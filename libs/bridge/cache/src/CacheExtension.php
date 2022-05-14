@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace App\Extension;
+namespace Helix\Bridge\Cache;
 
 use Cache\Adapter\Filesystem\FilesystemCachePool;
 use Helix\Boot\Attribute\Singleton;

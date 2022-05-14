@@ -15,6 +15,7 @@ return [
     //
     \Helix\Foundation\Extension\ConfigExtension::class,
     \Helix\Foundation\Http\Extension\HttpExtension::class,
+    \Helix\Bridge\Cache\CacheExtension::class,
     \Helix\Bridge\Doctrine\DoctrineExtension::class,
 
     //
@@ -28,7 +29,6 @@ return [
     //
     // Application Extensions
     //
-    \App\Extension\CacheExtension::class,
     \App\Extension\RouterExtension::class,
     \App\Extension\ServerExtension::class,
     \App\Extension\LoggerExtension::class,
