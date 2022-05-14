@@ -249,7 +249,7 @@
     </section>
     <h1>Welcome to <?=\htmlspecialchars(($name ?? 'Helix') ?: 'Helix')?></h1>
     <nav>
-        <a href="/articles">Articles</a>
+        <a href="<?=$route->generate('api.articles')?>">Articles</a>
     </nav>
     <section class="status">
         <code>

@@ -9,16 +9,18 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controller;
+namespace App\Http\Controller\Api;
 
 use App\Entity\Article;
 use Helix\Http\JsonResponse;
+use Helix\Router\Attribute\Group;
 use Helix\Router\Attribute\Route;
 use Psr\Http\Message\ResponseInterface;
 
+#[Group(prefix: 'api', suffix: '{suffix}', where: ['suffix' => '(?:\.json)?'])]
 final class ArticleController
 {
-    #[Route(path: '/articles', as: 'articles')]
+    #[Route(path: 'articles', as: 'api.articles')]
     public function index(Article\ArticleRepositoryInterface $articles): ResponseInterface
     {
         return new JsonResponse($articles->findAll());

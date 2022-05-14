@@ -23,11 +23,13 @@ final class Group
      * @param string $prefix
      * @param string $suffix
      * @param array $middleware
+     * @param array<non-empty-string, string> $where
      */
     public function __construct(
         public readonly string $prefix = '',
         public readonly string $suffix = '',
         public readonly array $middleware = [],
+        public readonly array $where = [],
     ) {
     }
 }

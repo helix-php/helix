@@ -100,6 +100,10 @@ class AttributeReader implements ReaderInterface
     {
         $result = new Route($this->path($group, $route), $handler, $route->method);
 
+        foreach ($group->where as $name => $pcre) {
+            $result->where($name, $pcre);
+        }
+
         foreach ($route->where as $name => $pcre) {
             $result->where($name, $pcre);
         }
