@@ -18,8 +18,8 @@ use Helix\Contracts\ErrorHandler\Http\HttpErrorHandlerInterface;
 use Helix\Foundation\Application as BaseApplication;
 use Helix\Server\ServerInterface;
 use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Log\LoggerInterface;
 
 final class Application extends BaseApplication
 {

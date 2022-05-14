@@ -16,6 +16,7 @@ use Helix\Boot\Loader;
 use Helix\Boot\LoaderInterface;
 use Helix\Container\Container;
 use Helix\Container\Exception\RegistrationException;
+use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
 abstract class Application implements LoaderInterface
@@ -100,7 +101,7 @@ abstract class Application implements LoaderInterface
         $this->container->instance($info->path);
 
         $this->container->instance(new NullLogger())
-            ->withInterfaces();
+            ->as(LoggerInterface::class);
         $this->container->instance($this->extensions)
             ->withInterfaces();
     }

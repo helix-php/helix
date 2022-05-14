@@ -44,6 +44,10 @@ final class Registry implements
     public function concrete(string $id): string
     {
         while (isset($this->aliases[$id])) {
+            if (isset($this->definitions[$id])) {
+                return $id;
+            }
+
             $id = $this->aliases[$id];
         }
 

@@ -127,6 +127,17 @@ final class Container implements
     }
 
     /**
+     * @template T of object
+     * @param non-empty-string|class-string<T> $id
+     * @return DefinitionInterface<T>
+     * @throws ServiceNotFoundException
+     */
+    public function definition(string $id): DefinitionInterface
+    {
+        return $this->definitions->get($id);
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function alias(string $id, string $alias): void
