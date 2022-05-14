@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controller\Api;
 
-use App\Entity\Article;
+use App\Entity\Article\ArticleRepositoryInterface;
 use Helix\Http\JsonResponse;
 use Helix\Router\Attribute\Group;
 use Helix\Router\Attribute\Route;
@@ -21,7 +21,7 @@ use Psr\Http\Message\ResponseInterface;
 final class ArticleController
 {
     #[Route(path: 'articles', as: 'api.articles')]
-    public function index(Article\ArticleRepositoryInterface $articles): ResponseInterface
+    public function index(ArticleRepositoryInterface $articles): ResponseInterface
     {
         return new JsonResponse($articles->findAll());
     }
