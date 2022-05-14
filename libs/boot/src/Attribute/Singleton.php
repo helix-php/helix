@@ -13,7 +13,7 @@ namespace Helix\Boot\Attribute;
 
 use Helix\Container\Container;
 use Helix\Container\Definition\SingletonDefinition;
-use Helix\Container\Definition\DefinitionInterface;
+use Helix\Contracts\Container\DefinitionInterface;
 
 #[\Attribute(\Attribute::TARGET_METHOD)]
 final class Singleton extends ServiceDefinition

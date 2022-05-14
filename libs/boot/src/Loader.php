@@ -12,11 +12,11 @@ declare(strict_types=1);
 namespace Helix\Boot;
 
 use Helix\Boot\Attribute\Execution;
-use Helix\Boot\Attribute\ServiceDefinition;
 use Helix\Boot\Attribute\Registration;
+use Helix\Boot\Attribute\ServiceDefinition;
 use Helix\Container\Container;
 use Helix\Container\Exception\RegistrationException;
-use Helix\Container\Definition\DefinitionInterface;
+use Helix\Contracts\Container\DefinitionInterface;
 
 class Loader implements RepositoryInterface, LoaderInterface
 {

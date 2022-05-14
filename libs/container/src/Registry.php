@@ -11,10 +11,12 @@ declare(strict_types=1);
 
 namespace Helix\Container;
 
-use Helix\Container\Definition\DefinitionInterface;
 use Helix\Container\Definition\DefinitionRegistrar;
 use Helix\Container\Definition\DefinitionRegistrarInterface;
 use Helix\Container\Exception\ServiceNotFoundException;
+use Helix\Contracts\Container\DefinitionInterface;
+use Helix\Contracts\Container\RegistrarInterface;
+use Helix\Contracts\Container\RepositoryInterface;
 use Psr\Container\ContainerInterface;
 
 final class Registry implements
@@ -123,5 +125,13 @@ final class Registry implements
     public function count(): int
     {
         return \count($this->definitions) + \count($this->aliases);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function definition(string $id): DefinitionInterface
+    {
+        return $this->get($id);
     }
 }

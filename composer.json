@@ -17,13 +17,16 @@
     ],
     "repositories": [
         {"type": "path", "url": "libs/contracts/arrayable"},
+        {"type": "path", "url": "libs/contracts/container"},
         {"type": "path", "url": "libs/contracts/memoizable"},
         {"type": "path", "url": "libs/contracts/error-handler"},
         {"type": "path", "url": "libs/contracts/error-handler-http"},
+        {"type": "path", "url": "libs/contracts/event-dispatcher"},
         {"type": "path", "url": "libs/contracts/http-method"},
         {"type": "path", "url": "libs/contracts/http-status-code"},
         {"type": "path", "url": "libs/contracts/manager"},
         {"type": "path", "url": "libs/contracts/middleware"},
+        {"type": "path", "url": "libs/contracts/param-resolver"},
         {"type": "path", "url": "libs/contracts/router"},
         {"type": "path", "url": "libs/contracts/view"},
 
@@ -34,6 +37,7 @@
         {"type": "path", "url": "libs/container"},
         {"type": "path", "url": "libs/debug"},
         {"type": "path", "url": "libs/env"},
+        {"type": "path", "url": "libs/event-dispatcher"},
         {"type": "path", "url": "libs/foundation"},
         {"type": "path", "url": "libs/foundation-http"},
         {"type": "path", "url": "libs/foundation-console"},
@@ -54,6 +58,8 @@
         "php": "^8.1",
         "ext-pdo": "*",
         "ext-mbstring": "*",
+
+        "psr/container": "^1.0",
 
         "helix/doctrine-bridge": "^1.0",
 
@@ -94,6 +100,7 @@
             "Helix\\Container\\Tests\\": "libs/container/tests",
             "Helix\\Debug\\Tests\\": "libs/debug/tests",
             "Helix\\Env\\Tests\\": "libs/env/tests",
+            "Helix\\EventDispatcher\\Tests\\": "libs/event-dispatcher/tests",
             "Helix\\Foundation\\Tests\\": "libs/foundation/tests",
             "Helix\\Foundation\\Console\\Tests\\": "libs/foundation-console/tests",
             "Helix\\Foundation\\Http\\Tests\\": "libs/foundation-http/tests",
@@ -124,8 +131,8 @@
         }
     },
     "scripts": {
-        "post-create-project-cmd": "@install",
-        "install": [
+        "post-create-project-cmd": "@prepare",
+        "prepare": [
             "@php do orm:schema-tool:update"
         ],
         "phpcs": "php-cs-fixer fix --config=.php-cs-fixer.php",

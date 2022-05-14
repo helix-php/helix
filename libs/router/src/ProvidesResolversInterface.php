@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Helix\Router;
 
-use Helix\Container\ParamResolver\ValueResolverInterface;
+use Helix\Contracts\ParamResolver\ValueResolverInterface;
 
 interface ProvidesResolversInterface
 {

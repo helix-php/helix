@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Helix\Container\ParamResolver;
+namespace Helix\Contracts\ParamResolver;
 
 /**
  * @template T of mixed

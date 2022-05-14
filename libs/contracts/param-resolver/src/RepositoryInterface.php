@@ -9,15 +9,11 @@
 
 declare(strict_types=1);
 
-namespace Helix\Container\Definition;
+namespace Helix\Contracts\ParamResolver;
 
 /**
- * @template TDefinition of object
+ * @template-extends \IteratorAggregate<ValueResolverInterface>
  */
-interface DefinitionInterface
+interface RepositoryInterface extends \IteratorAggregate, \Countable
 {
-    /**
-     * @return TDefinition
-     */
-    public function resolve(): object;
 }

@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Helix\Boot\Attribute;
 
 use Helix\Container\Container;
-use Helix\Container\Definition\DefinitionInterface;
+use Helix\Contracts\Container\DefinitionInterface;
 
 abstract class ServiceDefinition implements MethodMetadataInterface
 {

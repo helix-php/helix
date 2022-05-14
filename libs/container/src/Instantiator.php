@@ -15,7 +15,9 @@ use Helix\Container\Exception\ParamNotResolvableException;
 use Helix\Container\Exception\ServiceNotFoundException;
 use Helix\Container\Exception\ServiceNotInstantiatableException;
 use Helix\Container\Exception\SignatureException;
-use Helix\Container\ParamResolver\ValueResolverInterface;
+use Helix\Contracts\Container\InstantiatorInterface;
+use Helix\Contracts\ParamResolver\ParamResolverInterface;
+use Helix\Contracts\ParamResolver\ValueResolverInterface;
 
 final class Instantiator implements InstantiatorInterface
 {

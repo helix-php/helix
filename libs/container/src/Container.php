@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Helix\Container;
 
-use Helix\Container\Definition\DefinitionInterface;
 use Helix\Container\Definition\DefinitionRegistrarInterface;
 use Helix\Container\Definition\FactoryDefinition;
 use Helix\Container\Definition\InstanceDefinition;
@@ -19,7 +18,13 @@ use Helix\Container\Definition\SingletonDefinition;
 use Helix\Container\Definition\WeakSingletonDefinition;
 use Helix\Container\Exception\ServiceNotFoundException;
 use Helix\Container\ParamResolver\ContainerServiceResolver;
-use Helix\Container\ParamResolver\ValueResolverInterface;
+use Helix\Contracts\Container\DefinitionInterface;
+use Helix\Contracts\Container\DispatcherInterface;
+use Helix\Contracts\Container\InstantiatorInterface;
+use Helix\Contracts\Container\RegistrarInterface;
+use Helix\Contracts\Container\RepositoryInterface;
+use Helix\Contracts\ParamResolver\ParamResolverInterface;
+use Helix\Contracts\ParamResolver\ValueResolverInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 

@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Helix\Foundation\Console;
 
-use Helix\Container\DispatcherInterface;
+use Helix\Contracts\Container\DispatcherInterface;
 use SebastianBergmann\Environment\Console;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Input\InputInterface;

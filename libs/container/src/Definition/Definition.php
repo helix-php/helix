@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Helix\Container\Definition;
 
+use Helix\Contracts\Container\DefinitionInterface;
+
 /**
  * @template TDefinition of object
  * @template-implements DefinitionInterface<TDefinition>

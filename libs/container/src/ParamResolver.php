@@ -19,9 +19,12 @@ use Helix\Container\ParamResolver\MemoizableReader;
 use Helix\Container\ParamResolver\NullableParameterResolver;
 use Helix\Container\ParamResolver\ReaderInterface;
 use Helix\Container\ParamResolver\ValueResolver;
-use Helix\Container\ParamResolver\ValueResolverInterface;
+use Helix\Contracts\ParamResolver\ParamResolverInterface;
+use Helix\Contracts\ParamResolver\RegistrarInterface;
+use Helix\Contracts\ParamResolver\RepositoryInterface;
+use Helix\Contracts\ParamResolver\ValueResolverInterface;
 
-final class ParamResolver implements ParamResolverInterface
+final class ParamResolver implements ParamResolverInterface, RegistrarInterface, RepositoryInterface
 {
     /**
      * @var non-empty-string
@@ -186,5 +189,21 @@ final class ParamResolver implements ParamResolverInterface
         }
 
         return $result;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getIterator(): \Traversable
+    {
+        return $this->resolvers;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function count(): int
+    {
+        return \count($this->resolvers);
     }
 }

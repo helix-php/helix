@@ -9,20 +9,20 @@
 
 declare(strict_types=1);
 
-namespace Helix\Container;
+namespace Helix\Contracts\Container;
 
-use Helix\Container\ParamResolver\ValueResolverInterface;
+use Helix\Contracts\ParamResolver\ValueResolverInterface;
 
 interface InstantiatorInterface
 {
     /**
      * Attempts to create a new instance of an object by its identifier.
      *
-     * @template T of object
+     * @template TService of object
      *
-     * @param non-empty-string|class-string<T> $id
-     * @param iterable<ValueResolverInterface> $resolvers
-     * @return T
+     * @param non-empty-string|class-string<TService> $id
+     * @param iterable<ValueResolverInterface|class-string<ValueResolverInterface>> $resolvers
+     * @return TService
      */
     public function make(string $id, iterable $resolvers = []): object;
 }

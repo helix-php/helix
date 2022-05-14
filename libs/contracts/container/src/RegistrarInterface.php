@@ -9,9 +9,8 @@
 
 declare(strict_types=1);
 
-namespace Helix\Container;
+namespace Helix\Contracts\Container;
 
-use Helix\Container\Definition\DefinitionInterface;
 use Helix\Container\Definition\DefinitionRegistrarInterface;
 
 interface RegistrarInterface
@@ -19,8 +18,10 @@ interface RegistrarInterface
     /**
      * Creates an alias for an existing or added service in the future.
      *
-     * @param non-empty-string $id
-     * @param non-empty-string $alias
+     * @template TService of object
+     *
+     * @param non-empty-string|class-string<TService> $id
+     * @param non-empty-string|class-string<TService> $alias
      * @return void
      */
     public function alias(string $id, string $alias): void;
@@ -28,10 +29,10 @@ interface RegistrarInterface
     /**
      * Registers a definition by it's ID.
      *
-     * @template T as object
+     * @template TService as object
      *
-     * @param non-empty-string|class-string<T>|interface-string<T> $id
-     * @param DefinitionInterface<T> $service
+     * @param non-empty-string|class-string<TService> $id
+     * @param DefinitionInterface<TService> $service
      * @return DefinitionRegistrarInterface
      */
     public function define(string $id, DefinitionInterface $service): DefinitionRegistrarInterface;

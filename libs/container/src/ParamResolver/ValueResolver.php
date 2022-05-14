@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Helix\Container\ParamResolver;
 
+use Helix\Contracts\ParamResolver\ValueResolverInterface;
+
 /**
  * @template T of mixed
  * @template-implements ValueResolverInterface<T>

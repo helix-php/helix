@@ -9,12 +9,11 @@
 
 declare(strict_types=1);
 
-namespace Helix\Container;
+namespace Helix\Contracts\ParamResolver;
 
 use Helix\Container\Exception\ParamNotResolvableException;
 use Helix\Container\Exception\SignatureException;
 use Helix\Container\ParamResolver\ReaderInterface;
-use Helix\Container\ParamResolver\ValueResolverInterface;
 
 /**
  * @psalm-type ResolversList = iterable<array-key, ValueResolverInterface>

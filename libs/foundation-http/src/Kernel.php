@@ -11,11 +11,11 @@ declare(strict_types=1);
 
 namespace Helix\Foundation\Http;
 
-use Helix\Container\DispatcherInterface;
-use Helix\Container\InstantiatorInterface;
 use Helix\Container\ParamResolver\NamedArgumentsResolver;
 use Helix\Container\ParamResolver\ObjectResolver;
-use Helix\Container\ParamResolver\ValueResolverInterface;
+use Helix\Contracts\Container\DispatcherInterface;
+use Helix\Contracts\Container\InstantiatorInterface;
+use Helix\Contracts\ParamResolver\ValueResolverInterface;
 use Helix\Contracts\Router\MatchedRouteInterface;
 use Helix\Contracts\Router\RouterInterface;
 use Helix\Middleware\CallableHandler;

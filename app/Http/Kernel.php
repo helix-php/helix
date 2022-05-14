@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace App\Http;
 
-use Helix\Container\ParamResolver\ValueResolverInterface;
+use Helix\Contracts\ParamResolver\ValueResolverInterface;
 use Helix\Foundation\Http\Kernel as BaseHttpKernel;
 use Psr\Http\Server\MiddlewareInterface;
 

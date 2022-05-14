@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Helix\Router\Attribute;
 
-use Helix\Container\ParamResolver\ValueResolverInterface;
+use Helix\Contracts\ParamResolver\ValueResolverInterface;
 use Helix\Contracts\Router\RouteInterface;
 use Psr\Http\Server\MiddlewareInterface;
 

@@ -12,8 +12,8 @@ declare(strict_types=1);
 namespace Helix\Boot\Attribute;
 
 use Helix\Container\Container;
-use Helix\Container\Definition\DefinitionInterface;
 use Helix\Container\Definition\WeakSingletonDefinition;
+use Helix\Contracts\Container\DefinitionInterface;
 
 #[\Attribute(\Attribute::TARGET_METHOD)]
 final class WeakSingleton extends ServiceDefinition

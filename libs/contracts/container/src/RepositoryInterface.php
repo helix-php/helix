@@ -9,13 +9,21 @@
 
 declare(strict_types=1);
 
-namespace Helix\Container;
-
-use Helix\Container\Definition\DefinitionInterface;
+namespace Helix\Contracts\Container;
 
 /**
  * @template-implements \IteratorAggregate<non-empty-string, DefinitionInterface>
  */
 interface RepositoryInterface extends \IteratorAggregate, \Countable
 {
+    /**
+     * Finds a service definition of the container by its identifier
+     * and returns it.
+     *
+     * @template TService of object
+     *
+     * @param non-empty-string|class-string<TService> $id
+     * @return DefinitionInterface<TService>
+     */
+    public function definition(string $id): DefinitionInterface;
 }

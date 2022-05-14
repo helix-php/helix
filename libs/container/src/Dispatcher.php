@@ -13,7 +13,9 @@ namespace Helix\Container;
 
 use Helix\Container\Exception\ParamNotResolvableException;
 use Helix\Container\Exception\SignatureException;
-use Helix\Container\ParamResolver\ValueResolverInterface;
+use Helix\Contracts\Container\DispatcherInterface;
+use Helix\Contracts\ParamResolver\ParamResolverInterface;
+use Helix\Contracts\ParamResolver\ValueResolverInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;

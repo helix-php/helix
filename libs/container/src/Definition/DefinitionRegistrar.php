@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace Helix\Container\Definition;
 
 use Helix\Container\Exception\RegistrationException;
-use Helix\Container\RegistrarInterface;
 use Helix\Container\Registry;
 
 final class DefinitionRegistrar implements DefinitionRegistrarInterface

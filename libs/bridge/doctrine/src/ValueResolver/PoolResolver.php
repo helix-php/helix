@@ -14,7 +14,7 @@ namespace Helix\Bridge\Doctrine\ValueResolver;
 use Doctrine\ORM\EntityManagerInterface;
 use Helix\Bridge\Doctrine\Attribute\EntityManager;
 use Helix\Bridge\Doctrine\EntityManagerFactoryInterface;
-use Helix\Container\ParamResolver\ValueResolverInterface;
+use Helix\Contracts\ParamResolver\ValueResolverInterface;
 
 /**
  * @template TReference of object
