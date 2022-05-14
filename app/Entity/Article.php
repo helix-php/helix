@@ -36,7 +36,7 @@ class Article
     /**
      * @var \DateTimeInterface
      */
-    #[ORM\Column(name: 'created_at', type: Types::DATETIMETZ_IMMUTABLE)]
+    #[ORM\Column(name: 'created_at', type: Types::DATETIMETZ_IMMUTABLE, columnDefinition: 'NOW()')]
     public \DateTimeInterface $createdAt;
 
     /**

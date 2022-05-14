@@ -19,18 +19,45 @@ use Helix\Foundation\Console\Command;
 
 final class DebugContainerCommand extends Command
 {
+    /**
+     * @var non-empty-string
+     */
     protected string $name = 'debug:container';
+
+    /**
+     * @var string
+     */
     protected string $description = 'Displays a list of registered services';
 
-    private array $shortNames = [];
+    /**
+     * @var array<non-empty-string, non-empty-string>
+     */
+    private array $definitionShortNames = [];
 
+    /**
+     * @param RepositoryInterface $definitions
+     * @return int
+     */
     public function invoke(RepositoryInterface $definitions): int
     {
-        foreach ($definitions as $name => $definition) {
+        foreach ($this->getOrderedDefinitions($definitions) as $name => $definition) {
             $this->item($this->getNameString($name), $this->getDefinitionString($definition));
         }
 
         return self::SUCCESS;
+    }
+
+    /**
+     * @param RepositoryInterface $definitions
+     * @return array<non-empty-string, DefinitionInterface>
+     */
+    private function getOrderedDefinitions(RepositoryInterface $definitions): array
+    {
+        $result = \iterator_to_array($definitions);
+
+        \ksort($result, \SORT_NATURAL);
+
+        return $result;
     }
 
     /**
@@ -79,7 +106,7 @@ final class DebugContainerCommand extends Command
      */
     private function getShortName(DefinitionInterface $definition): string
     {
-        if (!isset($this->shortNames[$definition::class])) {
+        if (!isset($this->definitionShortNames[$definition::class])) {
             $shortName = (new \ReflectionObject($definition))
                 ->getShortName();
 
@@ -87,9 +114,9 @@ final class DebugContainerCommand extends Command
                 $shortName = \substr($shortName, 0, -10);
             }
 
-            $this->shortNames[$definition::class] = $shortName;
+            $this->definitionShortNames[$definition::class] = $shortName;
         }
 
-        return $this->shortNames[$definition::class];
+        return $this->definitionShortNames[$definition::class];
     }
 }

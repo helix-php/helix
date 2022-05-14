@@ -16,6 +16,7 @@ use Helix\Contracts\Router\MatchedRouteInterface;
 use Helix\Contracts\Router\RouteInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
+use Psr\Http\Server\MiddlewareInterface;
 
 class MatchedRoute implements MatchedRouteInterface
 {
@@ -88,7 +89,7 @@ class MatchedRoute implements MatchedRouteInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @return array<non-empty-string|class-string|MiddlewareInterface>
      */
     public function getMiddleware(): array
     {

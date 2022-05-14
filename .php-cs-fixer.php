@@ -20,7 +20,6 @@ return $config
             ],
         ],
         'modernize_strpos' => true,
-        'ordered_class_elements' => true,
         'trailing_comma_in_multiline' => [
             'elements' => [
                 'arrays',

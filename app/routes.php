@@ -14,5 +14,6 @@ use Helix\Router\Router;
 return static function (Router $router): void {
 
     $router->import(\App\Http\Controller\HomeController::class);
+    $router->import(\App\Http\Controller\ArticleController::class);
 
 };

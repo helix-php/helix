@@ -16,6 +16,7 @@ use Helix\Contracts\Router\RouteInterface;
 use Helix\Http\Method\Method;
 use Helix\Router\Internal\Normalizer;
 use JetBrains\PhpStorm\Language;
+use Psr\Http\Server\MiddlewareInterface;
 
 class Route implements RouteInterface
 {
@@ -108,9 +109,9 @@ class Route implements RouteInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @return array<non-empty-string|class-string|MiddlewareInterface>
      */
-    public function getMiddleware(): iterable
+    public function getMiddleware(): array
     {
         return $this->middleware;
     }

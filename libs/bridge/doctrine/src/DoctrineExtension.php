@@ -11,6 +11,10 @@ declare(strict_types=1);
 
 namespace Helix\Bridge\Doctrine;
 
+use Doctrine\Common\EventManager;
+use Doctrine\DBAL\Connection;
+use Doctrine\ORM\Configuration;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMSetup;
 use Doctrine\ORM\Tools\Console\Command\ClearCache\CollectionRegionCommand;
@@ -28,6 +32,9 @@ use Doctrine\ORM\Tools\Console\Command\SchemaTool\DropCommand;
 use Doctrine\ORM\Tools\Console\Command\SchemaTool\UpdateCommand;
 use Doctrine\ORM\Tools\Console\Command\ValidateSchemaCommand;
 use Doctrine\ORM\Tools\Console\EntityManagerProvider;
+use Doctrine\ORM\UnitOfWork;
+use Doctrine\Persistence\PropertyChangedListener;
+use Helix\Boot\Attribute\Factory;
 use Helix\Boot\Attribute\Registration;
 use Helix\Boot\Attribute\Singleton;
 use Helix\Bridge\Doctrine\Connection\EntityManagerInstantiator;
@@ -38,6 +45,8 @@ use Helix\Bridge\Doctrine\Connection\Pool\PoolCreateInfo;
 use Helix\Bridge\Doctrine\Connection\Pool\PoolManagerInterface;
 use Helix\Config\ConfigInterface;
 use Helix\Config\RegistrarInterface;
+use Helix\Container\Container;
+use Helix\Foundation\Application;
 use Helix\Foundation\Console\Application as CliApplication;
 use Psr\Cache\CacheItemPoolInterface;
 
@@ -47,6 +56,17 @@ final class DoctrineExtension
     public function loadConfiguration(RegistrarInterface $registrar): void
     {
         $registrar->addFile('doctrine.yml');
+    }
+
+    #[Registration]
+    public function bindRepositories(Container $container, ConfigInterface $config, EntityManagerInterface $em): void
+    {
+        $doctrine = $config->get('doctrine');
+
+        foreach (($doctrine['repositories'] ?? []) as $entity => $interface) {
+            $container->instance($em->getRepository($entity))
+                ->as($interface);
+        }
     }
 
     /**
@@ -69,43 +89,23 @@ final class DoctrineExtension
         return $this->createPoolCreateInfo($doctrine['pool']);
     }
 
-    /**
-     * @param array{
-     *  max?: int,
-     *  poller?: non-empty-string
-     * } $config
-     * @return PoolCreateInfo
-     */
-    private function createPoolCreateInfo(array $config): PoolCreateInfo
-    {
-        // Default poller type
-        $poller = PollerType::SINGLE_READ_UNIQUE_WRITE;
-
-        return new PoolCreateInfo(
-            max: $config['max'] ?? 1024,
-            poller: PollerType::from($config['poller'] ?? $poller->value),
-        );
-    }
-
     #[Singleton]
     public function getPoolManager(
         ConfigInterface $config,
         PoolCreateInfo $info,
+        Application $app,
         CacheItemPoolInterface $cache = null,
     ): PoolManagerInterface {
-        /** @var array{connections?: array<string, array>} */
+        /** @var array{orm?: array<string, array>} */
         $doctrine = $config->get('doctrine');
 
         $connections = [];
 
-        foreach (($doctrine['connections'] ?? []) as $name => $config) {
-            $orm = ORMSetup::createAttributeMetadataConfiguration(
-                paths: [__DIR__ . '/'],
-                cache: $cache,
-            );
+        foreach (($doctrine['orm'] ?? []) as $name => $params) {
+            $ormConfig = $this->getORMConfig($params, $app, $cache);
+            $connectionConfig = $this->getConnectionConfigArray($config, $params['connection'] ?? 'default');
 
-            $instantiator = new EntityManagerInstantiator((array)$config, $orm);
-
+            $instantiator = new EntityManagerInstantiator($connectionConfig, $ormConfig);
             $connections[$name] = new Pool($instantiator, $info);
         }
 
@@ -114,7 +114,27 @@ final class DoctrineExtension
     }
 
     /**
+     * @param array $config
+     * @param Application $app
+     * @param CacheItemPoolInterface|null $cache
+     * @return Configuration
+     */
+    private function getORMConfig(
+        array $config,
+        Application $app,
+        ?CacheItemPoolInterface $cache,
+    ): Configuration {
+        return ORMSetup::createAttributeMetadataConfiguration(
+            paths: (array)($config['paths'] ?? []),
+            isDevMode: $app->debug,
+            cache: $cache,
+        );
+    }
+
+    /**
+     * @param ConfigInterface $config
      * @param PoolManagerInterface<object, EntityManagerInterface> $pool
+     * @return EntityManagerFactoryInterface
      */
     #[Singleton(as: [EntityManagerProvider::class])]
     public function getEntityManagerFactory(
@@ -125,6 +145,30 @@ final class DoctrineExtension
         $doctrine = $config->get('doctrine');
 
         return new EntityMangerFactory($doctrine['default'] ?? 'default', $pool);
+    }
+
+    #[Singleton]
+    public function getDefaultEntityManager(EntityManagerFactoryInterface $factory): EntityManagerInterface
+    {
+        return $factory->getDefaultManager();
+    }
+
+    #[Factory]
+    public function getDefaultConnection(EntityManagerInterface $em): Connection
+    {
+        return $em->getConnection();
+    }
+
+    #[Factory]
+    public function getEventManager(EntityManagerInterface $em): EventManager
+    {
+        return $em->getEventManager();
+    }
+
+    #[Factory(as: [PropertyChangedListener::class])]
+    public function getUnitOfWork(EntityManagerInterface $em): UnitOfWork
+    {
+        return $em->getUnitOfWork();
     }
 
     #[Registration(ifServiceExists: CliApplication::class)]
@@ -149,5 +193,40 @@ final class DoctrineExtension
         $cli->add(new ValidateSchemaCommand($em));
         $cli->add(new MappingDescribeCommand($em));
         $cli->add(new GenerateProxiesCommand($em));
+    }
+
+    /**
+     * @param ConfigInterface $config
+     * @param string $name
+     * @return array
+     */
+    private function getConnectionConfigArray(ConfigInterface $config, string $name): array
+    {
+        /** @var array{connections?: array<string, array>} */
+        $doctrine = $config->get('doctrine');
+
+        if (!isset($doctrine['connections'][$name])) {
+            throw new \InvalidArgumentException('Could not find database connection "' . $name . '"');
+        }
+
+        return (array)$doctrine['connections'][$name];
+    }
+
+    /**
+     * @param array{
+     *     max?: int,
+     *     poller?: non-empty-string
+     * } $config
+     * @return PoolCreateInfo
+     */
+    private function createPoolCreateInfo(array $config): PoolCreateInfo
+    {
+        // Default poller type
+        $poller = PollerType::SINGLE_READ_UNIQUE_WRITE;
+
+        return new PoolCreateInfo(
+            max: $config['max'] ?? 1024,
+            poller: PollerType::from($config['poller'] ?? $poller->value),
+        );
     }
 }

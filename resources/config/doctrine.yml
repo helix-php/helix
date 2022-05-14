@@ -17,36 +17,22 @@ doctrine:
     # in an event loop instead of FCGI mode.
     poller: single_read_uniq_write
 
+  # List of repository interface bindings
+  repositories:
+    App\Entity\Article: App\Entity\Article\ArticleRepositoryInterface
+
   # Default entity manager
   default: default
 
   # List of available entity managers
   orm:
     default:
-      paths: [ '%path.app%/Entity' ]
-      # ...
-      query_cache_driver:
-      # ...
-      metadata_cache_driver:
-      # ...
-      result_cache_driver:
-      # ...
       connection: sqlite_local
-      class_metadata_factory_name: Doctrine\ORM\Mapping\ClassMetadataFactory
-      default_repository_class: Doctrine\ORM\EntityRepository
-      auto_mapping: false
-      hydrators: []
-      # ...
-      mappings: []
-      # ...
-      dql: []
-      # ...
-      filters: []
-      # ...
+      paths: '%path.app%/Entity'
 
   # List of available connections
   connections:
-    default:
+    sqlite_local:
       driver: pdo_sqlite
       path: '%path.root%/resources/database/db.sqlite'
 

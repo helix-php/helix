@@ -11,18 +11,16 @@ declare(strict_types=1);
 
 namespace App\Http\Controller;
 
-use Helix\Contracts\View\FactoryInterface;
-use Helix\Http\HtmlResponse;
+use App\Entity\Article;
+use Helix\Http\JsonResponse;
 use Helix\Router\Attribute\Route;
 use Psr\Http\Message\ResponseInterface;
 
-final class HomeController
+final class ArticleController
 {
-    #[Route(path: '/', as: 'home')]
-    public function index(FactoryInterface $views): ResponseInterface
+    #[Route(path: '/articles', as: 'articles')]
+    public function index(Article\ArticleRepositoryInterface $articles): ResponseInterface
     {
-        return new HtmlResponse(
-            $views->create('welcome.html.php')
-        );
+        return new JsonResponse($articles->findAll());
     }
 }

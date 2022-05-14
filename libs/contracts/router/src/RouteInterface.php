@@ -39,9 +39,4 @@ interface RouteInterface
      * @return non-empty-string|null
      */
     public function getName(): ?string;
-
-    /**
-     * @return iterable
-     */
-    public function getMiddleware(): iterable;
 }
