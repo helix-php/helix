@@ -13,6 +13,9 @@ namespace Helix\Config\Tests;
 
 use PHPUnit\Framework\TestCase as BaseTestCase;
 
+/**
+ * @group config
+ */
 abstract class TestCase extends BaseTestCase
 {
 }
