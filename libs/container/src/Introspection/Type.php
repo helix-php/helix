@@ -239,7 +239,7 @@ final class Type
      */
     private function matchSubclassOf(\ReflectionNamedType $type, string $expected): bool
     {
-        return !$type->isBuiltin() && \is_a($expected, $type->getName(), true);
+        return !$type->isBuiltin() && \is_a($type->getName(), $expected, true);
     }
 
     /**

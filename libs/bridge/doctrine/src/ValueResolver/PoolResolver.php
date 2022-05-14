@@ -13,40 +13,33 @@ namespace Helix\Bridge\Doctrine\ValueResolver;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Helix\Bridge\Doctrine\EntityManagerFactoryInterface;
-use Helix\Container\Introspection\Parameter;
 use Helix\Container\ParamResolver\ValueResolverInterface;
 
 /**
  * @template TReference of object
  */
-class EntityManagerValueResolver implements ValueResolverInterface
+abstract class PoolResolver implements ValueResolverInterface
 {
     /**
      * @param TReference $reference
      * @param EntityManagerFactoryInterface $factory
      */
     public function __construct(
-        private readonly object $reference,
-        private readonly EntityManagerFactoryInterface $factory,
+        protected readonly object $reference,
+        protected readonly EntityManagerFactoryInterface $factory,
     ) {
     }
 
     /**
-     * @param \ReflectionParameter $parameter
-     * @return bool
-     */
-    public function supports(\ReflectionParameter $parameter): bool
-    {
-        return Parameter::of($parameter)->type
-            ->allowsSubclassOf(EntityManagerInterface::class);
-    }
-
-    /**
-     * @param \ReflectionParameter $parameter
+     * @param string|null $name
      * @return EntityManagerInterface
      */
-    public function resolve(\ReflectionParameter $parameter): EntityManagerInterface
+    protected function getEntityManager(string $name = null): EntityManagerInterface
     {
+        if ($name !== null) {
+            return $this->factory->getManager($name, $this->reference);
+        }
+
         return $this->factory->getDefaultManager($this->reference);
     }
 }

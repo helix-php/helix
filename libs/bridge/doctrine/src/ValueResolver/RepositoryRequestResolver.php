@@ -15,13 +15,14 @@ use Helix\Bridge\Doctrine\EntityManagerFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * This class is responsible for getting the entity manager from the connection
- * pool depending on the current HTTP request.
- *
- * @template-extends EntityManagerResolver<ServerRequestInterface>
+ * @template-extends RepositoryResolver<ServerRequestInterface>
  */
-final class EntityManagerRequestResolver extends EntityManagerResolver
+class RepositoryRequestResolver extends RepositoryResolver
 {
+    /**
+     * @param ServerRequestInterface $request
+     * @param EntityManagerFactoryInterface $factory
+     */
     public function __construct(
         ServerRequestInterface $request,
         EntityManagerFactoryInterface $factory,

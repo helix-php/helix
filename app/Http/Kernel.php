@@ -35,6 +35,10 @@ class Kernel extends BaseHttpKernel
         // This resolver is responsible for getting the entity manager from the
         // connection pool depending on the current HTTP request.
         \Helix\Bridge\Doctrine\ValueResolver\EntityManagerRequestResolver::class,
+
+        // This resolver injects a specific repository when requested in the
+        // parameter using an HTTP request dependent connection.
+        \App\Http\ValueResolver\DoctrineRepositoryResolver::class,
     ];
 
     /**

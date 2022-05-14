@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace App\Http\Controller\Api;
 
 use App\Entity\Article;
+use App\Entity\Article\ArticleRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Helix\Http\JsonResponse;
 use Helix\Router\Attribute\Group;
@@ -22,18 +23,16 @@ use Psr\Http\Message\ResponseInterface;
 final class ArticleController
 {
     /**
-     * @param EntityManagerInterface $em
+     * @param ArticleRepositoryInterface $articles
      */
     public function __construct(
-        private readonly EntityManagerInterface $em,
+        private readonly ArticleRepositoryInterface $articles,
     ) {
     }
 
     #[Route(path: 'articles', as: 'api.articles')]
     public function index(): ResponseInterface
     {
-        $articles = $this->em->getRepository(Article::class);
-
-        return new JsonResponse($articles->findAll());
+        return new JsonResponse($this->articles->findAll());
     }
 }
