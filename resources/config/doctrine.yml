@@ -17,20 +17,28 @@ doctrine:
     # in an event loop instead of FCGI mode.
     poller: single_read_uniq_write
 
+  #
   # List of repository interface bindings
+  #
   repositories:
     App\Entity\Article: App\Entity\Article\ArticleRepositoryInterface
 
-  # Default entity manager
+  #
+  # Default Entity Manager
+  #
   default: default
 
-  # List of available entity managers
+  #
+  # List Of Entity Managers
+  #
   orm:
     default:
       connection: sqlite_local
       paths: '%path.app%/Entity'
 
-  # List of available connections
+  #
+  # List Of Database Connections
+  #
   connections:
     sqlite_local:
       driver: pdo_sqlite
