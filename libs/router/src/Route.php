@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Helix\Router;
 
+use Helix\Container\ParamResolver\ValueResolverInterface;
 use Helix\Contracts\Http\Method\MethodInterface;
 use Helix\Contracts\Router\RouteInterface;
 use Helix\Http\Method\Method;
@@ -18,7 +19,10 @@ use Helix\Router\Internal\Normalizer;
 use JetBrains\PhpStorm\Language;
 use Psr\Http\Server\MiddlewareInterface;
 
-class Route implements RouteInterface
+class Route implements
+    RouteInterface,
+    ProvidesMiddlewareInterface,
+    ProvidesResolversInterface
 {
     /**
      * @var non-empty-string|null
@@ -46,9 +50,14 @@ class Route implements RouteInterface
     private mixed $handler;
 
     /**
-     * @var array
+     * @var array<non-empty-string|string|MiddlewareInterface>
      */
     private array $middleware = [];
+
+    /**
+     * @var array<non-empty-string|string|ValueResolverInterface>
+     */
+    private array $resolvers = [];
 
     /**
      * @param non-empty-string $path
@@ -109,11 +118,19 @@ class Route implements RouteInterface
     }
 
     /**
-     * @return array<non-empty-string|class-string|MiddlewareInterface>
+     * {@inheritDoc}
      */
     public function getMiddleware(): array
     {
         return $this->middleware;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getResolvers(): array
+    {
+        return $this->resolvers;
     }
 
     /**
@@ -180,13 +197,26 @@ class Route implements RouteInterface
     }
 
     /**
-     * @param mixed ...$middleware
+     * @param string|class-string|MiddlewareInterface ...$middleware
      * @return $this
      */
-    public function through(mixed ...$middleware): self
+    public function through(string|MiddlewareInterface ...$middleware): self
     {
         foreach ($middleware as $class) {
             $this->middleware[] = $class;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string|class-string|ValueResolverInterface ...$resolvers
+     * @return $this
+     */
+    public function using(string|ValueResolverInterface ...$resolvers): self
+    {
+        foreach ($resolvers as $class) {
+            $this->resolvers[] = $class;
         }
 
         return $this;

@@ -91,8 +91,8 @@ class Router implements RegistrarInterface, RepositoryInterface, RouterInterface
      * @param ReaderInterface|null $reader
      */
     public function __construct(
-        private ResponseFactoryInterface $responses,
-        private UriFactoryInterface $uris,
+        private readonly ResponseFactoryInterface $responses,
+        private readonly UriFactoryInterface $uris,
         ReaderInterface $reader = null
     ) {
         $this->compiler = new Compiler();
@@ -268,7 +268,7 @@ class Router implements RegistrarInterface, RepositoryInterface, RouterInterface
      * @param iterable<string, string> $args
      * @param iterable<MethodInterface> $methods
      * @return Group
-     * @throws BadRouteDefinitionException
+     * @throws RouteGeneratorExceptionInterface
      */
     public function redirectTo(string $path, string $route, iterable $args = [], iterable $methods = []): Group
     {
@@ -292,7 +292,7 @@ class Router implements RegistrarInterface, RepositoryInterface, RouterInterface
      * @param iterable<string, string> $args
      * @param iterable<MethodInterface> $methods
      * @return Group
-     * @throws BadRouteDefinitionException
+     * @throws RouteGeneratorExceptionInterface
      */
     public function temporaryTo(string $path, string $route, iterable $args = [], iterable $methods = []): Group
     {
@@ -377,7 +377,7 @@ class Router implements RegistrarInterface, RepositoryInterface, RouterInterface
     }
 
     /**
-     * @param (callable(Router): taskInterface)|null $group
+     * @param null|callable(Router):void $group
      * @return Group
      */
     public function group(callable $group = null): Group
@@ -464,10 +464,7 @@ class Router implements RegistrarInterface, RepositoryInterface, RouterInterface
         StatusCodeInterface $code = StatusCode::FOUND,
         iterable $methods = [],
     ): Group {
-        return $this->oneOf(
-            $methods,
-            $path,
-            fn () =>
+        return $this->oneOf($methods, $path, fn () =>
             $this->responses->createResponse($code->getCode(), $code->getReasonPhrase())
                 ->withAddedHeader('Location', (string)$location)
         );

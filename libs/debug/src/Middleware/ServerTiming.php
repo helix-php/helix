@@ -17,6 +17,12 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
+/**
+ * This middleware is responsible for embedding information about the current
+ * request processing time inside the response headers.
+ *
+ * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Server-Timing
+ */
 class ServerTiming implements MiddlewareInterface
 {
     /**

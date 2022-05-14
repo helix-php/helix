@@ -206,10 +206,40 @@ final class Type
      */
     public function allowsInstanceOf(object $instance): bool
     {
-        return $this->match(
-            fn (\ReflectionNamedType $type): bool =>
+        return $this->match(fn (\ReflectionNamedType $type): bool =>
             $this->matchInstanceOf($type, $instance)
         );
+    }
+
+    /**
+     * @param class-string $class
+     * @return bool
+     */
+    public function isSubclassOf(string $class): bool
+    {
+        return $this->type instanceof \ReflectionNamedType
+            && $this->matchSubclassOf($this->type, $class);
+    }
+
+    /**
+     * @param class-string $class
+     * @return bool
+     */
+    public function allowsSubclassOf(string $class): bool
+    {
+        return $this->match(fn (\ReflectionNamedType $type): bool =>
+            $this->matchSubclassOf($type, $class)
+        );
+    }
+
+    /**
+     * @param \ReflectionNamedType $type
+     * @param class-string $expected
+     * @return bool
+     */
+    private function matchSubclassOf(\ReflectionNamedType $type, string $expected): bool
+    {
+        return !$type->isBuiltin() && \is_a($expected, $type->getName(), true);
     }
 
     /**

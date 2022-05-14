@@ -11,15 +11,38 @@ declare(strict_types=1);
 
 namespace App\Http;
 
+use Helix\Container\ParamResolver\ValueResolverInterface;
 use Helix\Foundation\Http\Kernel as BaseHttpKernel;
+use Psr\Http\Server\MiddlewareInterface;
 
 class Kernel extends BaseHttpKernel
 {
     /**
-     * {@inheritDoc}
+     * @var array<class-string<MiddlewareInterface>|MiddlewareInterface>
      */
     public array $middleware = [
-        // Debug
+        // This middleware is responsible for embedding information about the
+        // current request processing time inside the response headers.
+        //
+        // @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Server-Timing
         \Helix\Debug\Middleware\ServerTiming::class,
     ];
+
+    /**
+     * @var array<class-string<ValueResolverInterface>|ValueResolverInterface>
+     */
+    public array $resolvers = [
+        // This resolver is responsible for getting the entity manager from the
+        // connection pool depending on the current HTTP request.
+        \Helix\Bridge\Doctrine\ValueResolver\EntityManagerRequestResolver::class,
+    ];
+
+    /**
+     * @return void
+     */
+    protected function onBoot(): void
+    {
+        // Enable middlewares if it has been installed (remove debug)
+        $this->middleware = \array_filter($this->middleware, \class_exists(...));
+    }
 }
