@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Helix\Router\Tests;
 
 use Helix\Http\Method\Method;
+use Helix\Router\Tests\Stub\TestingMiddlewareStub;
 
 /**
  * @group router
@@ -93,7 +94,7 @@ class RouteTestCase extends TestCase
     public function testMiddlewareList(): void
     {
         $route = $this->route()
-            ->through(...$middleware = ['a', $this, 'b'])
+            ->through(...$middleware = ['a', new TestingMiddlewareStub(), 'b'])
         ;
 
         $this->assertEquals($middleware, $route->getMiddleware());
