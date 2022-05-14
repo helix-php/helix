@@ -13,7 +13,6 @@ namespace Helix\Router\Generator;
 
 use Helix\Contracts\Router\RepositoryInterface;
 use Helix\Router\Generator\Exception\InvalidRouteNameException;
-use Helix\Router\Generator\Exception\InvalidRouteParameterException;
 use Psr\Http\Message\UriFactoryInterface;
 use Psr\Http\Message\UriInterface;
 
@@ -24,8 +23,8 @@ class Generator implements GeneratorInterface
      * @param RepositoryInterface $routes
      */
     public function __construct(
-        private UriFactoryInterface $uris,
-        private RepositoryInterface $routes,
+        private readonly UriFactoryInterface $uris,
+        private readonly RepositoryInterface $routes,
     ) {
     }
 
@@ -49,11 +48,7 @@ class Generator implements GeneratorInterface
     private function replace(array $arguments): \Closure
     {
         return static function (array $matches) use ($arguments): string {
-            [,$name, $pattern] = $matches;
-
-            $result = $arguments[$name] ?? throw InvalidRouteParameterException::notPassed($name);
-
-            return $result;
+            return $arguments[$matches[1]] ?? '';
         };
     }
 }
