@@ -50,11 +50,7 @@ abstract class ErrorHandler implements ErrorHandlerInterface
     protected function report(\Throwable $e): void
     {
         if ($this->isReportable($e)) {
-            $this->logger?->error($e->getMessage(), [
-                'file'  => $e->getFile(),
-                'line'  => $e->getLine(),
-                'trace' => $e->getTrace(),
-            ]);
+            $this->logger?->error($e->getMessage(), ['exception' => $e]);
         }
     }
 }

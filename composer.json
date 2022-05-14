@@ -124,6 +124,10 @@
         }
     },
     "scripts": {
+        "post-create-project-cmd": "@install",
+        "install": [
+            "@php do orm:schema-tool:update"
+        ],
         "phpcs": "php-cs-fixer fix --config=.php-cs-fixer.php",
         "bench": "phpbench run tests/Bench --report=aggregate"
     },
