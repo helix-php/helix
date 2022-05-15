@@ -15,6 +15,7 @@ use Helix\Contracts\ErrorHandler\Http\HttpErrorHandlerInterface;
 use Helix\Http\Psr17FactoryInterface;
 use Helix\Server\ExternalServer;
 use Helix\Server\Sapi\Internal\Emitter;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
@@ -62,13 +63,9 @@ class Server extends ExternalServer
     public function run(RequestHandlerInterface $handler, HttpErrorHandlerInterface $error = null): void
     {
         try {
-            $request = $this->factory->createServerRequest(
-                $this->normalizeMethod($this->info->server),
-                $this->normalizeUri($this->info->server),
-                $this->info->server,
-            );
-
-            $this->emitter->emit($handler->handle($request));
+            $this->emitter->emit($handler->handle(
+                $this->createRequest()
+            ));
         } catch (\Throwable $e) {
             if ($error !== null) {
                 $this->emitter->emit($error->throw($e, $request ?? null));
@@ -76,5 +73,74 @@ class Server extends ExternalServer
                 throw $e;
             }
         }
+    }
+
+    /**
+     * @param ServerRequestInterface $request
+     * @return ServerRequestInterface
+     */
+    private function withCookies(ServerRequestInterface $request): ServerRequestInterface
+    {
+        return $request->withCookieParams($this->info->cookie);
+    }
+
+    /**
+     * @param ServerRequestInterface $request
+     * @return ServerRequestInterface
+     */
+    private function withUploadedFiles(ServerRequestInterface $request): ServerRequestInterface
+    {
+        $files = [];
+
+        foreach ($this->info->files as $name => $info) {
+            $files[$name] = $this->factory->createUploadedFile(
+                stream: $this->factory->createStreamFromFile($info['tmp_name']),
+                size: $info['size'],
+                error: $info['error'],
+                clientFilename: $info['name'],
+                clientMediaType: $info['type'],
+            );
+        }
+
+        return $request->withUploadedFiles($files);
+    }
+
+    /**
+     * @param ServerRequestInterface $request
+     * @return ServerRequestInterface
+     */
+    private function withBody(ServerRequestInterface $request): ServerRequestInterface
+    {
+        return $request->withBody(
+            $this->factory->createStreamFromFile('php://input')
+        );
+    }
+
+    /**
+     * @param ServerRequestInterface $request
+     * @return ServerRequestInterface
+     */
+    private function withParsedBody(ServerRequestInterface $request): ServerRequestInterface
+    {
+        return $request->withParsedBody($_REQUEST);
+    }
+
+    /**
+     * @return ServerRequestInterface
+     */
+    private function createRequest(): ServerRequestInterface
+    {
+        $request = $this->factory->createServerRequest(
+            $this->normalizeMethod($this->info->server),
+            $this->normalizeUri($this->info->server),
+            $this->info->server,
+        );
+
+        $request = $this->withUploadedFiles($request);
+        $request = $this->withParsedBody($request);
+        $request = $this->withCookies($request);
+        $request = $this->withBody($request);
+
+        return $request;
     }
 }

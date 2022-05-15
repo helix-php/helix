@@ -17,12 +17,16 @@ final class ServerCreateInfo extends ExternalServerCreateInfo
 {
     /**
      * @param array|null $vars
+     * @param array|null $cookie
+     * @param array|null $files
      * @param EmitterCreateInfo $emitter
      */
     public function __construct(
         array $vars = null,
+        array $cookie = null,
+        array $files = null,
         public readonly EmitterCreateInfo $emitter = new EmitterCreateInfo()
     ) {
-        parent::__construct($vars);
+        parent::__construct($vars, $cookie, $files);
     }
 }

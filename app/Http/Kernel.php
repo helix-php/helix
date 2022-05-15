@@ -39,6 +39,11 @@ class Kernel extends BaseHttpKernel
         // This resolver injects a specific repository when requested in the
         // parameter using an HTTP request dependent connection.
         \App\Http\ValueResolver\DoctrineRepositoryResolver::class,
+
+        // This resolver injects the current
+        // session {@see \Helix\Session\SessionIdInterface} identifier
+        // dependent on the HTTP request object.
+        \Helix\Session\ValueResolver\SessionIdValueResolver::class,
     ];
 
     /**

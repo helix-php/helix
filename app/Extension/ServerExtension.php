@@ -31,6 +31,8 @@ final class ServerExtension
     {
         return new Server($factory, new ServerCreateInfo(
             vars: $_SERVER,
+            cookie: $_COOKIE,
+            files: $_FILES,
             emitter: new EmitterCreateInfo(
                 bufferLength: 1024,
                 headers: HeadersBehaviour::SKIP,

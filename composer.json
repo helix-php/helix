@@ -34,6 +34,7 @@
         {"type": "path", "url": "libs/bridge/monolog"},
 
         {"type": "path", "url": "libs/boot"},
+        {"type": "path", "url": "libs/clock"},
         {"type": "path", "url": "libs/config"},
         {"type": "path", "url": "libs/container"},
         {"type": "path", "url": "libs/debug"},
@@ -49,8 +50,10 @@
         {"type": "path", "url": "libs/param-resolver"},
         {"type": "path", "url": "libs/router"},
         {"type": "path", "url": "libs/router-generator"},
-        {"type": "path", "url": "libs/server-sapi"},
         {"type": "path", "url": "libs/server"},
+        {"type": "path", "url": "libs/server-sapi"},
+        {"type": "path", "url": "libs/session"},
+        {"type": "path", "url": "libs/session-http"},
         {"type": "path", "url": "libs/view"},
         {"type": "path", "url": "libs/view-engine-php"},
         {"type": "path", "url": "libs/view-engine-twig"}
@@ -59,6 +62,8 @@
         "php": "^8.1",
         "ext-pdo": "*",
         "ext-mbstring": "*",
+
+        "helix/session-http": "^1.0",
 
         "helix/cache-bridge": "^1.0",
         "helix/doctrine-bridge": "^1.0",
@@ -91,6 +96,7 @@
             "App\\Tests\\": "tests",
 
             "Helix\\Boot\\Tests\\": "libs/boot/tests",
+            "Helix\\Clock\\Tests\\": "libs/clock/tests",
             "Helix\\Config\\Tests\\": "libs/config/tests",
             "Helix\\Container\\Tests\\": "libs/container/tests",
             "Helix\\Debug\\Tests\\": "libs/debug/tests",
@@ -108,6 +114,7 @@
             "Helix\\Router\\Generator\\Tests\\": "libs/router-generator/tests",
             "Helix\\Server\\Tests\\": "libs/server/tests",
             "Helix\\Server\\Sapi\\Tests\\": "libs/server-sapi/tests",
+            "Helix\\Session\\Tests\\": "libs/session/tests",
             "Helix\\View\\Tests\\": "libs/view/tests",
             "Helix\\View\\Engine\\Php\\Tests\\": "libs/view-engine-php/tests",
             "Helix\\View\\Engine\\Twig\\Tests\\": "libs/view-engine-twig/tests"

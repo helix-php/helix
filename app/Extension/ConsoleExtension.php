@@ -15,7 +15,7 @@ use App\Console\Command\ExampleCommand;
 use Helix\Boot\Attribute\Registration;
 use Helix\Foundation\Console\Application;
 
-class ConsoleExtension
+final class ConsoleExtension
 {
     #[Registration(ifServiceExists: Application::class)]
     public function registerConsoleCommands(Application $app): void

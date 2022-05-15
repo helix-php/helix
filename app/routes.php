@@ -13,7 +13,11 @@ use Helix\Router\Router;
 
 return static function (Router $router): void {
 
-    $router->import(\App\Http\Controller\HomeController::class);
+    $router->group(function (Router $router): void {
+        $router->import(\App\Http\Controller\HomeController::class);
+    })
+        ->through(\Helix\Session\Http\Middleware\StartSession::class);
+
     $router->import(\App\Http\Controller\Api\ArticleController::class);
 
 };

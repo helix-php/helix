@@ -14,7 +14,9 @@ return [
     // Kernel Extensions
     //
     \Helix\Foundation\Extension\ConfigExtension::class,
+    \Helix\Foundation\Extension\ClockExtension::class,
     \Helix\Foundation\Http\Extension\HttpExtension::class,
+    \Helix\Foundation\Http\Extension\SessionExtension::class,
     \Helix\Bridge\Monolog\MonologExtension::class,
     \Helix\Bridge\Cache\CacheExtension::class,
     \Helix\Bridge\Doctrine\DoctrineExtension::class,

@@ -18,6 +18,8 @@ use Psr\Http\Message\UriInterface;
 /**
  * @template T of ExternalServerCreateInfo
  * @template-extends Server<T>
+ *
+ * @property-read ExternalServerCreateInfo $info
  */
 abstract class ExternalServer extends Server
 {

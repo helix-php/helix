@@ -19,11 +19,27 @@ abstract class ExternalServerCreateInfo extends ServerCreateInfo
     public readonly array $server;
 
     /**
+     * @var array
+     */
+    public readonly array $files;
+
+    /**
+     * @var array
+     */
+    public readonly array $cookie;
+
+    /**
      * @param array|null $vars
+     * @param array|null $cookie
+     * @param array|null $files
      */
     public function __construct(
         array $vars = null,
+        array $cookie = null,
+        array $files = null,
     ) {
         $this->server = $vars ?? $_SERVER;
+        $this->cookie = $cookie ?? $_COOKIE;
+        $this->files = $files ?? $_FILES;
     }
 }

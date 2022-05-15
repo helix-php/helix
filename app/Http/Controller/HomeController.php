@@ -19,10 +19,18 @@ use Psr\Http\Message\ResponseInterface;
 
 final class HomeController
 {
+    /**
+     * @param FactoryInterface $views
+     */
+    public function __construct(
+        private readonly FactoryInterface $views,
+    ) {
+    }
+
     #[Route(path: '/', as: 'home')]
-    public function index(FactoryInterface $views, GeneratorInterface $generator): ResponseInterface
+    public function index(GeneratorInterface $generator): ResponseInterface
     {
-        return new HtmlResponse($views->create('welcome.html.php', [
+        return new HtmlResponse($this->views->create('welcome.html.php', [
             'route' => $generator,
         ]));
     }
