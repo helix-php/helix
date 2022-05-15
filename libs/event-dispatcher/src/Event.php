@@ -11,13 +11,10 @@ declare(strict_types=1);
 
 namespace Helix\EventDispatcher;
 
-use Helix\Contracts\EventDispatcher\EventInterface;
-
 /**
  * @template T of object|null
- * @template-implements EventInterface<T>
  */
-abstract class Event implements EventInterface
+abstract class Event
 {
     /**
      * @var int|float
