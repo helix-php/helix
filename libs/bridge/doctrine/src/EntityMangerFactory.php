@@ -12,7 +12,8 @@ declare(strict_types=1);
 namespace Helix\Bridge\Doctrine;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Helix\Bridge\Doctrine\Connection\Pool\PoolManagerInterface;
+use Doctrine\ORM\Tools\Console\EntityManagerProvider\UnknownManagerException;
+use Helix\Pool\MasterPoolInterface;
 
 /**
  * @template TReference of object
@@ -21,13 +22,26 @@ use Helix\Bridge\Doctrine\Connection\Pool\PoolManagerInterface;
 final class EntityMangerFactory implements EntityManagerFactoryInterface
 {
     /**
+     * @var array<string, MasterPoolInterface>
+     */
+    private array $pools = [];
+
+    /**
      * @param non-empty-string $default
-     * @param PoolManagerInterface<TReference, EntityManagerInterface> $manager
      */
     public function __construct(
         private readonly string $default,
-        private readonly PoolManagerInterface $manager,
     ) {
+    }
+
+    /**
+     * @param string $name
+     * @param MasterPoolInterface $pool
+     * @return void
+     */
+    public function add(string $name, MasterPoolInterface $pool): void
+    {
+        $this->pools[$name] = $pool;
     }
 
     /**
@@ -43,8 +57,10 @@ final class EntityMangerFactory implements EntityManagerFactoryInterface
      */
     public function getManager(string $name, ?object $reference = null): EntityManagerInterface
     {
-        $pool = $this->manager->get($name);
+        if (!isset($this->pools[$name])) {
+            throw UnknownManagerException::unknownManager($name, \array_keys($this->pools));
+        }
 
-        return $pool->get($reference);
+        return $this->pools[$name]->get($reference);
     }
 }

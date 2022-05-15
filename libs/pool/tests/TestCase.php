@@ -9,10 +9,13 @@
 
 declare(strict_types=1);
 
-namespace Helix\Bridge\Doctrine\Connection\Pool;
+namespace Helix\Pool\Tests;
 
-enum Status
+use PHPUnit\Framework\TestCase as BaseTestCase;
+
+/**
+ * @group pool
+ */
+abstract class TestCase extends BaseTestCase
 {
-    case USED;
-    case FREE;
 }

@@ -1,22 +1,4 @@
 doctrine:
-  pool:
-    # Max available connections:
-    #
-    # <= 0: Unlimited connections.
-    # >= 1: The specified number of connections.
-    max: 1024
-
-    # Connections establishment algorithm:
-    #
-    # - single_read_uniq_write: General connection for reading, separate for
-    #                           writing for each client (request).
-    # - uniq:                   Separate for each client (request).
-    # - single:                 Use one general connection.
-    #
-    # Modes other than "single" make sense when working
-    # in an event loop instead of FCGI mode.
-    poller: single_read_uniq_write
-
   #
   # Default Entity Manager
   #

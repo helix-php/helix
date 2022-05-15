@@ -23,7 +23,7 @@ final class SapiServeCommand extends Command
     /**
      * @param non-empty-string $public
      */
-    public function __construct(private string $public)
+    public function __construct(private readonly string $public)
     {
         parent::__construct('serve');
     }
@@ -70,7 +70,13 @@ final class SapiServeCommand extends Command
 
         $options = [];
         if ($input->getOption('workers') > 1) {
-            $options['PHP_CLI_SERVER_WORKERS'] = $input->getOption('workers');
+            if (\PHP_OS_FAMILY === 'Windows') {
+                $output->writeln(\sprintf(<<<'MESSAGE'
+                <comment>   Notice: Windows OS does not support</comment> %s <comment>workers.</comment>
+                MESSAGE, $input->getOption('workers')));
+            } else {
+                $options['PHP_CLI_SERVER_WORKERS'] = $input->getOption('workers');
+            }
         }
 
         $process = new Process([\PHP_BINARY, '-S', $host . ':' . $port, 'index.php'], $this->public, $options);

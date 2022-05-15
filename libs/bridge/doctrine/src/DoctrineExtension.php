@@ -32,15 +32,13 @@ use Doctrine\ORM\Tools\Console\EntityManagerProvider;
 use Helix\Boot\Attribute\Registration;
 use Helix\Boot\Attribute\Singleton;
 use Helix\Bridge\Doctrine\Connection\EntityManagerInstantiator;
-use Helix\Bridge\Doctrine\Connection\Pool\Manager;
-use Helix\Bridge\Doctrine\Connection\Pool\PollerType;
-use Helix\Bridge\Doctrine\Connection\Pool\Pool;
-use Helix\Bridge\Doctrine\Connection\Pool\PoolCreateInfo;
-use Helix\Bridge\Doctrine\Connection\Pool\PoolManagerInterface;
+use Helix\Bridge\Doctrine\Connection\PoolManager;
 use Helix\Config\ConfigInterface;
 use Helix\Config\RegistrarInterface;
 use Helix\Foundation\Application;
 use Helix\Foundation\Console\Application as CliApplication;
+use Helix\Pool\MasterPool;
+use Helix\Pool\Pool;
 use Psr\Cache\CacheItemPoolInterface;
 
 final class DoctrineExtension
@@ -51,79 +49,31 @@ final class DoctrineExtension
         $registrar->addFile('doctrine.yml');
     }
 
-    /**
-     * Creates global PoolCreateInfo object from configuration section:
-     * ```
-     *  doctrine:
-     *    pool:
-     *      max: X
-     *      poller: Y
-     * ```
-     *
-     * @param ConfigInterface $config
-     * @return PoolCreateInfo
-     */
-    #[Singleton]
-    public function getPoolGlobalConfiguration(ConfigInterface $config): PoolCreateInfo
-    {
-        $doctrine = $config->get('doctrine');
-
-        return $this->createPoolCreateInfo($doctrine['pool']);
-    }
-
-    /**
-     * @param array{
-     *     max?: int,
-     *     poller?: non-empty-string
-     * } $config
-     * @return PoolCreateInfo
-     */
-    private function createPoolCreateInfo(array $config): PoolCreateInfo
-    {
-        // Default poller type
-        $poller = PollerType::SINGLE_READ_UNIQUE_WRITE;
-
-        return new PoolCreateInfo(
-            max: $config['max'] ?? 1024,
-            poller: PollerType::from($config['poller'] ?? $poller->value),
-        );
-    }
-
-    #[Singleton]
-    public function getPoolManager(
+    #[Singleton(as: [EntityManagerProvider::class])]
+    public function getEntityManagerFactory(
         ConfigInterface $config,
-        PoolCreateInfo $info,
         Application $app,
         CacheItemPoolInterface $cache = null,
-    ): PoolManagerInterface {
+    ): EntityManagerFactoryInterface {
         /** @var array{orm?: array<string, array>} */
         $doctrine = $config->get('doctrine');
 
-        $connections = [];
+        $factory = new EntityMangerFactory($doctrine['default'] ?? 'default');
 
         foreach (($doctrine['orm'] ?? []) as $name => $params) {
-            $ormConfig = $this->getORMConfig($params, $app, $cache);
-            $connectionConfig = $this->getConnectionConfigArray($config, $params['connection'] ?? 'default');
+            $instantiator = new EntityManagerInstantiator(
+                $this->getConnectionConfigArray($config, $params['connection'] ?? 'default'),
+                $this->getORMConfig($params, $app, $cache),
+            );
 
-            $instantiator = new EntityManagerInstantiator($connectionConfig, $ormConfig);
-            $connections[$name] = new Pool($instantiator, $info);
+            $factory->add($name, new MasterPool($instantiator));
         }
 
-        /** @psalm-suppress MixedArgumentTypeCoercion */
-        return new Manager($connections);
+        return $factory;
     }
 
-    /**
-     * @param array $config
-     * @param Application $app
-     * @param CacheItemPoolInterface|null $cache
-     * @return Configuration
-     */
-    private function getORMConfig(
-        array $config,
-        Application $app,
-        ?CacheItemPoolInterface $cache,
-    ): Configuration {
+    private function getORMConfig(array $config, Application $app, ?CacheItemPoolInterface $cache): Configuration
+    {
         return ORMSetup::createAttributeMetadataConfiguration(
             paths: (array)($config['paths'] ?? []),
             isDevMode: $app->debug,
@@ -131,11 +81,6 @@ final class DoctrineExtension
         );
     }
 
-    /**
-     * @param ConfigInterface $config
-     * @param string $name
-     * @return array
-     */
     private function getConnectionConfigArray(ConfigInterface $config, string $name): array
     {
         /** @var array{connections?: array<string, array>} */
@@ -146,22 +91,6 @@ final class DoctrineExtension
         }
 
         return (array)$doctrine['connections'][$name];
-    }
-
-    /**
-     * @param ConfigInterface $config
-     * @param PoolManagerInterface<object, EntityManagerInterface> $pool
-     * @return EntityManagerFactoryInterface
-     */
-    #[Singleton(as: [EntityManagerProvider::class])]
-    public function getEntityManagerFactory(
-        ConfigInterface $config,
-        PoolManagerInterface $pool,
-    ): EntityManagerFactoryInterface {
-        /** @var array{default?: string} */
-        $doctrine = $config->get('doctrine');
-
-        return new EntityMangerFactory($doctrine['default'] ?? 'default', $pool);
     }
 
     #[Singleton]

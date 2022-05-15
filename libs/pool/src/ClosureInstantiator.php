@@ -9,20 +9,29 @@
 
 declare(strict_types=1);
 
-namespace Helix\Bridge\Doctrine\Connection;
+namespace Helix\Pool;
 
 /**
- * @template TConnection of object
- * @template-implements InstantiatorInterface<TConnection>
+ * @template TEntry of object
+ * @template-implements InstantiatorInterface<TEntry>
  */
-class ClosureInstantiator implements InstantiatorInterface
+final class ClosureInstantiator implements InstantiatorInterface
 {
     /**
-     * @param \Closure(TConnection|null):TConnection $instantiator
+     * @param \Closure(TEntry|null):TEntry $instantiator
      */
     public function __construct(
         private readonly \Closure $instantiator,
     ) {
+    }
+
+    /**
+     * @param \Closure(TEntry|null):TEntry $create
+     * @return self
+     */
+    public static function new(\Closure $creation): self
+    {
+        return new self($creation);
     }
 
     /**

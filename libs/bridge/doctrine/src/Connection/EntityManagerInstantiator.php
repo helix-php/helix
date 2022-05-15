@@ -16,35 +16,44 @@ use Doctrine\DBAL\Connection;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Exception\ORMException;
+use Helix\Pool\InstantiatorInterface;
 
 /**
- * @template-extends ClosureInstantiator<EntityManagerInterface>
+ * @template-implements InstantiatorInterface<EntityManagerInterface>
  */
-class EntityManagerInstantiator extends ClosureInstantiator
+final class EntityManagerInstantiator implements InstantiatorInterface
 {
     /**
      * @param array|Connection $connection
      * @param Configuration $config
-     * @param EventManager|null $eventManager
+     * @param EventManager|null $events
      */
     public function __construct(
-        Connection|array $connection,
-        Configuration $config,
-        ?EventManager $eventManager = null
+        private readonly Connection|array $connection,
+        private readonly Configuration $config,
+        private readonly ?EventManager $events = null
     ) {
-        parent::__construct(static function (?EntityManagerInterface $prev) use (
-            $connection,
-            $config,
-            $eventManager,
-        ) {
-            if ($prev !== null) {
-                $prev->clear();
+    }
 
-                return $prev;
-            }
+    /**
+     * {@inheritDoc}
+     * @throws ORMException
+     */
+    public function create(?object $previous): object
+    {
+        assert($previous === null || $previous instanceof EntityManagerInterface);
 
-            /** @psalm-suppress MixedArgumentTypeCoercion */
-            return EntityManager::create($connection, $config, $eventManager);
-        });
+        if ($previous !== null) {
+            $previous->clear();
+
+            return $previous;
+        }
+
+        return EntityManager::create(
+            $this->connection,
+            $this->config,
+            $this->events,
+        );
     }
 }

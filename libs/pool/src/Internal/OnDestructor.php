@@ -9,47 +9,50 @@
 
 declare(strict_types=1);
 
-namespace Helix\Bridge\Doctrine\Support;
+namespace Helix\Pool\Internal;
 
 /**
- * @template T of object
+ * @internal This is an internal library class, please do not use it in your code.
+ * @psalm-internal Helix\Pool
+ *
+ * @template TEntry of object
  */
-final class WeakObserver
+final class OnDestructor
 {
     /**
-     * @var \Closure(T):void
+     * @var \Closure(TEntry):void
      */
     private \Closure $listener;
 
     /**
-     * @param T $reference
-     * @param \Closure(T):void $onRelease
+     * @param TEntry $entry
+     * @param \Closure(TEntry):void $onRelease
      */
     private function __construct(
-        public readonly object $reference,
+        private readonly object $entry,
         \Closure $onRelease,
     ) {
         $this->listener = $onRelease;
     }
 
     /**
-     * @return T
+     * @return TEntry
      */
-    public function getReference(): object
+    public function getEntry(): object
     {
-        return $this->reference;
+        return $this->entry;
     }
 
     /**
      * @template TIn of object
      *
-     * @param TIn $reference
+     * @param TIn $entry
      * @param callable(TIn):void $onRelease
      * @return self<TIn>
      */
-    public static function create(object $reference, callable $onRelease): self
+    public static function create(object $entry, callable $onRelease): self
     {
-        return new self($reference, $onRelease(...));
+        return new self($entry, $onRelease(...));
     }
 
     /**
@@ -57,6 +60,6 @@ final class WeakObserver
      */
     public function __destruct()
     {
-        ($this->listener)($this->reference);
+        ($this->listener)($this->entry);
     }
 }
