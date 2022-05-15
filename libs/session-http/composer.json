@@ -1,5 +1,5 @@
 {
-    "name": "helix/session",
+    "name": "helix/session-http",
     "type": "library",
     "license": "MIT",
     "require": {
