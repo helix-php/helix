@@ -32,13 +32,11 @@ use Doctrine\ORM\Tools\Console\EntityManagerProvider;
 use Helix\Boot\Attribute\Registration;
 use Helix\Boot\Attribute\Singleton;
 use Helix\Bridge\Doctrine\Connection\EntityManagerInstantiator;
-use Helix\Bridge\Doctrine\Connection\PoolManager;
 use Helix\Config\ConfigInterface;
 use Helix\Config\RegistrarInterface;
 use Helix\Foundation\Application;
 use Helix\Foundation\Console\Application as CliApplication;
 use Helix\Pool\MasterPool;
-use Helix\Pool\Pool;
 use Psr\Cache\CacheItemPoolInterface;
 
 final class DoctrineExtension
