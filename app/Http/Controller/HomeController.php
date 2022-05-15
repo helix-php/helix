@@ -14,7 +14,6 @@ namespace App\Http\Controller;
 use Helix\Contracts\View\FactoryInterface;
 use Helix\Http\HtmlResponse;
 use Helix\Router\Attribute\Route;
-use Helix\Router\Generator\GeneratorInterface;
 use Psr\Http\Message\ResponseInterface;
 
 final class HomeController
@@ -28,10 +27,8 @@ final class HomeController
     }
 
     #[Route(path: '/', as: 'home')]
-    public function index(GeneratorInterface $generator): ResponseInterface
+    public function index(): ResponseInterface
     {
-        return new HtmlResponse($this->views->create('welcome.html.php', [
-            'route' => $generator,
-        ]));
+        return new HtmlResponse($this->views->create('welcome.html.php'));
     }
 }
