@@ -1,5 +1,5 @@
 {
-    "name": "helix/dispatcher",
+    "name": "helix/event-dispatcher",
     "license": "MIT",
     "type": "library",
     "require": {
@@ -9,7 +9,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Helix\\Dispatcher\\": "src"
+            "Helix\\EventDispatcher\\": "src"
         }
     },
     "require-dev": {
@@ -18,11 +18,11 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Helix\\Dispatcher\\Tests\\": "tests"
+            "Helix\\EventDispatcher\\Tests\\": "tests"
         }
     },
     "provide": {
-        "helix/event-dispatcher-contracts": "^1.0"
+        "helix/event-dispatcher-contracts-implementation": "^1.0"
     },
     "extra": {
         "branch-alias": {

@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Helix\Contracts\EventDispatcher;
 
 /**
- * @template T of EventInterface
+ * @template T of object
  * @template-extends DispatcherInterface<T>
  */
 interface EventSubscriptionInterface extends DispatcherInterface, \Stringable

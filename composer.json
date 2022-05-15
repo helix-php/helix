@@ -70,6 +70,7 @@
         "helix/monolog-bridge": "^1.0",
 
         "helix/env": "^1.0",
+        "helix/event-dispatcher": "^1.0",
         "helix/foundation-http": "^1.0",
         "helix/foundation-console": "^1.0",
         "helix/view-engine-php": "^1.0",

@@ -15,14 +15,26 @@ namespace Helix\Contracts\EventDispatcher;
  * @template T of EventInterface
  * @see EventInterface
  *
- * @psalm-type SubscribableEventListener = callable(EventInterface,EventSubscriptionInterface|null):void
- * @psalm-type EventListener = callable(EventInterface):void
+ * @psalm-type SubscribableEventListener = callable(T, EventSubscriptionInterface|null):void
+ * @psalm-type EventListener = callable(T):void
  */
 interface ListenerInterface
 {
     /**
-     * @param SubscribableEventListener|EventListener|class-string<EventInterface> $handlerOrEventClass
-     * @param SubscribableEventListener|EventListener|null $handler
+     * Listener usage:
+     * ```
+     * $listener->listen(SomeEvent::class, function() {
+     *      echo 'SomeEvent handling!';
+     * });
+     *
+     * // Otherwise
+     * $listener->listen(function(SomeEvent $event): void {
+     *      echo 'SomeEvent handling!';
+     * });
+     * ```
+     *
+     * @param EventListener|SubscribableEventListener|class-string<T> $handlerOrEventClass
+     * @param EventListener|SubscribableEventListener|null $handler
      * @return EventSubscriptionInterface
      * @throws \Throwable
      */

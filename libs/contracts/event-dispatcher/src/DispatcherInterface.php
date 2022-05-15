@@ -14,7 +14,7 @@ namespace Helix\Contracts\EventDispatcher;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
 /**
- * @template T of EventInterface
+ * @template T of object
  */
 interface DispatcherInterface extends EventDispatcherInterface
 {
