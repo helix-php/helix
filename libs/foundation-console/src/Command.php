@@ -18,7 +18,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * @method int invoke(mixed ...$args)
+ * @method void invoke(mixed ...$args)
  */
 abstract class Command extends SymfonyCommand
 {
