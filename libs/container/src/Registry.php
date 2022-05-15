@@ -93,6 +93,7 @@ final class Registry implements
      */
     public function define(string $id, DefinitionInterface $service): DefinitionRegistrarInterface
     {
+        unset($this->aliases[$id]);
         $this->definitions[$id] = $service;
 
         return new DefinitionRegistrar($id, $this);

@@ -77,7 +77,7 @@ final class Container implements
      * @template TIdentifier as object
      *
      * @param non-empty-string|class-string<TIdentifier> $id
-     * @param \Closure():TIdentifier|null $registrar
+     * @param null|\Closure():TIdentifier $registrar
      * @return DefinitionRegistrarInterface
      */
     public function singleton(string $id, \Closure $registrar = null): DefinitionRegistrarInterface
@@ -91,7 +91,7 @@ final class Container implements
      * @template TIdentifier as object
      *
      * @param non-empty-string|class-string<TIdentifier> $id
-     * @param \Closure():TIdentifier|null $registrar
+     * @param null|\Closure():TIdentifier $registrar
      * @return DefinitionRegistrarInterface
      */
     public function weak(string $id, \Closure $registrar = null): DefinitionRegistrarInterface
@@ -105,7 +105,7 @@ final class Container implements
      * @template TIdentifier as object
      *
      * @param non-empty-string|class-string<TIdentifier> $id
-     * @param \Closure():TIdentifier|null $registrar
+     * @param null|\Closure():TIdentifier $registrar
      * @return DefinitionRegistrarInterface
      */
     public function factory(string $id, \Closure $registrar = null): DefinitionRegistrarInterface
@@ -154,7 +154,7 @@ final class Container implements
     /**
      * @template T of object
      *
-     * @param non-empty-string|class-string<T>|interface-string<T> $id
+     * @param non-empty-string|class-string<T> $id
      * @param iterable<ValueResolverInterface> $resolvers
      * @return T
      * @throws ServiceNotFoundException
@@ -240,5 +240,13 @@ final class Container implements
             DispatcherInterface::class,
             InstantiatorInterface::class,
         );
+    }
+
+    /**
+     * @return void
+     */
+    public function __clone(): void
+    {
+        $this->dispatcher = clone $this->dispatcher;
     }
 }
