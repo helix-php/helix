@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Helix\Session\ValueResolver;
 
 use Helix\Contracts\ParamResolver\ValueResolverInterface;
-use Helix\ParamResolver\Introspection\Parameter;
+use Helix\ParamResolver\Parameter;
 use Helix\Session\ManagerInterface;
 use Helix\Session\SessionIdInterface;
 use Psr\Http\Message\ServerRequestInterface;

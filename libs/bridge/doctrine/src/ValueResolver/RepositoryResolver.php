@@ -13,7 +13,7 @@ namespace Helix\Bridge\Doctrine\ValueResolver;
 
 use Doctrine\Persistence\ObjectRepository;
 use Helix\ParamResolver\Exception\ParamNotResolvableException;
-use Helix\ParamResolver\Introspection\Parameter;
+use Helix\ParamResolver\Parameter;
 
 /**
  * @template TReference of object

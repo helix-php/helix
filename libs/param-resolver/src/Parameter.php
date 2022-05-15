@@ -9,7 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Helix\ParamResolver\Introspection;
+namespace Helix\ParamResolver;
+
+use Helix\ParamResolver\Introspection\Type;
 
 final class Parameter
 {

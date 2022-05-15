@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Helix\Bridge\Doctrine\ValueResolver;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Helix\ParamResolver\Introspection\Parameter;
+use Helix\ParamResolver\Parameter;
 
 /**
  * @template TReference of object

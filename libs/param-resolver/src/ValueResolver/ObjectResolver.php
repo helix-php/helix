@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Helix\ParamResolver\ValueResolver;
 
-use Helix\ParamResolver\Introspection\Parameter;
+use Helix\ParamResolver\Parameter;
 
 /**
  * @template T of object
