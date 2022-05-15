@@ -14,7 +14,7 @@
     <?php
     $hue ??= random_int(0, 360);
     $dark = static fn (float $alpha = 1): string => "hsla($hue, 20%, 45%, $alpha)";
-    $light = static fn (float $alpha = 1): string => "hsla($hue, 10%, 95%, $alpha)";
+    $light = static fn (float $alpha = 1): string => "hsla($hue, 10%, 85%, $alpha)";
     ?>
     -->
     <style>
@@ -67,7 +67,7 @@
             height: 100%;
             position: absolute;
             z-index: -1;
-            filter: blur(10px);
+            filter: blur(6px);
         }
 
         .status {
@@ -108,6 +108,10 @@
             vertical-align: text-bottom;
             fill: <?=$light()?>;
         }
+
+        #bg > svg {
+            transition: opacity 5s ease .2s;
+        }
     </style>
     <script>
         let refreshDuration = 10000;
@@ -122,9 +126,14 @@
             svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
             svg.setAttribute('width', window.innerWidth.toString());
             svg.setAttribute('height', window.innerHeight.toString());
+            svg.setAttribute('style', 'opacity: 0');
             document.querySelector('#bg').appendChild(svg);
 
-            let unitSize = (window.innerWidth + window.innerHeight) / 4;
+            setTimeout(function () {
+                svg.setAttribute('style', 'opacity: 1');
+            }, 1);
+
+            let unitSize = (window.innerWidth + window.innerHeight) / 20;
             numPointsX = Math.ceil(window.innerWidth / unitSize) + 1;
             numPointsY = Math.ceil(window.innerHeight / unitSize) + 1;
             unitWidth = Math.ceil(window.innerWidth / (numPointsX - 1));
