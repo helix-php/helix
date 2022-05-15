@@ -12,7 +12,8 @@ declare(strict_types=1);
 namespace Helix\Bridge\Doctrine;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Tools\Console\EntityManagerProvider\UnknownManagerException;
+use Helix\Bridge\Doctrine\Exception\PoolOverflowException;
+use Helix\Bridge\Doctrine\Exception\UnknownManagerException;
 use Helix\Pool\MasterPoolInterface;
 
 /**
@@ -21,6 +22,16 @@ use Helix\Pool\MasterPoolInterface;
  */
 final class EntityMangerFactory implements EntityManagerFactoryInterface
 {
+    /**
+     * @var non-empty-string
+     */
+    private const ERROR_POOL_OVERFLOW = 'The maximum allowed number of free connections is used';
+
+    /**
+     * @var non-empty-string
+     */
+    private const ERROR_INVALID_EM = 'Requested unknown entity manager: "%s", known managers: %s';
+
     /**
      * @var array<string, MasterPoolInterface>
      */
@@ -58,9 +69,15 @@ final class EntityMangerFactory implements EntityManagerFactoryInterface
     public function getManager(string $name, ?object $reference = null): EntityManagerInterface
     {
         if (!isset($this->pools[$name])) {
-            throw UnknownManagerException::unknownManager($name, \array_keys($this->pools));
+            throw new UnknownManagerException(
+                \sprintf(self::ERROR_INVALID_EM, $name, \array_keys($this->pools))
+            );
         }
 
-        return $this->pools[$name]->get($reference);
+        try {
+            return $this->pools[$name]->get($reference);
+        } catch (\OverflowException $e) {
+            throw new PoolOverflowException(self::ERROR_POOL_OVERFLOW, 0, $e);
+        }
     }
 }

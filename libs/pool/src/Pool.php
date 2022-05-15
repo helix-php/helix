@@ -25,7 +25,7 @@ class Pool implements PoolInterface
      * @var non-empty-string
      */
     private const ERROR_SIZE_OVERFLOW = 'Can not create entry: ' .
-        'The maximum allowed number of free entries is used';
+        'The maximum (%s) allowed number of free entries is used';
 
     /**
      * @var \WeakMap<TReference, OnDestructor<TEntry>>
@@ -56,7 +56,7 @@ class Pool implements PoolInterface
      */
     private function entryCanBeCreated(): bool
     {
-        return $this->max > 0 && \count($this) < $this->max;
+        return $this->max <= 0 || \count($this) < $this->max;
     }
 
     /**
@@ -66,7 +66,10 @@ class Pool implements PoolInterface
     {
         if ($this->free === []) {
             if (!$this->entryCanBeCreated()) {
-                throw new \OutOfRangeException(\sprintf(self::ERROR_SIZE_OVERFLOW));
+                throw new \OverflowException(\sprintf(
+                    self::ERROR_SIZE_OVERFLOW,
+                    $this->max > 0 ? $this->max : 'inf',
+                ));
             }
 
             $this->free[] = $this->instantiator->create(null);
