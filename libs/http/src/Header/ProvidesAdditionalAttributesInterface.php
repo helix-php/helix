@@ -11,12 +11,10 @@ declare(strict_types=1);
 
 namespace Helix\Http\Header;
 
-interface HeaderValueInterface extends \Stringable
+interface ProvidesAdditionalAttributesInterface
 {
     /**
-     * Returns string representation of the header value field.
-     *
-     * @return non-empty-string
+     * @return iterable<non-empty-string, non-empty-string|int>
      */
-    public function __toString(): string;
+    public function getAttributes(): iterable;
 }
