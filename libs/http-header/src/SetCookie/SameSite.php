@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Helix\Http\Header\Cookie;
+namespace Helix\Http\Header\SetCookie;
 
 enum SameSite: string
 {

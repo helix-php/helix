@@ -1363,6 +1363,16 @@ enum StatusCode: int implements StatusCodeInterface
     case REQUEST_HEADER_FIELDS_TOO_LARGE = 431;
 
     /**
+     * Used internally to instruct the server to return no information to the
+     * client and close the connection immediately.
+     *
+     * @link https://www.nginx.com/resources/wiki/extending/api/http/
+     * @var StatusCodeEnumValue
+     */
+    #[Info(reasonPhrase: 'No Response', category: Category::CLIENT_ERROR)]
+    case CLOSE = 444;
+
+    /**
      * This status code indicates that the server is subject to legal
      * restrictions which prevent it servicing the request.
      *
@@ -1381,6 +1391,16 @@ enum StatusCode: int implements StatusCodeInterface
      */
     #[Info(reasonPhrase: 'Unavailable For Legal Reasons', category: Category::CLIENT_ERROR)]
     case UNAVAILABLE_FOR_LEGAL_REASONS = 451;
+
+    /**
+     * Used when the client has closed the request before the server could send
+     * a response.
+     *
+     * @link https://www.nginx.com/resources/wiki/extending/api/http/
+     * @var StatusCodeEnumValue
+     */
+    #[Info(reasonPhrase: 'Client Closed Request', category: Category::CLIENT_ERROR)]
+    case CLIENT_CLOSED_REQUEST = 499;
 
     /**
      * The 500 (Internal Server Error) status code indicates that the server
@@ -1539,6 +1559,16 @@ enum StatusCode: int implements StatusCodeInterface
      */
     #[Info(reasonPhrase: 'Network Authentication Required', category: Category::SERVER_ERROR)]
     case HTTP_NETWORK_AUTHENTICATION_REQUIRED = 511;
+
+    /**
+     * This status code is not specified in any RFCs but is used by some HTTP
+     * proxies to signal a network connect timeout behind the proxy to a client
+     * in front of the proxy.
+     *
+     * @var StatusCodeEnumValue
+     */
+    #[Info(reasonPhrase: 'Network Connect Timeout Error', category: Category::CLIENT_ERROR)]
+    case NETWORK_CONNECT_TIMEOUT = 599;
 
     /**
      * @param int $code

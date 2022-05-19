@@ -9,12 +9,19 @@
 
 declare(strict_types=1);
 
-namespace Helix\Http\Header;
+namespace Helix\Contracts\Http\Header\Attribute;
 
-interface HeaderValueInterface extends \Stringable
+interface FlagInterface extends \Stringable
 {
     /**
-     * Returns string representation of the header value field.
+     * Returns name of the attribute.
+     *
+     * @return non-empty-string
+     */
+    public function getName(): string;
+
+    /**
+     * String representation of the flag.
      *
      * @return non-empty-string
      */

@@ -22,6 +22,7 @@
         {"type": "path", "url": "libs/contracts/error-handler"},
         {"type": "path", "url": "libs/contracts/error-handler-http"},
         {"type": "path", "url": "libs/contracts/event-dispatcher"},
+        {"type": "path", "url": "libs/contracts/http-header"},
         {"type": "path", "url": "libs/contracts/http-method"},
         {"type": "path", "url": "libs/contracts/http-status-code"},
         {"type": "path", "url": "libs/contracts/middleware"},
@@ -44,6 +45,7 @@
         {"type": "path", "url": "libs/foundation-http"},
         {"type": "path", "url": "libs/foundation-console"},
         {"type": "path", "url": "libs/http"},
+        {"type": "path", "url": "libs/http-header"},
         {"type": "path", "url": "libs/http-method"},
         {"type": "path", "url": "libs/http-status-code"},
         {"type": "path", "url": "libs/middleware"},
@@ -84,14 +86,16 @@
         }
     },
     "require-dev": {
-        "phpbench/phpbench": "^1.2",
         "helix/debug": "^1.0",
-        "phpunit/phpunit": "^9.5.20",
         "symfony/var-dumper": "^5.4|^6.0",
+        "phpunit/phpunit": "^9.5.20",
         "vimeo/psalm": "^4.10",
         "jetbrains/phpstorm-attributes": "^1.0",
-        "httpsoft/http-message": "^1.0",
-        "friendsofphp/php-cs-fixer": "*"
+        "friendsofphp/php-cs-fixer": "^3.8",
+        "nyholm/psr7": "^1.5",
+        "symfony/http-foundation": "^5.4|^6.0",
+        "laminas/laminas-diactoros": "^2.12",
+        "httpsoft/http-message": "^1.0"
     },
     "autoload-dev": {
         "psr-4": {
@@ -108,6 +112,7 @@
             "Helix\\Foundation\\Console\\Tests\\": "libs/foundation-console/tests",
             "Helix\\Foundation\\Http\\Tests\\": "libs/foundation-http/tests",
             "Helix\\Http\\Tests\\": "libs/http/tests",
+            "Helix\\Http\\Header\\Tests\\": "libs/http-header/tests",
             "Helix\\Http\\Method\\Tests\\": "libs/http-method/tests",
             "Helix\\Http\\StatusCode\\Tests\\": "libs/http-status-code/tests",
             "Helix\\Middleware\\Tests\\": "libs/middleware/tests",
@@ -118,6 +123,7 @@
             "Helix\\Server\\Tests\\": "libs/server/tests",
             "Helix\\Server\\Sapi\\Tests\\": "libs/server-sapi/tests",
             "Helix\\Session\\Tests\\": "libs/session/tests",
+            "Helix\\Session\\Http\\Tests\\": "libs/session-http/tests",
             "Helix\\View\\Tests\\": "libs/view/tests",
             "Helix\\View\\Engine\\Php\\Tests\\": "libs/view-engine-php/tests",
             "Helix\\View\\Engine\\Twig\\Tests\\": "libs/view-engine-twig/tests"
@@ -140,8 +146,7 @@
         "prepare": [
             "@php do orm:schema-tool:update"
         ],
-        "phpcs": "php-cs-fixer fix --config=.php-cs-fixer.php",
-        "bench": "phpbench run tests/Bench --report=aggregate"
+        "phpcs": "php-cs-fixer fix --config=.php-cs-fixer.php"
     },
     "minimum-stability": "dev",
     "prefer-stable": true

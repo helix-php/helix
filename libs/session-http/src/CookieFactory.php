@@ -12,7 +12,8 @@ declare(strict_types=1);
 namespace Helix\Session\Http;
 
 use Helix\Clock\SystemClock;
-use Helix\Http\Header\Cookie;
+use Helix\Http\Header\SetCookie;
+use Helix\Http\Header\SetCookie\SameSite;
 use Helix\Session\SessionIdInterface;
 use Psr\Clock\ClockInterface;
 
@@ -84,18 +85,18 @@ class CookieFactory
     /**
      * @param SessionIdInterface $session
      * @param bool $secure
-     * @return Cookie
+     * @return SetCookie
      * @throws \Exception
      */
-    public function create(SessionIdInterface $session, bool $secure = false): Cookie
+    public function create(SessionIdInterface $session, bool $secure = false): SetCookie
     {
-        return new Cookie(
+        return new SetCookie(
             name: $this->name,
             value: $session,
             expires: $this->getExpirationDate(),
             maxAge: $this->lifetime,
             path: '/',
-            sameSite: Cookie\SameSite::LAX,
+            sameSite: SameSite::LAX,
             secure: $secure,
             httpOnly: true,
         );

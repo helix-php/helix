@@ -9,12 +9,11 @@
 
 declare(strict_types=1);
 
-namespace Helix\Http\Header;
+namespace Helix\Contracts\Http\Header;
 
-interface ProvidesAdditionalAttributesInterface
+/**
+ * Means that the header can be used as a response header.
+ */
+interface ResponseValueInterface extends ValueInterface
 {
-    /**
-     * @return iterable<non-empty-string, non-empty-string|int>
-     */
-    public function getAttributes(): iterable;
 }

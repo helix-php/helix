@@ -9,13 +9,11 @@
 
 declare(strict_types=1);
 
-namespace Helix\Session\Http\Tests;
+namespace Helix\Http\Header;
 
-use PHPUnit\Framework\TestCase as BaseTestCase;
+use Helix\Contracts\Http\Header\ProvidesAttributesInterface;
+use Helix\Contracts\Http\Header\ValueInterface;
 
-/**
- * @group session
- */
-abstract class TestCase extends BaseTestCase
+abstract class Value implements ValueInterface
 {
 }

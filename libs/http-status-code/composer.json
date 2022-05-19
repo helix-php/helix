@@ -12,6 +12,10 @@
         }
     },
     "require-dev": {
+        "nyholm/psr7": "^1.5",
+        "symfony/http-foundation": "^5.4|^6.0",
+        "laminas/laminas-diactoros": "^2.12",
+        "httpsoft/http-message": "^1.0.9",
         "phpunit/phpunit": "^9.5.20",
         "vimeo/psalm": "^4.22"
     },

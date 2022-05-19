@@ -9,12 +9,12 @@
 
 declare(strict_types=1);
 
-namespace Helix\Session\Http\Tests;
+namespace Helix\Http\Header\Tests;
 
 use PHPUnit\Framework\TestCase as BaseTestCase;
 
 /**
- * @group session
+ * @group http-header
  */
 abstract class TestCase extends BaseTestCase
 {
