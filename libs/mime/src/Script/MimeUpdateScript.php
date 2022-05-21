@@ -19,7 +19,7 @@ use Helix\Mime\Category;
  * @internal Helix\Mime\Script\MimeUpdateScript is an internal library class, please do not use it in your code.
  * @psalm-internal Helix\Mime\Script
  */
-final class MimeUpdateScript
+final class MimeUpdateScript extends Script
 {
     private const ERROR_DOWNLOADING = 'An error occurred while downloading "%s"';
 
@@ -28,6 +28,8 @@ final class MimeUpdateScript
 
     public static function run(Event $e): void
     {
+        self::requireAutoloader();
+
         $io = $e->getIO();
 
         foreach (Category::cases() as $category) {

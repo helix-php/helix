@@ -18,7 +18,7 @@ use Composer\Script\Event;
  * @internal Helix\Mime\Script\MimeGenerateScript is an internal library class, please do not use it in your code.
  * @psalm-internal Helix\Mime\Script
  */
-final class MimeGenerateScript
+final class MimeGenerateScript extends Script
 {
     private const SPEC_DIRECTORY_GLOB = __DIR__ . '/../../resources/spec/*.csv';
     private const SPEC_TEMPLATE = __DIR__ . '/../../resources/template.php';
@@ -26,6 +26,8 @@ final class MimeGenerateScript
 
     public static function run(Event $e): void
     {
+        self::requireAutoloader();
+
         $result = '';
 
         foreach (self::cases($e->getIO()) as $case) {
