@@ -13,6 +13,7 @@ namespace Helix\Mime;
 
 use Helix\Contracts\Mime\CategoryInterface;
 use Helix\Contracts\Mime\TypeInterface;
+use Helix\Mime\Internal\CustomType;
 
 enum Type: string implements TypeInterface
 {

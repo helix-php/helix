@@ -9,17 +9,22 @@
 
 declare(strict_types=1);
 
-namespace Helix\Http\Method;
+namespace Helix\Http\Method\Internal;
 
 use Helix\Contracts\Http\Method\MethodInterface;
+use Helix\Http\Method\Info;
+use Helix\Http\Method\Method;
 
 /**
- * @internal Helix\Http\Method\CustomMethod is an internal library class, please do not use it in your code.
- * @psalm-internal Helix\Http\Method
+ * @internal Helix\Http\Method\Internal\CustomMethod is an internal library
+ *           class, please do not use it in your code.
+ * @psalm-internal Helix\Http\Method\Internal
  */
 final class CustomMethod implements MethodInterface
 {
     /**
+     * @internal Please use {@see Method::create()} factory method instead.
+     *
      * @param non-empty-string $name
      * @param bool $safe
      * @param bool $idempotent

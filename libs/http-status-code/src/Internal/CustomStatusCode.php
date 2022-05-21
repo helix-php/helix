@@ -9,14 +9,16 @@
 
 declare(strict_types=1);
 
-namespace Helix\Http\StatusCode;
+namespace Helix\Http\StatusCode\Internal;
 
 use Helix\Contracts\Http\StatusCode\CategoryInterface;
 use Helix\Contracts\Http\StatusCode\StatusCodeInterface;
+use Helix\Http\StatusCode\Category;
 
 /**
- * @internal Helix\Http\StatusCode\CustomStatusCode is an internal library class, please do not use it in your code.
- * @psalm-internal Helix\Http\StatusCode
+ * @internal Helix\Http\StatusCode\Internal\CustomStatusCode is an internal
+ *           library class, please do not use it in your code.
+ * @psalm-internal Helix\Http\StatusCode\Internal
  */
 final class CustomStatusCode implements StatusCodeInterface
 {
@@ -26,7 +28,7 @@ final class CustomStatusCode implements StatusCodeInterface
     private CategoryInterface $category;
 
     /**
-     * @internal Please use {@see StatusCode::create()} method instead.
+     * @internal Please use {@see StatusCode::create()} factory method instead.
      *
      * @param positive-int|0 $code
      * @param string $reasonPhrase

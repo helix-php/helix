@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Helix\Http\StatusCode;
 
 use Helix\Contracts\Http\StatusCode\StatusCodeInterface;
+use Helix\Http\StatusCode\Internal\CustomStatusCode;
 
 /**
  * @psalm-type StatusCodeEnumValue = StatusCode::*

@@ -14,6 +14,11 @@ namespace Helix\Contracts\Http\StatusCode;
 interface CategoryInterface
 {
     /**
+     * @return non-empty-string
+     */
+    public function getName(): string;
+
+    /**
      * @param bool $server
      * @return bool
      */

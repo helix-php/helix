@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Helix\Mime;
 
 use Helix\Contracts\Mime\CategoryInterface;
+use Helix\Mime\Internal\CustomCategory;
 
 enum Category: string implements CategoryInterface
 {

@@ -48,6 +48,14 @@ enum Category: int implements CategoryInterface
     /**
      * {@inheritDoc}
      */
+    public function getName(): string
+    {
+        return \ucfirst(\strtolower(\str_replace('_', ' ', $this->name)));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function isError(bool $server = false): bool
     {
         $case = $server ? self::SERVER_ERROR : self::CLIENT_ERROR;

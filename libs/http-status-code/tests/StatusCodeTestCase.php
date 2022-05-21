@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Helix\Http\StatusCode\Tests;
 
 use Helix\Http\StatusCode\Category;
-use Helix\Http\StatusCode\CustomStatusCode;
+use Helix\Http\StatusCode\Internal\CustomStatusCode;
 use Helix\Http\StatusCode\StatusCode;
 
 /**

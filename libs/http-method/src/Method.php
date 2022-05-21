@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Helix\Http\Method;
 
 use Helix\Contracts\Http\Method\MethodInterface;
+use Helix\Http\Method\Internal\CustomMethod;
 
 enum Method: string implements MethodInterface
 {

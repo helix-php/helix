@@ -9,18 +9,23 @@
 
 declare(strict_types=1);
 
-namespace Helix\Mime;
+namespace Helix\Mime\Internal;
 
 use Helix\Contracts\Mime\CategoryInterface;
 use Helix\Contracts\Mime\TypeInterface;
+use Helix\Mime\Category;
+use Helix\Mime\Type;
 
 /**
- * @internal Helix\Mime\CustomType is an internal library class, please do not use it in your code.
- * @psalm-internal Helix\Mime
+ * @internal Helix\Mime\Internal\CustomType is an internal library class, please
+ *           do not use it in your code.
+ * @psalm-internal Helix\Mime\Internal
  */
 final class CustomType implements TypeInterface
 {
     /**
+     * @internal Please use {@see Type::create()} factory method instead.
+     *
      * @param non-empty-string $name
      * @param CategoryInterface $category
      */
