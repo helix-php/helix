@@ -52,7 +52,7 @@ final class MimeUpdateScript extends Script
             }
 
             $io->overwrite('- Copying  [<info>' . $category->getName() . '</info>] into <comment>' . $target . '</comment>');
-            \stream_copy_to_stream($result, \fopen($target, 'ab+'));
+            \stream_copy_to_stream($result, \fopen($target, 'wb+'));
             $io->overwrite('- Updated  [<info>' . $category->getName() . '</info>]');
         }
     }
