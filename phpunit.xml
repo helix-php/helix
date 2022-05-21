@@ -13,7 +13,8 @@
 >
     <coverage>
         <include>
-            <directory suffix=".php">src</directory>
+            <directory suffix=".php">app</directory>
+            <directory suffix=".php">libs</directory>
         </include>
     </coverage>
     <testsuites>
