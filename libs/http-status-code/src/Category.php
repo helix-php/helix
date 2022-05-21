@@ -13,7 +13,7 @@ namespace Helix\Http\StatusCode;
 
 use Helix\Contracts\Http\StatusCode\CategoryInterface;
 
-enum Category : int implements CategoryInterface
+enum Category: int implements CategoryInterface
 {
     /**
      * @var int

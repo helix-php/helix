@@ -72,7 +72,7 @@ trait AttributesTrait
      *
      * @psalm-immutable
      * @param iterable<FlagInterface> $attributes
-     * @return $this
+     * @return self
      */
     public function withAttributes(iterable $attributes): self
     {
@@ -87,7 +87,7 @@ trait AttributesTrait
      *
      * @psalm-immutable
      * @param iterable<FlagInterface> $attributes
-     * @return $this
+     * @return self
      */
     public function withAddedAttributes(iterable $attributes): self
     {

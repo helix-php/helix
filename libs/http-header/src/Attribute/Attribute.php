@@ -63,7 +63,7 @@ class Attribute extends Flag implements AttributeInterface
     /**
      * @psalm-immutable
      * @param non-empty-string $delimiter
-     * @return $this
+     * @return self
      */
     public function withDelimiter(string $delimiter): self
     {
@@ -84,7 +84,7 @@ class Attribute extends Flag implements AttributeInterface
     /**
      * @psalm-immutable
      * @param string|\Stringable $value
-     * @return $this
+     * @return self
      */
     public function withValue(string|\Stringable $value): self
     {

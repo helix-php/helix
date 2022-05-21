@@ -1571,17 +1571,23 @@ enum StatusCode: int implements StatusCodeInterface
     case NETWORK_CONNECT_TIMEOUT = 599;
 
     /**
-     * @param int $code
+     * @param positive-int|0 $code
      * @param Info|null $info
      * @return StatusCodeInterface
      */
     public static function create(int $code, Info $info = null): StatusCodeInterface
     {
-        if ($info === null) {
-            return self::tryFrom($code) ?? new CustomStatusCode($code, '');
-        }
+        /**
+         * Local identity map for CustomStatusCode objects.
+         *
+         * @var array<positive-int|0, CustomStatusCode> $memory
+         */
+        static $memory = [];
 
-        return new CustomStatusCode($code, $info->reasonPhrase, $info->category);
+        return self::tryFrom($code)
+            ?? $memory[$code]
+            ??= new CustomStatusCode($code, $info?->reasonPhrase ?? '', $info?->category)
+        ;
     }
 
     /**
@@ -1617,7 +1623,11 @@ enum StatusCode: int implements StatusCodeInterface
      */
     private function getInfo(): Info
     {
-        /** @var array<non-empty-string, Info> $memory */
+        /**
+         * Local identity map for Info metadata objects.
+         *
+         * @var array<non-empty-string, Info> $memory
+         */
         static $memory = [];
 
         if (isset($memory[$this->name])) {
@@ -1631,6 +1641,6 @@ enum StatusCode: int implements StatusCodeInterface
             return $memory[$this->name] = $attributes[0]->newInstance();
         }
 
-        throw new \LogicException('Could not resolve status code [' . $this->name . '] info');
+        throw new \LogicException('Could not load status code [' . $this->name . '] info');
     }
 }

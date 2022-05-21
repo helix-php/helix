@@ -26,8 +26,8 @@ final class CustomMethod implements MethodInterface
      */
     public function __construct(
         private readonly string $name,
-        private readonly bool $safe = false,
-        private readonly bool $idempotent = false,
+        private bool $safe = false,
+        private bool $idempotent = false,
     ) {
     }
 
@@ -53,5 +53,19 @@ final class CustomMethod implements MethodInterface
     public function isSafe(): bool
     {
         return $this->safe;
+    }
+
+    /**
+     * @psalm-immutable
+     * @param Info $info
+     * @return $this
+     */
+    public function withInfo(Info $info): self
+    {
+        $self = clone $this;
+        $self->safe = $info->safe;
+        $self->idempotent = $info->idempotent;
+
+        return $self;
     }
 }

@@ -21,19 +21,22 @@ use Helix\Contracts\Http\StatusCode\StatusCodeInterface;
 final class CustomStatusCode implements StatusCodeInterface
 {
     /**
-     * @var Category
+     * @var CategoryInterface
      */
-    private Category $category;
+    private CategoryInterface $category;
 
     /**
      * @internal Please use {@see StatusCode::create()} method instead.
      *
      * @param positive-int|0 $code
      * @param string $reasonPhrase
-     * @param Category|null $category
+     * @param CategoryInterface|null $category
      */
-    public function __construct(private int $code, private string $reasonPhrase = '', Category $category = null)
-    {
+    public function __construct(
+        private readonly int $code,
+        private string $reasonPhrase = '',
+        CategoryInterface $category = null,
+    ) {
         $this->category = $category ?? Category::parse($this->code);
     }
 
@@ -45,6 +48,19 @@ final class CustomStatusCode implements StatusCodeInterface
     {
         $self = clone $this;
         $self->reasonPhrase = $reasonPhrase;
+
+        return $self;
+    }
+
+    /**
+     * @psalm-immutable
+     * @param CategoryInterface $category
+     * @return $this
+     */
+    public function withCategory(CategoryInterface $category): self
+    {
+        $self = clone $this;
+        $self->category = $category;
 
         return $self;
     }

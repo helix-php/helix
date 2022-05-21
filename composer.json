@@ -26,6 +26,7 @@
         {"type": "path", "url": "libs/contracts/http-method"},
         {"type": "path", "url": "libs/contracts/http-status-code"},
         {"type": "path", "url": "libs/contracts/middleware"},
+        {"type": "path", "url": "libs/contracts/mime"},
         {"type": "path", "url": "libs/contracts/param-resolver"},
         {"type": "path", "url": "libs/contracts/router"},
         {"type": "path", "url": "libs/contracts/view"},
@@ -49,6 +50,7 @@
         {"type": "path", "url": "libs/http-method"},
         {"type": "path", "url": "libs/http-status-code"},
         {"type": "path", "url": "libs/middleware"},
+        {"type": "path", "url": "libs/mime"},
         {"type": "path", "url": "libs/param-resolver"},
         {"type": "path", "url": "libs/pool"},
         {"type": "path", "url": "libs/router"},
@@ -86,6 +88,7 @@
         }
     },
     "require-dev": {
+        "composer/composer": "^2.0",
         "helix/debug": "^1.0",
         "symfony/var-dumper": "^5.4|^6.0",
         "phpunit/phpunit": "^9.5.20",

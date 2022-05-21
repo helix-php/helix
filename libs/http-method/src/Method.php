@@ -592,19 +592,24 @@ enum Method: string implements MethodInterface
     case TRACE = 'TRACE';
 
     /**
-     * @param string $method
+     * @param non-empty-string $method
      * @param Info|null $info
      * @return MethodInterface
      */
     public static function create(string $method, Info $info = null): MethodInterface
     {
+        /**
+         * Local identity map for CustomMethod objects.
+         *
+         * @var array<non-empty-string, CustomMethod> $memory
+         */
+        static $memory = [];
+
         $method = \strtoupper($method);
 
-        if ($info === null) {
-            return self::tryFrom($method) ?? new CustomMethod($method);
-        }
-
-        return new CustomMethod($method, $info->safe, $info->idempotent);
+        return self::tryFrom($method)
+            ?? $memory[$method]
+            ??= new CustomMethod($method, $info?->safe ?? false, $info?->idempotent ?? false);
     }
 
     /**
@@ -640,7 +645,11 @@ enum Method: string implements MethodInterface
      */
     private function getInfo(): Info
     {
-        /** @var array<non-empty-string, Info> $memory */
+        /**
+         * Local identity map for Info metadata objects.
+         *
+         * @var array<non-empty-string, Info> $memory
+         */
         static $memory = [];
 
         if (isset($memory[$this->name])) {

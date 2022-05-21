@@ -9,10 +9,13 @@
 
 declare(strict_types=1);
 
-namespace Helix\Http\Header;
+namespace Helix\Mime\Tests;
 
-use Helix\Contracts\Http\Header\ValueInterface;
+use PHPUnit\Framework\TestCase as BaseTestCase;
 
-abstract class Value implements ValueInterface
+/**
+ * @group mime
+ */
+abstract class TestCase extends BaseTestCase
 {
 }
