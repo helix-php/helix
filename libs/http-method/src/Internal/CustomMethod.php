@@ -23,7 +23,7 @@ use Helix\Http\Method\Method;
 final class CustomMethod implements MethodInterface
 {
     /**
-     * @internal Please use {@see Method::create()} factory method instead.
+     * @internal Please use {@see Method::parse()} factory method instead.
      *
      * @param non-empty-string $name
      * @param bool $safe

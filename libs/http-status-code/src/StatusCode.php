@@ -1573,10 +1573,9 @@ enum StatusCode: int implements StatusCodeInterface
 
     /**
      * @param positive-int|0 $code
-     * @param Info|null $info
      * @return StatusCodeInterface
      */
-    public static function create(int $code, Info $info = null): StatusCodeInterface
+    public static function parse(int $code): StatusCodeInterface
     {
         /**
          * Local identity map for CustomStatusCode objects.
@@ -1585,10 +1584,7 @@ enum StatusCode: int implements StatusCodeInterface
          */
         static $memory = [];
 
-        return self::tryFrom($code)
-            ?? $memory[$code]
-            ??= new CustomStatusCode($code, $info?->reasonPhrase ?? '', $info?->category)
-        ;
+        return self::tryFrom($code) ?? $memory[$code] ??= new CustomStatusCode($code);
     }
 
     /**

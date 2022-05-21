@@ -28,7 +28,7 @@ final class CustomStatusCode implements StatusCodeInterface
     private CategoryInterface $category;
 
     /**
-     * @internal Please use {@see StatusCode::create()} factory method instead.
+     * @internal Please use {@see StatusCode::parse()} factory method instead.
      *
      * @param positive-int|0 $code
      * @param string $reasonPhrase

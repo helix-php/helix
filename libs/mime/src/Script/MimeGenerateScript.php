@@ -46,14 +46,16 @@ final class MimeGenerateScript extends Script
         foreach ($types as $mime => $category) {
             $case = \strtoupper(\preg_replace('/(\W+)/ium', '_', $mime));
 
+            $name = \substr($mime, (\strpos($mime, '/') ?? -1) + 1);
+
             yield \sprintf(<<<'TEMPLATE'
 
                 /**
                  * @link https://www.iana.org/assignments/media-types/%s
                  */
-                #[Info(name: '%1$s', category: Category::%s)]
+                #[Info(name: '%s', category: Category::%s)]
                 case %s = '%s';
-            TEMPLATE, $mime, \strtoupper($category), $case, \strtolower($mime));
+            TEMPLATE, $mime, $name, \strtoupper($category), $case, \strtolower($mime));
         }
 
         return [];

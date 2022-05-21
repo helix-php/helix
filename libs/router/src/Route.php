@@ -74,7 +74,7 @@ class Route implements
         /** @psalm-suppress MissingClosureReturnType */
         $this->handler = $handler ?? (static fn () => null);
 
-        $this->method = $method instanceof MethodInterface ? $method : Method::create($method);
+        $this->method = $method instanceof MethodInterface ? $method : Method::parse($method);
     }
 
     /**
@@ -151,7 +151,7 @@ class Route implements
     public function matched(MethodInterface|string $method): self
     {
         if (\is_string($method)) {
-            $method = Method::create($method);
+            $method = Method::parse($method);
         }
 
         $this->method = $method;

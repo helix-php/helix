@@ -597,7 +597,7 @@ enum Method: string implements MethodInterface
      * @param Info|null $info
      * @return MethodInterface
      */
-    public static function create(string $method, Info $info = null): MethodInterface
+    public static function parse(string $method, Info $info = null): MethodInterface
     {
         /**
          * Local identity map for CustomMethod objects.
@@ -608,9 +608,11 @@ enum Method: string implements MethodInterface
 
         $method = \strtoupper($method);
 
-        return self::tryFrom($method)
-            ?? $memory[$method]
-            ??= new CustomMethod($method, $info?->safe ?? false, $info?->idempotent ?? false);
+        return self::tryFrom($method) ?? $memory[$method] ??= new CustomMethod(
+            $method,
+            $info?->safe ?? false,
+            $info?->idempotent ?? false,
+        );
     }
 
     /**

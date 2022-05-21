@@ -40,7 +40,7 @@ abstract class VendorCompatibilityTestCase extends TestCase
      */
     public function testStatusCodeAvailable(int $code, string $text): void
     {
-        $actual = StatusCode::create($code);
+        $actual = StatusCode::parse($code);
 
         $message = "Unsupported Status Code: $code ($text)";
         $this->assertInstanceOf(StatusCode::class, $actual, $message);

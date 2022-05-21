@@ -23,20 +23,19 @@ enum Type: string implements TypeInterface
      * @param non-empty-string $name
      * @return TypeInterface
      */
-    public static function create(string $name): TypeInterface
+    public static function parse(string $name): TypeInterface
     {
         /**
          * Local identity map for CustomType objects.
          *
-         * @var array<non-empty-lowercase-string, CustomType> $memory
+         * @psalm-var array<non-empty-lowercase-string, CustomType> $memory
          */
         static $memory = [];
 
+        /** @psalm-var non-empty-lowercase-string $lower */
         $lower = \strtolower($name);
 
-        return self::tryFrom($lower)
-            ?? $memory[$lower]
-            ??= CustomType::create($name);
+        return self::tryFrom($lower) ?? $memory[$lower] ??= CustomType::fromString($name);
     }
 
     /**

@@ -39,7 +39,7 @@ class StatusCodeTestCase extends TestCase
      */
     public function testMemoization(int $code, bool $available): void
     {
-        $status = StatusCode::create($code);
+        $status = StatusCode::parse($code);
 
         if ($available) {
             $this->assertInstanceOf(StatusCode::class, $status);
@@ -53,7 +53,7 @@ class StatusCodeTestCase extends TestCase
      */
     public function testStatusCodeValue(int $code): void
     {
-        $status = StatusCode::create($code);
+        $status = StatusCode::parse($code);
 
         $this->assertSame($code, $status->getCode());
     }
@@ -63,7 +63,7 @@ class StatusCodeTestCase extends TestCase
      */
     public function testReasonPhrase(int $code, bool $available): void
     {
-        $status = StatusCode::create($code);
+        $status = StatusCode::parse($code);
 
         if ($available) {
             $this->assertNotSame('', $status->getReasonPhrase());
@@ -77,7 +77,7 @@ class StatusCodeTestCase extends TestCase
      */
     public function testCategory(int $code, bool $available): void
     {
-        $status = StatusCode::create($code);
+        $status = StatusCode::parse($code);
 
         if ($available) {
             $this->assertNotSame(Category::UNKNOWN, $status->getCategory());

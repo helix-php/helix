@@ -24,7 +24,12 @@ use Helix\Mime\Type;
 final class CustomType implements TypeInterface
 {
     /**
-     * @internal Please use {@see Type::create()} factory method instead.
+     * @var non-empty-string
+     */
+    private const EMPTY_MIME_TYPE = 'example';
+
+    /**
+     * @internal Please use {@see Type::parse()} factory method instead.
      *
      * @param non-empty-string $name
      * @param CategoryInterface $category
@@ -39,15 +44,38 @@ final class CustomType implements TypeInterface
      * @param non-empty-string $mime
      * @return TypeInterface
      */
-    public static function create(string $mime): TypeInterface
+    public static function fromString(string $mime): TypeInterface
     {
         $position = \strpos($mime, '/');
 
-        $category = $position !== false
-            ? Category::create(\substr($mime, 0, $position))
-            : Category::EXAMPLE;
+        return match ($position) {
+            false => new self(
+                name: $mime ?: self::EMPTY_MIME_TYPE,
+                category: Category::EXAMPLE,
+            ),
+            0 => new self(
+                name: \substr($mime, 1) ?: self::EMPTY_MIME_TYPE,
+                category: Category::EXAMPLE,
+            ),
+            \strlen($mime) - 1 => new self(
+                name: self::EMPTY_MIME_TYPE,
+                category: Category::create(\substr($mime, 0, -1)),
+            ),
+            default => new self(
+                name: \substr($mime, $position + 1),
+                category: Category::create(\substr($mime, 0, $position)),
+            )
+        };
+    }
 
-        return new self($mime, $category);
+    /**
+     * {@inheritDoc}
+     */
+    public function getFullName(): string
+    {
+        $category = $this->getCategory();
+
+        return $category->getName() . '/' . $this->getName();
     }
 
     /**
