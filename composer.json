@@ -88,7 +88,6 @@
         }
     },
     "require-dev": {
-        "composer/composer": "^2.0",
         "helix/debug": "^1.0",
         "symfony/var-dumper": "^5.4|^6.0",
         "phpunit/phpunit": "^9.5.20",
