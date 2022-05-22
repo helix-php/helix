@@ -55,7 +55,7 @@ return $config
     ])
     ->setFinder(
         (new PhpCsFixer\Finder())
-            ->in([__DIR__ . '/libs', __DIR__ . '/app', __DIR__ . '/tests'])
+            ->in([__DIR__ . '/app', __DIR__ . '/tests'])
             ->name('*.php')
     )
 ;
