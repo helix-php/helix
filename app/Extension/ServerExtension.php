@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace App\Extension;
 
-use Helix\Boot\Attribute\Registration;
+use Helix\Boot\Attribute\Register;
 use Helix\Boot\Attribute\Singleton;
 use Helix\Foundation\Path;
 use Helix\Http\Psr17FactoryInterface;
@@ -41,7 +41,7 @@ final class ServerExtension
         ));
     }
 
-    #[Registration(ifServiceExists: CliApplication::class)]
+    #[Register(afterResolved: CliApplication::class)]
     public function addServeCommand(CliApplication $cli, Path $path): void
     {
         $cli->add(new SapiServeCommand($path->public));

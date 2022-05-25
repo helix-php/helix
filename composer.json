@@ -4,6 +4,12 @@
     "type": "library",
     "description": "Helix Application",
     "homepage": "https://github.com/helix-php",
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../framework"
+        }
+    ],
     "support": {
         "issues": "https://github.com/helix-php/helix/issues",
         "source": "https://github.com/helix-php/helix"
@@ -50,6 +56,8 @@
     },
     "config": {
         "sort-packages": true,
+        "platform-check": true,
+        "optimize-autoloader": true,
         "allow-plugins": {
             "composer/package-versions-deprecated": true
         }

@@ -17,23 +17,21 @@ return [
     \Helix\Foundation\Extension\ClockExtension::class,
     \Helix\Foundation\Http\Extension\HttpExtension::class,
     \Helix\Foundation\Http\Extension\SessionExtension::class,
+    \Helix\Foundation\Http\Extension\ViewExtension::class,
     \Helix\Bridge\Monolog\MonologExtension::class,
     \Helix\Bridge\Cache\CacheExtension::class,
     \Helix\Bridge\Doctrine\DoctrineExtension::class,
+    \Helix\Bridge\Twig\TwigExtension::class,
 
     //
     // Debug Extensions
     //
-    ...\array_filter([
-        \Helix\Debug\DebugExtension::class,
-    ], \class_exists(...)),
-
+    \Helix\Debug\DebugExtension::class => (bool)env('APP_DEBUG'),
 
     //
     // Application Extensions
     //
     \App\Extension\RouterExtension::class,
     \App\Extension\ServerExtension::class,
-    \App\Extension\ViewExtension::class,
     \App\Extension\ConsoleExtension::class,
 ];
