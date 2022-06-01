@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace App\Http;
 
-use Helix\Contracts\ParamResolver\ValueResolverInterface;
+use Helix\Contracts\ParamResolver\MiddlewareInterface;
 use Helix\Foundation\Http\Kernel as BaseHttpKernel;
 use Psr\Http\Server\MiddlewareInterface;
 
@@ -43,7 +43,7 @@ class Kernel extends BaseHttpKernel
         // This resolver injects the current
         // session {@see \Helix\Session\SessionIdInterface} identifier
         // dependent on the HTTP request object.
-        \Helix\Session\ValueResolver\SessionIdValueResolver::class,
+        \Helix\Session\ValueResolver\SessionIdMiddleware::class,
     ];
 
     /**

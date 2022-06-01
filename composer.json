@@ -8,6 +8,7 @@
         "issues": "https://github.com/helix-php/helix/issues",
         "source": "https://github.com/helix-php/helix"
     },
+    "repositories": [{"type": "path", "url": "../framework"}],
     "authors": [
         {
             "name": "Kirill Nesmeyanov",
